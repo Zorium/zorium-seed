@@ -1,0 +1,34 @@
+@require '../../bower_components/nib/index.styl'
+@require '../../bower_components/normalize.css/normalize.css'
+
+json('./vars.json')
+
+@require './layout.styl'
+
+//
+// Base Styles
+//
+
+html
+  font-size: 62.5% /* 10px browser default */
+
+body
+  background: $white
+  color: $grayDark
+
+a
+  text-decoration: none
+  color: $grayDark
+  -webkit-tap-highlight-color: $transparent
+
+h1
+  font-size: $fontSizeLarge
+
+h2
+  font-size: $fontSizeMedium
+
+button
+  border: none
+  outline: none
+  appearance: none
+  -webkit-tap-highlight-color: $transparent
