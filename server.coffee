@@ -58,9 +58,9 @@ renderHomePage = do ->
     name: 'Zorium'
     twitterHandle: '@ZoriumJS'
     themeColor: '#00695C'
-    favicon: '/images/icons/icon_32.png'
-    icon1024: '/images/icons/icon_1024.png'
-    icon256: '/images/icons/icon_256.png'
+    favicon: '/images/zorium_icon_32.png'
+    icon1024: '/images/zorium_icon_1024.png'
+    icon256: '/images/zorium_icon_256.png'
     url: 'http://zorium.org'
     distjs: distJs
     distcss: distCss

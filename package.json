@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "node_modules/bower/bin/bower install",
     "test": "NODE_ENV=test node_modules/gulp/bin/gulp.js test",
-    "start": "npm run build && ./node_modules/pm2/bin/pm2 start ./bin/server.coffee -i 0 --name zorium_seed --no-daemon -o /var/log/zorium_seed.log -e /var/log/zorium_seed.error.log",
+    "start": "NODE_ENV=production npm run build && NODE_ENV=production ./node_modules/pm2/bin/pm2 start ./bin/server.coffee -i 0 --name zorium_seed --no-daemon -o /tmp/zorium_seed.log -e /tmp/zorium_seed.error.log",
     "dev": "NODE_ENV=development node_modules/gulp/bin/gulp.js dev",
     "mock": "NODE_ENV=development MOCK=true node_modules/gulp/bin/gulp.js dev",
     "watch-tests": "NODE_ENV=test node_modules/gulp/bin/gulp.js watch:test",
@@ -60,7 +60,7 @@
     "compression": "1.0.11",
     "dustjs-linkedin": "2.4.0",
     "lodash": "2.4.1",
-    "pm2": "0.10.3",
+    "pm2": "0.12.3",
     "promiz": "1.0.0",
     "zorium": "*"
   }

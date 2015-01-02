@@ -1,5 +1,7 @@
 # Zorium Seed
 
+![zorium](./src/images/zorium_icon_1024.png)
+
 ### Getting started
 
 ```bash
