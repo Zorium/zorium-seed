@@ -1,12 +1,13 @@
 #!/usr/bin/env coffee
 log = require 'clay-loglevel'
+path = require 'path'
 
 app = require '../server'
 webpack = require 'webpack'
 WebpackDevServer = require 'webpack-dev-server'
 config = require '../src/config'
 
-webpackDevPort = 3004
+webpackDevPort = config.WEBPACK_DEV_PORT
 webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
 isMockingApi = config.MOCK
 
@@ -43,14 +44,22 @@ new WebpackDevServer webpack({
     loaders: [
       { test: /\.coffee$/, loader: 'coffee' }
       { test: /\.json$/, loader: 'json' }
-      { test: /\.styl$/, loader: 'style/useable!css!stylus?paths=components/' }
+      {
+        test: /\.styl$/
+        loader: 'style/useable!css!stylus?' +
+                'paths[]=bower_components&paths[]=node_modules'
+      }
     ]
   plugins: [
+    new webpack.ResolverPlugin(
+      new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(
+        'bower.json', ['main']
+      )
+    )
     new webpack.HotModuleReplacementPlugin()
   ]
-  externals:
-    kik: 'kik'
   resolve:
+    root: [path.join(__dirname, '/../bower_components')]
     extensions: ['.coffee', '.js', '.json', '']
 }),
   publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/js/"

@@ -5,8 +5,11 @@ _ = require 'lodash'
 Promise = require 'bluebird'
 compress = require 'compression'
 log = require 'clay-loglevel'
+helmet = require 'helmet'
 
 config = require './src/config'
+
+MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
 
 app = express()
 router = express.Router()
@@ -17,25 +20,46 @@ log.enableAll()
 # Don't compact whitespace, because it breaks the javascript partial
 dust.optimizers.format = (ctx, node) -> node
 
-indexTpl = dust.compile fs.readFileSync('index.dust', 'utf-8'), 'index'
-
+indexTpl = dust.compile fs.readFileSync('src/index.dust', 'utf-8'), 'index'
 
 distJs = if config.ENV is config.ENVS.PROD \
           then fs.readFileSync('dist/js/bundle.js', 'utf-8')
-          else null
-distCss = if config.ENV is config.ENVS.PROD \
-          then fs.readFileSync('dist/css/bundle.css', 'utf-8')
           else null
 
 dust.loadSource indexTpl
 
 app.use compress()
 
+webpackDevHost = config.WEBPACK_DEV_HOSTNAME + ':' + config.WEBPACK_DEV_PORT
+scriptSrc = [
+  '\'unsafe-eval\''
+  '\'unsafe-inline\''
+  'www.google-analytics.com'
+  if config.ENV is config.ENVS.DEV then webpackDevHost
+]
+stylesSrc = [
+  '\'unsafe-inline\''
+  if config.ENV is config.ENVS.DEV then webpackDevHost
+]
+app.use helmet.contentSecurityPolicy
+  scriptSrc: scriptSrc
+  stylesSrc: stylesSrc
+app.use helmet.xssFilter()
+app.use helmet.frameguard()
+app.use helmet.hsts
+  # https://hstspreload.appspot.com/
+  maxAge: MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS
+  includeSubdomains: true # include in Google Chrome
+  preload: true # include in Google Chrome
+  force: true
+app.use helmet.noSniff()
+app.use helmet.crossdomain()
+app.disable 'x-powered-by'
+
 if config.ENV is config.ENVS.PROD
 then app.use express['static'](__dirname + '/dist')
 else app.use express['static'](__dirname + '/build')
 
-# After checking static files
 app.use router
 
 # Routes
@@ -53,9 +77,9 @@ renderHomePage = do ->
     inlineSource: config.ENV is config.ENVS.PROD
     webpackDevHostname: config.WEBPACK_DEV_HOSTNAME
     title: 'Zorium Seed'
-    description: 'Zorium - (╯°□°）╯︵ ┻━┻)'
+    description: 'Zorium Seed - (╯°□°）╯︵ ┻━┻)'
     keywords: 'Zorium'
-    name: 'Zorium'
+    name: 'Zorium Seed'
     twitterHandle: '@ZoriumJS'
     themeColor: '#00695C'
     favicon: '/images/zorium_icon_32.png'
@@ -63,7 +87,6 @@ renderHomePage = do ->
     icon256: '/images/zorium_icon_256.png'
     url: 'http://zorium.org'
     distjs: distJs
-    distcss: distCss
 
   rendered = Promise.promisify(dust.render, dust) 'index', page
 

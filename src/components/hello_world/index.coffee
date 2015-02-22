@@ -2,12 +2,9 @@ z = require 'zorium'
 
 styles = require './index.styl'
 
-module.exports = class Stars
+module.exports = class HelloWorld
   constructor: ->
     styles.use()
 
-    @state = z.state
-      hello: 'Hello World!'
-
-  render: =>
-    z '.z-hello-world', @state().hello
+  render: ->
+    z '.z-hello-world', 'Hello World'

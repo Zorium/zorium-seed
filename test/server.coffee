@@ -1,3 +1,3 @@
-describe 'noop', ->
+describe 'server', ->
   it 'noop', ->
     return true

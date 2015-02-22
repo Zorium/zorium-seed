@@ -3,8 +3,7 @@
   "homepage": "http://zorium.org",
   "private": true,
   "dependencies": {
-    "normalize.css": "3.0.1",
-    "nib": "1.0.3",
-    "fetch": "0.3.0"
+    "fetch": "0.3.0",
+    "normalize.styl": "~3.0.2"
   }
 }

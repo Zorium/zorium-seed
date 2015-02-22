@@ -1,57 +1,52 @@
 _ = require 'lodash'
+del = require 'del'
+path = require 'path'
 gulp = require 'gulp'
-concat = require 'gulp-concat'
-nodemon = require 'gulp-nodemon'
-rename = require 'gulp-rename'
-clean = require 'gulp-clean'
-sourcemaps = require 'gulp-sourcemaps'
-runSequence = require 'gulp-run-sequence'
-stylus = require 'gulp-stylus'
-coffeelint = require 'gulp-coffeelint'
 karma = require('karma').server
-minifyCss = require 'gulp-minify-css'
 mocha = require 'gulp-mocha'
+rename = require 'gulp-rename'
+nodemon = require 'gulp-nodemon'
+gulpWebpack = require 'gulp-webpack'
+coffeelint = require 'gulp-coffeelint'
+runSequence = require 'run-sequence'
 RewirePlugin = require 'rewire-webpack'
-webpack = require 'gulp-webpack'
-webpackSource = require 'webpack'
+webpack = require 'webpack'
+clayLintConfig = require 'clay-coffeescript-style-guide'
 
-karmaConf = require './karma.defaults'
-
-outFiles =
-  scripts: 'bundle.js'
-  styles: 'bundle.css'
+karmaConf =
+  frameworks: ['mocha']
+  client:
+    useIframe: true
+    captureConsole: true
+    mocha:
+      timeout: 1000
+  files: [
+    'build/test/bundle.js'
+  ]
+  browsers: ['Chrome', 'Firefox']
 
 paths =
-  static: './src/*.*'
-  images: './src/images/*.*'
-  scripts: ['./src/**/*.coffee', './*.coffee']
-  styles: './src/stylus/**/*.styl'
-
-  tests: './test/*/**/*.coffee'
-  serverTests: './test/server.coffee'
+  static: './src/static/**/*'
+  coffee: ['./src/**/*.coffee', './*.coffee', './test/*/**/*.coffee']
   root: './src/root.coffee'
   rootTests: './test/index.coffee'
-  baseStyle: './src/stylus/base.styl'
+  rootServerTests: './test/server.coffee'
   dist: './dist/'
   build: './build/'
 
 # start the dev server, and auto-update
-gulp.task 'dev', ['assets:dev', 'watch:dev'], ->
-  gulp.start 'server'
+gulp.task 'dev', ['assets:dev'], ->
+  gulp.start 'server:dev'
 
 # compile sources: src/* -> build/*
 gulp.task 'assets:dev', [
-  'styles:dev'
   'static:dev'
-  'images:dev'
 ]
 
 # compile sources: src/* -> dist/*
 gulp.task 'assets:prod', [
   'scripts:prod'
-  'styles:prod'
   'static:prod'
-  'images:prod'
 ]
 
 # build for production
@@ -63,14 +58,18 @@ gulp.task 'build', (cb) ->
 gulp.task 'test', [
     'scripts:test'
     'test:server'
-    'lint:tests'
-    'lint:scripts'
+    'lint'
   ], (cb) ->
   karma.start _.defaults(singleRun: true, karmaConf), process.exit
 
+# start the dev server
+gulp.task 'server:dev', ->
+  # Don't actually watch for changes, just run the server
+  nodemon {script: 'bin/dev_server.coffee', ext: 'null', ignore: ['**/*.*']}
+
 # gulp-mocha will never exit on its own.
 gulp.task 'test:server', ['scripts:test'], ->
-  gulp.src paths.serverTests
+  gulp.src paths.rootServerTests
     .pipe mocha()
 
 gulp.task 'test:phantom', ['scripts:test'], (cb) ->
@@ -80,9 +79,8 @@ gulp.task 'test:phantom', ['scripts:test'], (cb) ->
   }, karmaConf), cb
 
 gulp.task 'scripts:test', ->
-
   gulp.src paths.rootTests
-  .pipe webpack
+  .pipe gulpWebpack
     module:
       postLoaders: [
         { test: /\.coffee$/, loader: 'transform/cacheable?envify' }
@@ -92,17 +90,22 @@ gulp.task 'scripts:test', ->
         { test: /\.json$/, loader: 'json' }
         {
           test: /\.styl$/
-          loader: 'style/useable!css!stylus?paths=components/'
+          loader: 'style/useable!css!stylus?' +
+                  'paths[]=bower_components&paths[]=node_modules'
         }
       ]
-    externals:
-      kik: '{}'
     plugins: [
+      new webpack.ResolverPlugin(
+        new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(
+          'bower.json', ['main']
+        )
+      )
       new RewirePlugin()
     ]
     resolve:
+      root: [path.join(__dirname, 'bower_components')]
       extensions: ['.coffee', '.js', '.json', '']
-      # browser-builtins is for modules requesting native node modules
+      # browser-builtins is for tests requesting native node modules
       modulesDirectories: ['web_modules', 'node_modules', './src',
       './node_modules/browser-builtins/builtin']
   .pipe rename 'bundle.js'
@@ -110,67 +113,30 @@ gulp.task 'scripts:test', ->
 
 
 # run coffee-lint
-gulp.task 'lint:tests', ->
-  gulp.src paths.tests
-    .pipe coffeelint()
+gulp.task 'lint', ->
+  gulp.src paths.coffee
+    .pipe coffeelint(null, clayLintConfig)
     .pipe coffeelint.reporter()
-
-#
-# Dev server and watcher
-#
-
-# start the dev server
-gulp.task 'server', ->
-  # Don't actually watch for changes, just run the server
-  nodemon {script: 'bin/dev_server.coffee', ext: 'null', ignore: ['**/*.*']}
-
-gulp.task 'watch:dev', ->
-  gulp.watch paths.styles, ['styles:dev']
 
 gulp.task 'watch:test', ->
-  gulp.watch paths.scripts.concat([paths.tests]), ['test:phantom']
+  gulp.watch paths.coffee, ['test:phantom']
 
-# run coffee-lint
-gulp.task 'lint:scripts', ->
-  gulp.src paths.scripts
-    .pipe coffeelint()
-    .pipe coffeelint.reporter()
-
-#
-# Dev compilation
-#
-
-# css/style.css --> build/css/bundle.css
-gulp.task 'styles:dev', ->
-  gulp.src paths.baseStyle
-    .pipe sourcemaps.init()
-      .pipe stylus 'include css': true
-      .pipe rename outFiles.styles
-    .pipe sourcemaps.write()
-    .pipe gulp.dest paths.build + '/css/'
-
-# * --> build/*
 gulp.task 'static:dev', ->
   gulp.src paths.static
     .pipe gulp.dest paths.build
-
-gulp.task 'images:dev', ->
-  gulp.src paths.images
-    .pipe gulp.dest paths.build + '/images'
 
 #
 # Production compilation
 #
 
 # rm -r dist
-gulp.task 'clean:dist', ->
-  gulp.src paths.dist, read: false
-    .pipe clean()
+gulp.task 'clean:dist', (cb) ->
+  del paths.dist, cb
 
 # init.coffee --> dist/js/bundle.min.js
 gulp.task 'scripts:prod', ->
   gulp.src paths.root
-  .pipe webpack
+  .pipe gulpWebpack
     module:
       postLoaders: [
         { test: /\.coffee$/, loader: 'transform/cacheable?envify' }
@@ -180,34 +146,24 @@ gulp.task 'scripts:prod', ->
         { test: /\.json$/, loader: 'json' }
         {
           test: /\.styl$/
-          loader: 'style/useable!css!stylus?paths=components/'
+          loader: 'style/useable!css!stylus?' +
+                  'paths[]=bower_components&paths[]=node_modules'
         }
       ]
     plugins: [
-      new webpackSource.optimize.UglifyJsPlugin()
+      new webpack.ResolverPlugin(
+        new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(
+          'bower.json', ['main']
+        )
+      )
+      new webpack.optimize.UglifyJsPlugin()
     ]
-    externals:
-      kik: 'kik'
     resolve:
+      root: [path.join(__dirname, 'bower_components')]
       extensions: ['.coffee', '.js', '.json', '']
   .pipe rename 'bundle.js'
   .pipe gulp.dest paths.dist + '/js/'
 
-# css/style.css --> dist/css/bundle.min.css
-gulp.task 'styles:prod', ->
-  gulp.src paths.baseStyle
-    .pipe sourcemaps.init()
-      .pipe stylus 'include css': true
-      .pipe rename outFiles.styles
-      .pipe minifyCss()
-    .pipe sourcemaps.write '../maps/'
-    .pipe gulp.dest paths.dist + '/css/'
-
-# * --> dist/*
 gulp.task 'static:prod', ->
   gulp.src paths.static
     .pipe gulp.dest paths.dist
-
-gulp.task 'images:prod', ->
-  gulp.src paths.images
-    .pipe gulp.dest paths.dist + '/images'

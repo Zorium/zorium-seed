@@ -8,6 +8,10 @@ config = require './config'
 HomePage = require './pages/home'
 ErrorReportService = require './services/error_report'
 
+style = require './root.styl'
+
+style.use()
+
 ###########
 # LOGGING #
 ###########

@@ -24,8 +24,8 @@ unless Function::bind
 # coffeelint: enable=missing_fat_arrows
 
 # Promise polyfill - https://github.com/zolmeister/promiz
-Promise = require 'promiz'
-window.Promise = window.Promise or Promise
+Promiz = require 'promiz'
+window.Promise = window.Promise or Promiz
 
 # Fetch polyfill - https://github.com/github/fetch
 require 'fetch'
