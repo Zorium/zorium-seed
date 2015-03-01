@@ -13,6 +13,12 @@ style = require './root.styl'
 style.use()
 
 ###########
+# EVENTS  #
+###########
+
+window.addEventListener('resize', z.redraw)
+
+###########
 # LOGGING #
 ###########
 
