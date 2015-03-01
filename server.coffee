@@ -6,6 +6,7 @@ Promise = require 'bluebird'
 compress = require 'compression'
 log = require 'clay-loglevel'
 helmet = require 'helmet'
+paperColors = require 'zorium-paper/colors.json'
 
 config = require './src/config'
 
@@ -81,7 +82,7 @@ renderHomePage = do ->
     keywords: 'Zorium'
     name: 'Zorium Seed'
     twitterHandle: '@ZoriumJS'
-    themeColor: '#00695C'
+    themeColor: paperColors.$teal700
     favicon: '/images/zorium_icon_32.png'
     icon1024: '/images/zorium_icon_1024.png'
     icon256: '/images/zorium_icon_256.png'
