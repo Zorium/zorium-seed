@@ -34,9 +34,9 @@
     "compression": "^1.0.11",
     "css-loader": "^0.9.0",
     "del": "^1.1.1",
-    "dustjs-linkedin": "^2.4.0",
     "envify": "^3.0.0",
     "express": "^4.5.1",
+    "extract-text-webpack-plugin": "^0.5.0",
     "gulp": "^3.8.10",
     "gulp-coffeelint": "^0.4.0",
     "gulp-mocha": "^2.0.0",
@@ -51,11 +51,12 @@
     "promiz": "^1.0.0",
     "rewire-webpack": "^0.2.0",
     "run-sequence": "^0.3.2",
+    "rx-lite": "^2.5.2",
     "style-loader": "^0.8.1",
     "stylus-loader": "^0.5.0",
     "transform-loader": "^0.2.1",
     "webpack": "^1.5.0",
-    "zorium": "^0.7.0",
+    "zorium": "^1.0.0-rc1",
     "zorium-paper": "^0.3.4"
   }
 }

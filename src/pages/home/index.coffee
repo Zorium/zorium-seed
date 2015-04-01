@@ -9,7 +9,7 @@ module.exports = class HomePage
       $hello: new HelloWorld()
 
   render: =>
-    {$hello} = @state()
+    {$hello} = @state.getValue()
 
     z 'div',
       z $hello

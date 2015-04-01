@@ -3,6 +3,7 @@ del = require 'del'
 path = require 'path'
 gulp = require 'gulp'
 karma = require('karma').server
+webpack = require 'webpack'
 mocha = require 'gulp-mocha'
 rename = require 'gulp-rename'
 nodemon = require 'gulp-nodemon'
@@ -10,8 +11,8 @@ gulpWebpack = require 'gulp-webpack'
 coffeelint = require 'gulp-coffeelint'
 runSequence = require 'run-sequence'
 RewirePlugin = require 'rewire-webpack'
-webpack = require 'webpack'
 clayLintConfig = require 'clay-coffeescript-style-guide'
+ExtractTextPlugin = require 'extract-text-webpack-plugin'
 
 karmaConf =
   frameworks: ['mocha']
@@ -82,6 +83,8 @@ gulp.task 'scripts:test', ->
   gulp.src paths.rootTests
   .pipe gulpWebpack
     module:
+      exprContextRegExp: /$^/
+      exprContextCritical: false
       postLoaders: [
         { test: /\.coffee$/, loader: 'transform/cacheable?envify' }
       ]
@@ -90,7 +93,7 @@ gulp.task 'scripts:test', ->
         { test: /\.json$/, loader: 'json' }
         {
           test: /\.styl$/
-          loader: 'style/useable!css!stylus?' +
+          loader: 'style!css!stylus?' +
                   'paths[]=bower_components&paths[]=node_modules'
         }
       ]
@@ -138,6 +141,8 @@ gulp.task 'scripts:prod', ->
   gulp.src paths.root
   .pipe gulpWebpack
     module:
+      exprContextRegExp: /$^/
+      exprContextCritical: false
       postLoaders: [
         { test: /\.coffee$/, loader: 'transform/cacheable?envify' }
       ]
@@ -146,8 +151,8 @@ gulp.task 'scripts:prod', ->
         { test: /\.json$/, loader: 'json' }
         {
           test: /\.styl$/
-          loader: 'style/useable!css!stylus?' +
-                  'paths[]=bower_components&paths[]=node_modules'
+          loader: ExtractTextPlugin.extract 'style-loader',
+            'css!stylus?paths[]=bower_components&paths[]=node_modules'
         }
       ]
     plugins: [
@@ -157,12 +162,14 @@ gulp.task 'scripts:prod', ->
         )
       )
       new webpack.optimize.UglifyJsPlugin()
+      new ExtractTextPlugin 'bundle.css'
     ]
     resolve:
       root: [path.join(__dirname, 'bower_components')]
       extensions: ['.coffee', '.js', '.json', '']
-  .pipe rename 'bundle.js'
-  .pipe gulp.dest paths.dist + '/js/'
+    output:
+      filename: 'bundle.js'
+  .pipe gulp.dest paths.dist
 
 gulp.task 'static:prod', ->
   gulp.src paths.static

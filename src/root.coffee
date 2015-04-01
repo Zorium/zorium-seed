@@ -4,13 +4,10 @@ _ = require 'lodash'
 z = require 'zorium'
 log = require 'clay-loglevel'
 
+require './root.styl'
 config = require './config'
-HomePage = require './pages/home'
 ErrorReportService = require './services/error_report'
-
-style = require './root.styl'
-
-style.use()
+routes = require './routes'
 
 ###########
 # LOGGING #
@@ -30,9 +27,8 @@ else
 # ROUTING SETUP #
 #################
 
-root = document.getElementById('app')
-z.router.setRoot root
-z.router.add '/', HomePage
-z.router.go()
+z.server.setRoot document
+z.server.setRouter routes
+z.server.go '/'
 
 log.info 'App Ready'

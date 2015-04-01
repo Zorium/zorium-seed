@@ -38,6 +38,8 @@ new WebpackDevServer webpack({
     filename: 'bundle.js',
     publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/js/"
   module:
+    exprContextRegExp: /$^/
+    exprContextCritical: false
     postLoaders: [
       { test: /\.coffee$/, loader: 'transform/cacheable?envify' }
     ]
@@ -46,7 +48,7 @@ new WebpackDevServer webpack({
       { test: /\.json$/, loader: 'json' }
       {
         test: /\.styl$/
-        loader: 'style/useable!css!stylus?' +
+        loader: 'style!css!stylus?' +
                 'paths[]=bower_components&paths[]=node_modules'
       }
     ]
