@@ -42,3 +42,13 @@ describe 'server', ->
     flare
       .get '/ping'
       .expect 200, 'pong'
+
+  it 'renders /', ->
+    flare
+      .get '/'
+      .expect 200
+
+  it 'renders /404', ->
+    flare
+      .get '/404'
+      .expect 404

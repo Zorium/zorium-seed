@@ -28,7 +28,11 @@ karmaConf =
 
 paths =
   static: './src/static/**/*'
-  coffee: ['./src/**/*.coffee', './*.coffee', './test/*/**/*.coffee']
+  coffee: [
+    './*.coffee'
+    './src/**/*.coffee'
+    './test/**/*.coffee'
+  ]
   root: './src/root.coffee'
   rootTests: './test/index.coffee'
   rootServerTests: './test/server.coffee'
@@ -122,7 +126,7 @@ gulp.task 'lint', ->
     .pipe coffeelint.reporter()
 
 gulp.task 'watch', ->
-  gulp.watch paths.coffee, ['test:phantom']
+  gulp.watch paths.coffee, ['test:server', 'test:phantom']
 
 gulp.task 'static:dev', ->
   gulp.src paths.static
