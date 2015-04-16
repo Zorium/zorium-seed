@@ -108,7 +108,7 @@ class Root
         # styles
         if isInliningSource
           z 'style',
-            styles
+            innerHTML: styles
         else
           null
 
@@ -117,7 +117,8 @@ class Root
           z $currentPage, {}
         z 'div',
           if isInliningSource
-            z 'script', scripts
+            z 'script',
+              innerHTML: scripts
           else
             z 'script', {src: "//#{webpackDevHostname}:3004/js/bundle.js"}
 
