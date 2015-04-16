@@ -93,7 +93,7 @@ gulp.task 'scripts:test', ->
         { test: /\.json$/, loader: 'json' }
         {
           test: /\.styl$/
-          loader: 'style!css!stylus?' +
+          loader: 'style!css!autoprefixer!stylus?' +
                   'paths[]=bower_components&paths[]=node_modules'
         }
       ]
@@ -152,7 +152,8 @@ gulp.task 'scripts:prod', ->
         {
           test: /\.styl$/
           loader: ExtractTextPlugin.extract 'style-loader',
-            'css!stylus?paths[]=bower_components&paths[]=node_modules'
+            'css!autoprefixer!' +
+            'stylus?paths[]=bower_components&paths[]=node_modules'
         }
       ]
     plugins: [

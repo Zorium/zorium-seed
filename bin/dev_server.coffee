@@ -48,7 +48,7 @@ new WebpackDevServer webpack({
       { test: /\.json$/, loader: 'json' }
       {
         test: /\.styl$/
-        loader: 'style!css!stylus?' +
+        loader: 'style!css!autoprefixer!stylus?' +
                 'paths[]=bower_components&paths[]=node_modules'
       }
     ]
