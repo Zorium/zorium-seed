@@ -4,10 +4,10 @@ FROM dockerfile/nodejs:latest
 RUN apt-get install -y git
 
 # Add source
-ADD ./node_modules /opt/zorium-seed/node_modules
-ADD . /opt/zorium-seed
+ADD ./node_modules /opt/app/node_modules
+ADD . /opt/app
 
-WORKDIR /opt/zorium-seed
+WORKDIR /opt/app
 
 # Install app deps
 RUN npm install

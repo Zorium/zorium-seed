@@ -121,7 +121,7 @@ gulp.task 'lint', ->
     .pipe coffeelint(null, clayLintConfig)
     .pipe coffeelint.reporter()
 
-gulp.task 'watch:test', ->
+gulp.task 'watch', ->
   gulp.watch paths.coffee, ['test:phantom']
 
 gulp.task 'static:dev', ->
