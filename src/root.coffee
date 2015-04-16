@@ -29,6 +29,6 @@ else
 
 z.server.setRoot document
 z.server.setRouter routes
-z.server.go '/'
+z.server.go()
 
 log.info 'App Ready'

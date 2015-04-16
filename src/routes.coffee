@@ -4,7 +4,9 @@ Rx = require 'rx-lite'
 
 config = require './config'
 HomePage = require './pages/home'
+FourOhFourPage = require './pages/404'
 
+router = new z.Router()
 isInliningSource = config.ENV is config.ENVS.PROD
 
 styles = if not window? and isInliningSource
@@ -28,16 +30,20 @@ class Root
     @$currentPage = new Rx.ReplaySubject(1)
     @state = z.state {
       lastRenderedPath: null
+      status: 200
       $currentPage: @$currentPage
     }
 
   render: ({path, cookies}) ->
-    {lastRenderedPath, $currentPage} = @state.getValue()
+    {lastRenderedPath, $currentPage, status} = @state.getValue()
 
     if path isnt lastRenderedPath
+      lastRenderedPath = path
       if path is '/'
-        lastRenderedPath = path
         @$currentPage.onNext new HomePage()
+      else
+        @state.set status: 404
+        @$currentPage.onNext new FourOhFourPage()
 
     webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
     title = 'Zorium Seed'
@@ -51,7 +57,7 @@ class Root
     icon256 = '/images/zorium_icon_256.png'
     url = 'http://zorium.org'
 
-    z 'html',
+    tree = z 'html',
       z 'head',
         z 'title', "#{title}"
         z 'meta', {name: 'description', content: "#{description}"}
@@ -115,9 +121,16 @@ class Root
           else
             z 'script', {src: "//#{webpackDevHostname}:3004/js/bundle.js"}
 
-router = new z.Router()
+    if status is 404
+      throw new router.Error {tree, status}
+    else
+      return tree
+
 $root = new Root()
 router.add '/', ({cookies}) ->
   z $root, {path: '/', cookies}
+
+router.add '*', ({cookies}) ->
+  z $root, {path: '*', cookies}
 
 module.exports = router
