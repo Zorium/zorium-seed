@@ -1,15 +1,18 @@
-FROM dockerfile/nodejs:latest
+FROM node:0.10
 
-# Install Git
-RUN apt-get install -y git
+# Cache dependencies
+COPY npm-shrinkwrap.json /tmp/npm-shrinkwrap.json
+COPY package.json /tmp/package.json
+COPY bower.json /tmp/bower.json
+RUN mkdir -p /opt/app && \
+    cd /opt/app && \
+    cp /tmp/npm-shrinkwrap.json . && \
+    cp /tmp/package.json . && \
+    cp /tmp/bower.json . && \
+    npm install --unsafe-perm
 
-# Add source
-ADD ./node_modules /opt/app/node_modules
-ADD . /opt/app
+COPY . /opt/app
 
 WORKDIR /opt/app
-
-# Install app deps
-RUN npm install
 
 CMD ["npm", "start"]
