@@ -33,6 +33,7 @@ entries = entries.concat ['./src/root']
 
 new WebpackDevServer webpack({
   entry: entries
+  devtool: '#inline-source-map'
   output:
     path: __dirname,
     filename: 'bundle.js',
@@ -64,7 +65,7 @@ new WebpackDevServer webpack({
     root: [path.join(__dirname, '/../bower_components')]
     extensions: ['.coffee', '.js', '.json', '']
 }),
-  publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/js/"
+  publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/"
   hot: true
 .listen webpackDevPort, (err) ->
   if err

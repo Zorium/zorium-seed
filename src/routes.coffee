@@ -120,7 +120,7 @@ class Root
             z 'script',
               innerHTML: scripts
           else
-            z 'script', {src: "//#{webpackDevHostname}:3004/js/bundle.js"}
+            z 'script', {src: "//#{webpackDevHostname}:3004/bundle.js"}
 
     if status is 404
       throw new router.Error {tree, status}

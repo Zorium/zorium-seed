@@ -144,6 +144,7 @@ gulp.task 'clean:dist', (cb) ->
 gulp.task 'scripts:prod', ->
   gulp.src paths.root
   .pipe gulpWebpack
+    devtool: 'source-map'
     module:
       exprContextRegExp: /$^/
       exprContextCritical: false
