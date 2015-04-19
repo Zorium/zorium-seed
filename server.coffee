@@ -65,11 +65,17 @@ app.use '/healthcheck', (req, res, next) ->
 app.use '/ping', (req, res) ->
   res.send 'pong'
 
+app.use '/api/demo', (req, res) ->
+  res.json {
+    name: 'Zorium!'
+    url: 'https://github.com/zorium'
+  }
+
 if config.ENV is config.ENVS.PROD
 then app.use express['static'](__dirname + '/dist')
 else app.use express['static'](__dirname + '/build')
 
-app.use z.factoryToMiddleware rootFactory
 app.use router
+app.use z.factoryToMiddleware rootFactory
 
 module.exports = app
