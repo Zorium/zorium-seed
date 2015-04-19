@@ -8,7 +8,7 @@ Promise = require 'bluebird'
 request = require 'request-promise'
 
 config = require './src/config'
-routes = require './src/routes'
+rootFactory = require './src/root_factory'
 
 MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
 HEALTHCHECK_TIMEOUT = 200
@@ -69,7 +69,7 @@ if config.ENV is config.ENVS.PROD
 then app.use express['static'](__dirname + '/dist')
 else app.use express['static'](__dirname + '/build')
 
-app.use z.routerToMiddleware routes
+app.use z.factoryToMiddleware rootFactory
 app.use router
 
 module.exports = app

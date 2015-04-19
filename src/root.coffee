@@ -7,7 +7,7 @@ log = require 'clay-loglevel'
 require './root.styl'
 config = require './config'
 ErrorReportService = require './services/error_report'
-routes = require './routes'
+rootFactory = require './root_factory'
 
 ###########
 # LOGGING #
@@ -27,8 +27,8 @@ else
 # ROUTING SETUP #
 #################
 
-z.server.setRoot document
-z.server.setRouter routes
+z.server.setRootNode document
+z.server.setRootFactory rootFactory
 z.server.go()
 
 log.info 'App Ready'

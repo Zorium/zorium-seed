@@ -37,7 +37,7 @@ new WebpackDevServer webpack({
   output:
     path: __dirname,
     filename: 'bundle.js',
-    publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/js/"
+    publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/"
   module:
     exprContextRegExp: /$^/
     exprContextCritical: false
@@ -49,7 +49,7 @@ new WebpackDevServer webpack({
       { test: /\.json$/, loader: 'json' }
       {
         test: /\.styl$/
-        loader: 'style!css!autoprefixer!stylus?' +
+        loader: 'style!css!stylus?' +
                 'paths[]=bower_components&paths[]=node_modules'
       }
     ]

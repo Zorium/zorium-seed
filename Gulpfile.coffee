@@ -140,7 +140,7 @@ gulp.task 'static:dev', ->
 gulp.task 'clean:dist', (cb) ->
   del paths.dist, cb
 
-# init.coffee --> dist/js/bundle.min.js
+# init.coffee --> dist/bundle.min.js
 gulp.task 'scripts:prod', ->
   gulp.src paths.root
   .pipe gulpWebpack
