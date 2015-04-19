@@ -101,10 +101,51 @@ class RootComponent
         z 'link', {rel: 'shortcut icon', href: "#{favicon}"}
 
         # fonts
-        z 'link',
-          href: '//fonts.googleapis.com/css?family=Roboto:300,400,500'
-          rel: 'stylesheet'
-          type: 'text/css'
+        z 'style',
+          innerHTML: '
+            @font-face {
+              font-family: "Roboto";
+              font-style: normal;
+              font-weight: 300;
+              src:
+                local("Roboto Light"),
+                local("Roboto-Light"),
+                url(https://fonts.gstatic.com/s/roboto/v15/Hgo13k-tfSpn0qi1S' +
+                'FdUfZBw1xU1rKptJj_0jans920.woff2) format("woff2"),
+                url(https://fonts.gstatic.com/s/roboto/v15/Hgo13k-tfSpn0qi1S' +
+                'FdUfbO3LdcAZYWl9Si6vvxL-qU.woff) format("woff"),
+                url(https://fonts.gstatic.com/s/roboto/v15/Hgo13k-tfSpn0qi1S' +
+                'FdUfSZ2oysoEQEeKwjgmXLRnTc.ttf) format("truetype");
+            }
+            @font-face {
+              font-family: "Roboto";
+              font-style: normal;
+              font-weight: 400;
+              src:
+                local("Roboto"),
+                local("Roboto-Regular"),
+                url(https://fonts.gstatic.com/s/roboto/v15/oMMgfZMQthOryQo9n' +
+                '22dcuvvDin1pK8aKteLpeZ5c0A.woff2) format("woff2"),
+                url(https://fonts.gstatic.com/s/roboto/v15/CrYjSnGjrRCn0pd9V' +
+                'QsnFOvvDin1pK8aKteLpeZ5c0A.woff) format("woff"),
+                url(https://fonts.gstatic.com/s/roboto/v15/QHD8zigcbDB8aPfIo' +
+                'aupKOvvDin1pK8aKteLpeZ5c0A.ttf) format("truetype");
+            }
+            @font-face {
+              font-family: "Roboto";
+              font-style: normal;
+              font-weight: 500;
+              src:
+                local("Roboto Medium"),
+                local("Roboto-Medium"),
+                url(https://fonts.gstatic.com/s/roboto/v15/RxZJdnzeo3R5zSexg' +
+                'e8UUZBw1xU1rKptJj_0jans920.woff2) format("woff2"),
+                url(https://fonts.gstatic.com/s/roboto/v15/RxZJdnzeo3R5zSexg' +
+                'e8UUbO3LdcAZYWl9Si6vvxL-qU.woff) format("woff"),
+                url(https://fonts.gstatic.com/s/roboto/v15/RxZJdnzeo3R5zSexg' +
+                'e8UUSZ2oysoEQEeKwjgmXLRnTc.ttf) format("truetype");
+            }
+          '
 
         # styles
         if isInliningSource
