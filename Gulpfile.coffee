@@ -41,6 +41,7 @@ paths =
 
 # start the dev server, and auto-update
 gulp.task 'dev', ['assets:dev'], ->
+  gulp.start 'server:webpack'
   gulp.start 'server:dev'
 
 # compile sources: src/* -> build/*
@@ -67,10 +68,13 @@ gulp.task 'test', [
   ], (cb) ->
   karma.start _.defaults(singleRun: true, karmaConf), process.exit
 
+# start the webpack server
+gulp.task 'server:webpack', ->
+  require('./bin/webpack_server.coffee')
+
 # start the dev server
 gulp.task 'server:dev', ->
-  # Don't actually watch for changes, just run the server
-  nodemon {script: 'bin/dev_server.coffee', ext: 'null', ignore: ['**/*.*']}
+  nodemon {script: 'bin/dev_server.coffee', ext: 'js json coffee'}
 
 # gulp-mocha will never exit on its own.
 gulp.task 'test:server', ['scripts:test'], ->
