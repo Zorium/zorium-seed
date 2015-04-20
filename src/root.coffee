@@ -32,3 +32,10 @@ z.server.setRootFactory rootFactory
 z.server.go()
 
 log.info 'App Ready'
+
+#############################
+# ENABLE WEBPACK HOT RELOAD #
+#############################
+
+if module.hot
+  module.hot.accept()
