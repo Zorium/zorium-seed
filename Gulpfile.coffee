@@ -90,6 +90,7 @@ gulp.task 'test:phantom', ['scripts:test'], (cb) ->
 gulp.task 'scripts:test', ->
   gulp.src paths.rootTests
   .pipe gulpWebpack
+    devtool: '#inline-source-map'
     module:
       exprContextRegExp: /$^/
       exprContextCritical: false
@@ -148,7 +149,7 @@ gulp.task 'clean:dist', (cb) ->
 gulp.task 'scripts:prod', ->
   gulp.src paths.root
   .pipe gulpWebpack
-    devtool: 'source-map'
+    devtool: '#source-map'
     module:
       exprContextRegExp: /$^/
       exprContextCritical: false

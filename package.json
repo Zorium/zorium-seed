@@ -60,6 +60,6 @@
     "transform-loader": "^0.2.1",
     "webpack": "^1.8.4",
     "zorium": "^1.0.0-rc3",
-    "zorium-paper": "^0.4.0-rc3"
+    "zorium-paper": "^0.4.0-rc4"
   }
 }
