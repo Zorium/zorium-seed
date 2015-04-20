@@ -3,7 +3,6 @@
   "homepage": "http://zorium.org",
   "private": true,
   "dependencies": {
-    "fetch": "0.3.0",
     "normalize.styl": "~3.0.2"
   }
 }

@@ -28,4 +28,4 @@ Promiz = require 'promiz'
 window.Promise = window.Promise or Promiz
 
 # Fetch polyfill - https://github.com/github/fetch
-require 'fetch'
+require 'whatwg-fetch'
