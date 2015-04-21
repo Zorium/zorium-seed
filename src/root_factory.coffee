@@ -5,7 +5,7 @@ Rx = require 'rx-lite'
 config = require './config'
 HomePage = require './pages/home'
 FourOhFourPage = require './pages/404'
-PreloadSerivce = require './services/preload'
+PreloadService = require './services/preload'
 
 isInliningSource = config.ENV is config.ENVS.PROD
 
@@ -155,7 +155,7 @@ class RootComponent
           null
 
         # preloaded data
-        PreloadSerivce.serializeToComponent()
+        PreloadService.serializeToComponent()
 
       z 'body',
         z '#zorium-root',
