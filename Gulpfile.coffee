@@ -34,58 +34,54 @@ paths =
     './test/**/*.coffee'
   ]
   root: './src/root.coffee'
-  rootTests: './test/index.coffee'
-  rootServerTests: './test/server.coffee'
+  rootTests: './test/unit/index.coffee'
+  rootServerTests: './test/server/index.coffee'
   dist: './dist/'
   build: './build/'
 
+gulp.task 'build', ['scripts:prod', 'static:prod']
+
 # start the dev server, and auto-update
-gulp.task 'dev', ['assets:dev'], ->
+gulp.task 'dev', ['static:dev'], ->
   gulp.start 'server:webpack'
   gulp.start 'server:dev'
 
-# compile sources: src/* -> build/*
-gulp.task 'assets:dev', [
-  'static:dev'
-]
+gulp.task 'test', ['test:unit', 'test:server', 'lint'], ->
+  process.exit() # mocha hangs
 
-# compile sources: src/* -> dist/*
-gulp.task 'assets:prod', [
-  'scripts:prod'
-  'static:prod'
-]
+gulp.task 'watch', ->
+  gulp.watch paths.coffee, ['test:server', 'test:unit:phantom']
 
-# build for production
-gulp.task 'build', (cb) ->
-  runSequence 'clean:dist', 'assets:prod', cb
+gulp.task 'lint', ->
+  gulp.src paths.coffee
+    .pipe coffeelint(null, clayLintConfig)
+    .pipe coffeelint.reporter()
 
-# tests
-# process.exit is added due to gulp-mocha (test:server) hanging
-gulp.task 'test', [
-    'scripts:test'
-    'test:server'
-    'lint'
-  ], (cb) ->
-  karma.start _.defaults(singleRun: true, karmaConf), process.exit
+gulp.task 'test:unit', ['scripts:test'], (cb) ->
+  karma.start _.defaults(singleRun: true, karmaConf), ->
+    cb()
 
-# start the webpack server
 gulp.task 'server:webpack', ->
   require('./bin/webpack_server.coffee')
 
-# start the dev server
 gulp.task 'server:dev', ->
   nodemon {script: 'bin/dev_server.coffee', ext: 'js json coffee'}
 
-# gulp-mocha will never exit on its own.
-gulp.task 'test:server', ['scripts:test'], ->
+gulp.task 'test:server', ->
   gulp.src paths.rootServerTests
     .pipe mocha()
+    .on 'error', ->
+      process.exit() # mocha hangs
 
-gulp.task 'test:phantom', ['scripts:test'], (cb) ->
+gulp.task 'test:unit:phantom', ['scripts:test'], (cb) ->
   karma.start _.defaults({
     singleRun: true,
     browsers: ['PhantomJS']
   }, karmaConf), cb
+
+gulp.task 'static:dev', ->
+  gulp.src paths.static
+    .pipe gulp.dest paths.build
 
 gulp.task 'scripts:test', ->
   gulp.src paths.rootTests
@@ -124,19 +120,6 @@ gulp.task 'scripts:test', ->
   .pipe gulp.dest paths.build + '/test/'
 
 
-# run coffee-lint
-gulp.task 'lint', ->
-  gulp.src paths.coffee
-    .pipe coffeelint(null, clayLintConfig)
-    .pipe coffeelint.reporter()
-
-gulp.task 'watch', ->
-  gulp.watch paths.coffee, ['test:server', 'test:phantom']
-
-gulp.task 'static:dev', ->
-  gulp.src paths.static
-    .pipe gulp.dest paths.build
-
 #
 # Production compilation
 #
@@ -145,8 +128,12 @@ gulp.task 'static:dev', ->
 gulp.task 'clean:dist', (cb) ->
   del paths.dist, cb
 
-# init.coffee --> dist/bundle.min.js
-gulp.task 'scripts:prod', ->
+gulp.task 'static:prod', ['clean:dist'], ->
+  gulp.src paths.static
+    .pipe gulp.dest paths.dist
+
+# root.coffee --> dist/
+gulp.task 'scripts:prod', ['clean:dist'], ->
   gulp.src paths.root
   .pipe gulpWebpack
     devtool: '#source-map'
@@ -181,7 +168,3 @@ gulp.task 'scripts:prod', ->
     output:
       filename: 'bundle.js'
   .pipe gulp.dest paths.dist
-
-gulp.task 'static:prod', ->
-  gulp.src paths.static
-    .pipe gulp.dest paths.dist

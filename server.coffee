@@ -48,7 +48,7 @@ app.disable 'x-powered-by'
 
 app.use '/healthcheck', (req, res, next) ->
   Promise.settle [
-    Promise.cast(request.get(config.API_URL + '/repos/zorium/zorium'))
+    Promise.cast(request.get(config.API_URL + '/ping'))
       .timeout HEALTHCHECK_TIMEOUT
   ]
   .spread (api) ->
@@ -65,11 +65,8 @@ app.use '/healthcheck', (req, res, next) ->
 app.use '/ping', (req, res) ->
   res.send 'pong'
 
-app.use '/api/demo', (req, res) ->
-  res.json {
-    name: 'Zorium!'
-    url: 'https://github.com/zorium'
-  }
+app.use '/demo', (req, res) ->
+  res.json {name: 'Zorium'}
 
 if config.ENV is config.ENVS.PROD
 then app.use express['static'](__dirname + '/dist')

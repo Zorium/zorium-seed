@@ -8,7 +8,6 @@ mock = new Zock()
   .base(config.API_URL)
   .post '/log'
   .reply 200, {}
-  .base(config.API_URL)
 
 window.XMLHttpRequest = ->
   mock.XMLHttpRequest()

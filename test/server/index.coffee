@@ -2,8 +2,8 @@ flareGun = require 'flare-gun'
 nock = require 'nock'
 should = require('clay-chai').should()
 
-app = require '../server'
-config = require '../src/config'
+app = require '../../server'
+config = require '../../src/config'
 
 flare = flareGun.express(app)
 
@@ -13,12 +13,8 @@ before ->
 describe 'server', ->
   it 'is healthy', ->
     nock config.API_URL
-    .get '/repos/zorium/zorium'
-    .reply 200, {
-      'id': 26881260,
-      'name': 'zorium',
-      'stargazers_count': 9001
-    }
+    .get '/ping'
+    .reply 200, 'pong'
 
     flare
       .get '/healthcheck'
@@ -28,7 +24,7 @@ describe 'server', ->
 
   it 'fails if not healthy', ->
     nock config.API_URL
-    .get '/repos/zorium/zorium'
+    .get '/ping'
     .reply 503, 'error'
 
     flare
@@ -44,6 +40,10 @@ describe 'server', ->
       .expect 200, 'pong'
 
   it 'renders /', ->
+    nock config.API_URL
+    .get '/demo'
+    .reply 200, {name: 'Zorium'}
+
     flare
       .get '/'
       .expect 200

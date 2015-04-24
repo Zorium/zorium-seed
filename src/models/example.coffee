@@ -8,7 +8,7 @@ PATH = config.API_URL
 class Example
   get: ->
     Rx.Observable.fromPromise \
-      RequestService PATH + '/api/demo'
+      RequestService PATH + '/demo'
 
 
 module.exports = new Example()
