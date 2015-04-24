@@ -6,7 +6,8 @@
     "test": "./bin/test.sh",
     "start": "./bin/start.sh",
     "dev": "./bin/dev.sh",
-    "watch": "./bin/watch.sh"
+    "watch": "./bin/watch.sh",
+    "functional_test": "./bin/functional_test.sh"
   },
   "devDependencies": {
     "browser-builtins": "^3.3.0",
@@ -53,7 +54,6 @@
     "request-promise": "^0.4.2",
     "rewire": "^2.3.1",
     "rewire-webpack": "^1.0.0",
-    "run-sequence": "^1.0.2",
     "rx-lite": "^2.5.2",
     "style-loader": "^0.10.2",
     "stylus-loader": "^1.1.0",

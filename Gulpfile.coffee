@@ -9,10 +9,11 @@ rename = require 'gulp-rename'
 nodemon = require 'gulp-nodemon'
 gulpWebpack = require 'gulp-webpack'
 coffeelint = require 'gulp-coffeelint'
-runSequence = require 'run-sequence'
 RewirePlugin = require 'rewire-webpack'
 clayLintConfig = require 'clay-coffeescript-style-guide'
 ExtractTextPlugin = require 'extract-text-webpack-plugin'
+
+FUNCTIONAL_TEST_TIMEOUT_MS = 10 * 1000 # 10sec
 
 karmaConf =
   frameworks: ['mocha']
@@ -35,6 +36,7 @@ paths =
   ]
   root: './src/root.coffee'
   rootTests: './test/unit/index.coffee'
+  rootFunctionalTests: './test/functional/index.coffee'
   rootServerTests: './test/server/index.coffee'
   dist: './dist/'
   build: './build/'
@@ -42,9 +44,7 @@ paths =
 gulp.task 'build', ['scripts:prod', 'static:prod']
 
 # start the dev server, and auto-update
-gulp.task 'dev', ['static:dev'], ->
-  gulp.start 'server:webpack'
-  gulp.start 'server:dev'
+gulp.task 'dev', ['server:webpack', 'server:dev:watch']
 
 gulp.task 'test', ['test:unit', 'test:server', 'lint'], ->
   process.exit() # mocha hangs
@@ -64,14 +64,25 @@ gulp.task 'test:unit', ['scripts:test'], (cb) ->
 gulp.task 'server:webpack', ->
   require('./bin/webpack_server.coffee')
 
-gulp.task 'server:dev', ->
+gulp.task 'server:dev:watch', ['static:dev'], ->
   nodemon {script: 'bin/dev_server.coffee', ext: 'js json coffee'}
+
+gulp.task 'server:dev', ['static:dev'], ->
+  require('./bin/dev_server.coffee')
 
 gulp.task 'test:server', ->
   gulp.src paths.rootServerTests
     .pipe mocha()
     .on 'error', ->
       process.exit() # mocha hangs
+
+gulp.task 'test:functional', ['server:dev', 'server:webpack'], (cb) ->
+  gulp.src paths.rootFunctionalTests
+    .pipe mocha(timeout: FUNCTIONAL_TEST_TIMEOUT_MS)
+    .on 'error', ->
+      process.exit() # mocha hangs
+    .once 'end', ->
+      process.exit()
 
 gulp.task 'test:unit:phantom', ['scripts:test'], (cb) ->
   karma.start _.defaults({
