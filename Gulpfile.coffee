@@ -41,25 +41,44 @@ paths =
   dist: './dist/'
   build: './build/'
 
+mochaKiller = do ->
+  pendingCnt = 0
+  listeners = []
+
+  check = ->
+    setTimeout ->
+      if pendingCnt is 0
+        console.log 'exiting'
+        process.exit() # mocha hangs
+    , 100
+
+  ->
+    pendingCnt += 1
+
+    hasBeenCalled = false
+    ->
+      unless hasBeenCalled
+        hasBeenCalled = true
+        pendingCnt -= 1
+        check()
+
 gulp.task 'build', ['scripts:prod', 'static:prod']
 
 # start the dev server, and auto-update
 gulp.task 'dev', ['server:webpack', 'server:dev:watch']
 
-gulp.task 'test', ['test:unit', 'test:server', 'lint'], ->
-  process.exit() # mocha hangs
+gulp.task 'test', ['test:unit', 'test:server', 'lint']
 
 gulp.task 'watch', ->
-  gulp.watch paths.coffee, ['test:server', 'test:unit:phantom']
+  gulp.watch paths.coffee, ['test:server:watch', 'test:unit:phantom']
 
 gulp.task 'lint', ->
   gulp.src paths.coffee
     .pipe coffeelint(null, clayLintConfig)
     .pipe coffeelint.reporter()
 
-gulp.task 'test:unit', ['scripts:test'], (cb) ->
-  karma.start _.defaults(singleRun: true, karmaConf), ->
-    cb()
+gulp.task 'test:unit', ['scripts:test'], ->
+  karma.start _.defaults(singleRun: true, karmaConf), mochaKiller()
 
 gulp.task 'server:webpack', ->
   require('./bin/webpack_server.coffee')
@@ -71,10 +90,14 @@ gulp.task 'server:dev', ['static:dev'], ->
   require('./bin/dev_server.coffee')
 
 gulp.task 'test:server', ->
+  end = mochaKiller()
   gulp.src paths.rootServerTests
     .pipe mocha()
-    .on 'error', ->
-      process.exit() # mocha hangs
+    .once 'end', end
+
+gulp.task 'test:server:watch', ->
+  gulp.src paths.rootServerTests
+    .pipe mocha()
 
 gulp.task 'test:functional', ['server:dev', 'server:webpack'], (cb) ->
   gulp.src paths.rootFunctionalTests
