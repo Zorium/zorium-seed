@@ -71,10 +71,6 @@ describe 'functional tests', ->
 
   after ->
     client
-      .then ->
-        new Promise (resolve) ->
-          revision.short (str) ->
-            resolve build = str
       .sauceJobStatus
         passed: _.every this.test.parent.tests, {state: 'passed'}
         public: 'public'
