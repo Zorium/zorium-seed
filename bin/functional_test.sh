@@ -3,7 +3,7 @@ export NODE_ENV=development
 export REMOTE_SELENIUM=1
 
 
-declare -a browsers=("android")
+declare -a browsers=("chrome" "firefox" "safari" "internet explorer" "android")
 
 for i in "${browsers[@]}"
 do
