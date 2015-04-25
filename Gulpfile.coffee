@@ -43,12 +43,10 @@ paths =
 
 mochaKiller = do ->
   pendingCnt = 0
-  listeners = []
 
   check = ->
     setTimeout ->
       if pendingCnt is 0
-        console.log 'exiting'
         process.exit() # mocha hangs
     , 100
 
@@ -99,13 +97,19 @@ gulp.task 'test:server:watch', ->
   gulp.src paths.rootServerTests
     .pipe mocha()
 
-gulp.task 'test:functional', ['server:dev', 'server:webpack'], (cb) ->
+gulp.task 'test:functional', ['server:dev', 'server:webpack'], ->
+  end = mochaKiller()
   gulp.src paths.rootFunctionalTests
     .pipe mocha(timeout: FUNCTIONAL_TEST_TIMEOUT_MS)
-    .on 'error', ->
-      process.exit() # mocha hangs
-    .once 'end', ->
-      process.exit()
+    .on 'error', end
+    .once 'end', end
+
+gulp.task 'watch:functional', ->
+  gulp.watch paths.coffee, ['test:functional:watch']
+
+gulp.task 'test:functional:watch', ->
+  gulp.src paths.rootFunctionalTests
+    .pipe mocha(timeout: FUNCTIONAL_TEST_TIMEOUT_MS)
 
 gulp.task 'test:unit:phantom', ['scripts:test'], (cb) ->
   karma.start _.defaults({

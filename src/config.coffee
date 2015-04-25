@@ -9,3 +9,8 @@ module.exports =
     DEV: 'development'
     PROD: 'production'
     TEST: 'test'
+  HOSTNAME: process.env.HOSTNAME or 'localhost'
+  REMOTE_SELENIUM: process.env.REMOTE_SELENIUM is '1'
+  SELENIUM_BROWSER: process.env.SELENIUM_BROWSER or 'chrome'
+  SAUCE_USERNAME: process.env.SAUCE_USERNAME
+  SAUCE_ACCESS_KEY: process.env.SAUCE_ACCESS_KEY
