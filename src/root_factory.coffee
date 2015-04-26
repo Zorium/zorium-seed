@@ -165,12 +165,16 @@ class RootComponent
 
     if $currentPage
       if $pathPage isnt $currentPage and not isAnimating
-        @state.set isAnimating: true
-        setTimeout =>
+        if window?
+          @state.set isAnimating: true
+          setTimeout =>
+            @state.set
+              $currentPage: $pathPage
+              isAnimating: false
+          , 1000
+        else
           @state.set
             $currentPage: $pathPage
-            isAnimating: false
-        , 1000
     else
       $currentPage = $pathPage
       @state.set {$currentPage}
