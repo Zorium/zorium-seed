@@ -31,6 +31,8 @@ module.exports = class HelloWorld
             c500: paperColors.$blue500
             c600: paperColors.$blue600
             c700: paperColors.$blue700
+          onclick: ->
+            window.alert 'hello'
         z 'br'
         z $input,
           hintText: 'abc'

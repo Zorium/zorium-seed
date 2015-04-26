@@ -10,6 +10,7 @@ nodemon = require 'gulp-nodemon'
 gulpWebpack = require 'gulp-webpack'
 coffeelint = require 'gulp-coffeelint'
 RewirePlugin = require 'rewire-webpack'
+istanbul = require 'gulp-coffee-istanbul'
 clayLintConfig = require 'clay-coffeescript-style-guide'
 ExtractTextPlugin = require 'extract-text-webpack-plugin'
 
@@ -34,10 +35,15 @@ paths =
     './src/**/*.coffee'
     './test/**/*.coffee'
   ]
+  cover: [
+    './*.coffee'
+    './src/**/*.coffee'
+  ]
+  tests: './test/unit/**/*.coffee'
+  serverTests: './test/server/index.coffee'
+  functionalTests: './test/functional/**/*.coffee'
   root: './src/root.coffee'
-  rootTests: './test/unit/index.coffee'
-  rootFunctionalTests: './test/functional/index.coffee'
-  rootServerTests: './test/server/index.coffee'
+  rootTests: './test/index.coffee'
   dist: './dist/'
   build: './build/'
 
@@ -65,7 +71,7 @@ gulp.task 'build', ['scripts:prod', 'static:prod']
 # start the dev server, and auto-update
 gulp.task 'dev', ['server:webpack', 'server:dev:watch']
 
-gulp.task 'test', ['test:unit', 'test:server', 'lint']
+gulp.task 'test', ['test:karma', 'test:node:coverage', 'lint']
 
 gulp.task 'watch', ->
   gulp.watch paths.coffee, ['test:server:watch', 'test:unit:phantom']
@@ -75,7 +81,7 @@ gulp.task 'lint', ->
     .pipe coffeelint(null, clayLintConfig)
     .pipe coffeelint.reporter()
 
-gulp.task 'test:unit', ['scripts:test'], ->
+gulp.task 'test:karma', ['scripts:test'], ->
   karma.start _.defaults(singleRun: true, karmaConf), mochaKiller()
 
 gulp.task 'server:webpack', ->
@@ -87,28 +93,34 @@ gulp.task 'server:dev:watch', ['static:dev'], ->
 gulp.task 'server:dev', ['static:dev'], ->
   require('./bin/dev_server.coffee')
 
-gulp.task 'test:server', ->
-  end = mochaKiller()
-  gulp.src paths.rootServerTests
-    .pipe mocha()
-    .once 'end', end
-
 gulp.task 'test:server:watch', ->
-  gulp.src paths.rootServerTests
+  gulp.src paths.serverTests
     .pipe mocha()
 
-gulp.task 'test:functional', ['server:dev', 'server:webpack'], ->
+gulp.task 'test:functional', ->
   end = mochaKiller()
-  gulp.src paths.rootFunctionalTests
+  gulp.src paths.functionalTests
     .pipe mocha(timeout: FUNCTIONAL_TEST_TIMEOUT_MS)
     .on 'error', end
     .once 'end', end
+
+gulp.task 'test:node:coverage', ->
+  end = mochaKiller()
+  gulp.src paths.cover
+    .pipe istanbul includeUntested: false
+    .pipe istanbul.hookRequire()
+    .on 'finish', ->
+      gulp.src [paths.serverTests, paths.tests]
+        .pipe mocha()
+        .pipe istanbul.writeReports()
+        .on 'error', end
+        .once 'end', end
 
 gulp.task 'watch:functional', ->
   gulp.watch paths.coffee, ['test:functional:watch']
 
 gulp.task 'test:functional:watch', ->
-  gulp.src paths.rootFunctionalTests
+  gulp.src paths.functionalTests
     .pipe mocha(timeout: FUNCTIONAL_TEST_TIMEOUT_MS)
 
 gulp.task 'test:unit:phantom', ['scripts:test'], (cb) ->
@@ -124,7 +136,7 @@ gulp.task 'static:dev', ->
 gulp.task 'scripts:test', ->
   gulp.src paths.rootTests
   .pipe gulpWebpack
-    devtool: '#inline-source-map'
+    devtool: 'inline-source-map'
     module:
       exprContextRegExp: /$^/
       exprContextCritical: false
@@ -174,7 +186,7 @@ gulp.task 'static:prod', ['clean:dist'], ->
 gulp.task 'scripts:prod', ['clean:dist'], ->
   gulp.src paths.root
   .pipe gulpWebpack
-    devtool: '#source-map'
+    devtool: 'source-map'
     module:
       exprContextRegExp: /$^/
       exprContextCritical: false

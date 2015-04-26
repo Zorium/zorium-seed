@@ -2,4 +2,5 @@
 /dist
 /build
 /bower_components
+/coverage
 npm-debug.log

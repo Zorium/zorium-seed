@@ -4,10 +4,10 @@
   "scripts": {
     "postinstall": "node_modules/bower/bin/bower install --allow-root",
     "test": "./bin/test.sh",
+    "test-functional": "./bin/functional_test.sh",
     "start": "./bin/start.sh",
     "dev": "./bin/dev.sh",
     "watch": "./bin/watch.sh",
-    "functional-test": "./bin/functional_test.sh",
     "watch-functional": "./bin/watch_functional.sh"
   },
   "devDependencies": {
@@ -16,6 +16,7 @@
     "clay-webdriverio": "^3.0.0-rc2-clay",
     "flare-gun": "^0.6.0",
     "git-rev": "^0.2.1",
+    "gulp-coffee-istanbul": "^0.7.0",
     "karma-chrome-launcher": "^0.1.7",
     "karma-coffee-preprocessor": "^0.2.1",
     "karma-firefox-launcher": "^0.1.4",

@@ -13,6 +13,12 @@ run local selenium server
 docker run -i --rm -p 4444:4444 selenium/standalone-chrome:2.45.0
 ```
 
+run dev server
+
+```bash
+npm run dev
+```
+
 (HOSTNAME is your local ip address)  
 
 ```bash
@@ -33,6 +39,12 @@ tar xvzf sc-4.3.8-linux.tar.gz
 ./sc-4.3.8-linux/bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY
 ```
 
+run dev server
+
 ```bash
-HOSTNAME=192.168.1.1 npm run functional-test
+npm run dev
+```
+
+```bash
+HOSTNAME=192.168.1.1 npm run test-functional
 ```

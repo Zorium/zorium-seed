@@ -21,7 +21,7 @@ entries = entries.concat ['./src/root']
 
 new WebpackDevServer webpack({
   entry: entries
-  devtool: '#inline-source-map'
+  devtool: 'inline-source-map'
   output:
     path: __dirname,
     filename: 'bundle.js',
