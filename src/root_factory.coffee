@@ -26,25 +26,23 @@ else
   null
 
 class RootComponent
-  constructor: ({cookies}) ->
-    @$currentPage = new Rx.ReplaySubject(1)
+  constructor: ->
     @state = z.state {
-      lastRenderedPath: null
-      status: 200
-      $currentPage: @$currentPage
+      $homePage: new HomePage()
+      $fourOhFourPage: new FourOhFourPage()
     }
 
   render: ({path}) ->
-    {lastRenderedPath, $currentPage, status} = @state.getValue()
+    {$homePage, $fourOhFourPage} = @state.getValue()
 
-    if path isnt lastRenderedPath
-      @state.set lastRenderedPath: path
-      if path is '/'
-        $currentPage = new HomePage()
-      else
-        @state.set status: 404
-        $currentPage = new FourOhFourPage()
-      @$currentPage.onNext $currentPage
+    status = 200
+    $currentPage =
+      switch path
+        when '/'
+          $homePage
+        else
+          status = 404
+          $fourOhFourPage
 
     webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
     title = 'Zorium Seed'
@@ -172,5 +170,5 @@ class RootComponent
     else
       return tree
 
-module.exports = ({cookies}) ->
-  new RootComponent({cookies})
+module.exports = ->
+  new RootComponent()
