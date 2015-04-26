@@ -7,7 +7,7 @@ Model = require '../../models/example'
 if window?
   require './index.styl'
 
-module.exports = class HelloWorld
+module.exports = class Red
   constructor: ->
     @state = z.state
       $button: new Button()
@@ -17,7 +17,7 @@ module.exports = class HelloWorld
   render: =>
     {$button, $input, model} = @state.getValue()
 
-    z '.z-hello-world',
+    z '.z-red',
       z '.content',
         'Hello World'
         z 'br'
@@ -32,7 +32,7 @@ module.exports = class HelloWorld
             c600: paperColors.$blue600
             c700: paperColors.$blue700
           onclick: ->
-            z.server.go '/red'
+            z.server.go '/'
         z 'br'
         z $input,
           hintText: 'abc'

@@ -1,0 +1,23 @@
+@require 'zorium-paper/base'
+
+json('zorium-paper/colors.json')
+
+.z-red
+  zp-shadow-1()
+  display: flex
+  position: absolute
+  top: 50%
+  left: 50%
+  margin-left: -150px
+  margin-top: -50px
+  background: $red500
+  width: 300px
+  height: 200px
+  border-radius: 2px
+  justify-content: center
+
+  > .content
+    zp-font-display1()
+    align-self: center
+    color: $white
+    text-align: center

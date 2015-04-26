@@ -1,5 +1,4 @@
 z = require 'zorium'
-_ = require 'lodash'
 
 HelloWorld = require '../../components/hello_world'
 
