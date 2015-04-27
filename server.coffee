@@ -73,6 +73,6 @@ then app.use express['static'](__dirname + '/dist')
 else app.use express['static'](__dirname + '/build')
 
 app.use router
-app.use z.factoryToMiddleware rootFactory
+app.use z.server.factoryToMiddleware rootFactory
 
 module.exports = app

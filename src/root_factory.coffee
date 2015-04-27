@@ -179,9 +179,12 @@ class RootComponent
       $currentPage = $pathPage
       @state.set {$currentPage}
 
+    if $currentPage is $fourOhFourPage
+      z.server.setStatus 404
+
     webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
 
-    tree = z 'html',
+    z 'html',
       $getHead({
         title: 'Zorium Seed'
         description: 'Zorium Seed - (╯°□°）╯︵ ┻━┻)'
@@ -212,11 +215,6 @@ class RootComponent
               innerHTML: scripts
           else
             z 'script', {src: "//#{webpackDevHostname}:3004/bundle.js"}
-
-    if $currentPage is $fourOhFourPage
-      throw new z.server.Error {tree, status: 404}
-    else
-      return tree
 
 module.exports = ->
   new RootComponent()

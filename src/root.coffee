@@ -27,8 +27,9 @@ else
 # ROUTING SETUP #
 #################
 
-z.server.setRootNode document
-z.server.setRootFactory rootFactory
+z.server.set
+  $$root: document
+  factory: rootFactory
 z.server.go()
 
 log.info 'App Ready'

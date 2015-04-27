@@ -7844,8 +7844,9 @@
       "resolved": "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-0.7.0.tgz"
     },
     "zorium": {
-      "version": "1.0.0-rc6",
-      "from": "zorium@1.0.0-rc6",
+      "version": "1.0.0-rc9",
+      "from": "zorium@1.0.0-rc9",
+      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0-rc9.tgz",
       "dependencies": {
         "cookie": {
           "version": "0.1.2",
