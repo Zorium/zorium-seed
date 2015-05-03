@@ -1,23 +1,26 @@
 z = require 'zorium'
+Rx = require 'rx-lite'
 
 Head = require '../../components/head'
 Red = require '../../components/red'
 Model = require '../../models/example'
 
-module.exports = class HomePage
+module.exports = class RedPage
   constructor: ->
+
     @state = z.state
       $head: new Head()
       $red: new Red()
       model: Model.get()
 
-  render: ({styles}) =>
-    {$head, $red, model} = @state.getValue()
+  renderHead: ({styles}) =>
+    {$head} = @state.getValue()
 
-    z 'html',
-      z $head, {styles}
-      z 'body',
-        z '#zorium-root',
-          z 'div',
-            if model
-              z $red, {model}
+    z $head, {styles, title: 'Zorium Seed - Red Page'}
+
+  render: =>
+    {$red, model} = @state.getValue()
+
+    z 'div',
+      if model
+        z $red, {model}

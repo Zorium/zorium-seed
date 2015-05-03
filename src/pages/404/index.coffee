@@ -7,15 +7,14 @@ module.exports = class FourOhFourPage
     @state = z.state
       $head: new Head()
 
-  render: ({styles}) =>
+  renderHead: ({styles}) =>
     {$head} = @state.getValue()
 
-    z 'html',
-      z $head, {styles}
-      z 'body',
-        z '#zorium-root',
-          z '.z-root',
-            z 'div',
-              '404 page not found'
-              z 'br'
-              '(╯°□°)╯︵ ┻━┻'
+    z $head, {styles}
+
+  render: ->
+    z 'div',
+      z 'div',
+        '404 page not found'
+        z 'br'
+        '(╯°□°)╯︵ ┻━┻'

@@ -5,11 +5,11 @@ config = require '../../config'
 PreloadService = require '../../services/preload'
 
 module.exports = class Head
-  render: ({styles}) ->
+  render: ({styles, title}) ->
     isInliningSource = config.ENV is config.ENVS.PROD
     webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
     webpackDevPort = config.WEBPACK_DEV_PORT
-    title = 'Zorium Seed'
+    title ?= 'Zorium Seed'
     description = 'Zorium Seed - (╯°□°）╯︵ ┻━┻)'
     keywords = 'Zorium'
     name = 'Zorium Seed'

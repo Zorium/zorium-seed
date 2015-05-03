@@ -1,4 +1,5 @@
 z = require 'zorium'
+Rx = require 'rx-lite'
 
 Head = require '../../components/head'
 HelloWorld = require '../../components/hello_world'
@@ -11,13 +12,14 @@ module.exports = class HomePage
       $hello: new HelloWorld()
       model: Model.get()
 
-  render: ({styles}) =>
-    {$head, $hello, model} = @state.getValue()
+  renderHead: ({styles}) =>
+    {$head} = @state.getValue()
 
-    z 'html',
-      z $head, {styles}
-      z 'body',
-        z '#zorium-root',
-          z 'div',
-            if model
-              z $hello, {model}
+    z $head, {styles}
+
+  render: =>
+    {$hello, model} = @state.getValue()
+
+    z 'div',
+      if model
+        z $hello, {model}
