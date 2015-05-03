@@ -7854,24 +7854,14 @@
       "resolved": "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-0.7.0.tgz"
     },
     "zorium": {
-      "version": "1.0.0-rc9",
-      "from": "zorium@1.0.0-rc9",
-      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0-rc9.tgz",
+      "version": "1.0.0-rc13",
+      "from": "zorium@1.0.0-rc13",
+      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0-rc13.tgz",
       "dependencies": {
         "cookie": {
           "version": "0.1.2",
           "from": "cookie@^0.1.2",
           "resolved": "https://registry.npmjs.org/cookie/-/cookie-0.1.2.tgz"
-        },
-        "qs": {
-          "version": "2.4.1",
-          "from": "qs@^2.4.1",
-          "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.1.tgz"
-        },
-        "routes": {
-          "version": "2.0.0",
-          "from": "routes@^2.0.0",
-          "resolved": "https://registry.npmjs.org/routes/-/routes-2.0.0.tgz"
         },
         "vdom-to-html": {
           "version": "2.0.0",
@@ -8014,8 +8004,9 @@
       }
     },
     "zorium-paper": {
-      "version": "0.4.0-rc4",
-      "from": "zorium-paper@0.4.0-rc4"
+      "version": "0.4.0-rc6",
+      "from": "zorium-paper@0.4.0-rc6",
+      "resolved": "https://registry.npmjs.org/zorium-paper/-/zorium-paper-0.4.0-rc6.tgz"
     }
   }
 }

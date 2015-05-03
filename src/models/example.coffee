@@ -6,11 +6,8 @@ RequestService = require '../services/request'
 PATH = config.API_URL
 
 class Example
-  get: do ->
-    stream = Rx.Observable.defer ->
-      Rx.Observable.fromPromise \
-        RequestService PATH + '/demo'
-    -> stream
+  get: ->
+    RequestService.getStream PATH + '/demo'
 
 
 module.exports = new Example()

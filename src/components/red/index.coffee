@@ -2,7 +2,6 @@ z = require 'zorium'
 Button = require 'zorium-paper/button'
 Input = require 'zorium-paper/input'
 paperColors = require 'zorium-paper/colors.json'
-Model = require '../../models/example'
 
 if window?
   require './index.styl'
@@ -12,16 +11,15 @@ module.exports = class Red
     @state = z.state
       $button: new Button()
       $input: new Input()
-      model: Model.get()
 
-  render: =>
-    {$button, $input, model} = @state.getValue()
+  render: ({model}) =>
+    {$button, $input} = @state.getValue()
 
     z '.z-red',
       z '.content',
         'Hello World'
         z 'br'
-        model?.name
+        model.name
         z 'br'
         z $button,
           text: 'click me'

@@ -8,6 +8,7 @@ config = require './config'
 HomePage = require './pages/home'
 RedPage = require './pages/red'
 FourOhFourPage = require './pages/404'
+StateService = require './services/state'
 
 styles = if not window?
   # Avoid webpack include
@@ -77,4 +78,5 @@ class RootComponent
     }
 
 module.exports = ->
+  StateService.clear()
   new RootComponent()
