@@ -1,6 +1,6 @@
 # Zorium Seed
 
-![zorium](./src/static/images/zorium_icon_1024.png)
+![zorium](./src/static/images/zorium_icon_256.png)
 
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/Zolmeister.svg)](https://saucelabs.com/u/Zolmeister)
