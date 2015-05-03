@@ -21,6 +21,6 @@ module.exports = class RedPage
   render: =>
     {$red, model} = @state.getValue()
 
-    z 'div',
+    z '.p-red',
       if model
         z $red, {model}

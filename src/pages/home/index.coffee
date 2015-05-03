@@ -20,6 +20,6 @@ module.exports = class HomePage
   render: =>
     {$hello, model} = @state.getValue()
 
-    z 'div',
+    z '.p-home',
       if model
         z $hello, {model}

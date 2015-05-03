@@ -13,8 +13,7 @@ module.exports = class FourOhFourPage
     z $head, {styles}
 
   render: ->
-    z 'div',
-      z 'div',
-        '404 page not found'
-        z 'br'
-        '(╯°□°)╯︵ ┻━┻'
+    z '.p-404',
+      '404 page not found'
+      z 'br'
+      '(╯°□°)╯︵ ┻━┻'
