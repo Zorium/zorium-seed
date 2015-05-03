@@ -1,14 +1,20 @@
 z = require 'zorium'
 
+Head = require '../../components/head'
 HelloWorld = require '../../components/hello_world'
 
 module.exports = class HomePage
   constructor: ->
     @state = z.state
+      $head: new Head()
       $hello: new HelloWorld()
 
-  render: =>
-    {$hello} = @state.getValue()
+  render: ({styles}) =>
+    {$head, $hello} = @state.getValue()
 
-    z 'div',
-      z $hello
+    z 'html',
+      z $head, {styles}
+      z 'body',
+        z '#zorium-root',
+          z 'div',
+            z $hello

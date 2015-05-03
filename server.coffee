@@ -22,7 +22,7 @@ app.use compress()
 
 webpackDevHost = config.WEBPACK_DEV_HOSTNAME + ':' + config.WEBPACK_DEV_PORT
 scriptSrc = [
-  '\'unsafe-eval\''
+  '\'self\''
   '\'unsafe-inline\''
   'www.google-analytics.com'
   if config.ENV is config.ENVS.DEV then webpackDevHost
