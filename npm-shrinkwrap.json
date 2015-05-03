@@ -6691,6 +6691,11 @@
       "from": "https://registry.npmjs.org/promiz/-/promiz-1.0.3.tgz",
       "resolved": "https://registry.npmjs.org/promiz/-/promiz-1.0.3.tgz"
     },
+    "qs": {
+      "version": "2.4.1",
+      "from": "qs@",
+      "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.1.tgz"
+    },
     "request-promise": {
       "version": "0.4.2",
       "from": "https://registry.npmjs.org/request-promise/-/request-promise-0.4.2.tgz",
@@ -7028,6 +7033,11 @@
           }
         }
       }
+    },
+    "routes": {
+      "version": "2.0.0",
+      "from": "routes@",
+      "resolved": "https://registry.npmjs.org/routes/-/routes-2.0.0.tgz"
     },
     "rx-lite": {
       "version": "2.5.2",

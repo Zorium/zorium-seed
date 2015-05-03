@@ -1,6 +1,8 @@
 z = require 'zorium'
 paperColors = require 'zorium-paper/colors.json'
 Rx = require 'rx-lite'
+Routes = require 'routes'
+Qs = require 'qs'
 
 config = require './config'
 HomePage = require './pages/home'
@@ -15,32 +17,64 @@ styles = if not window?
 else
   null
 
-class RootComponent
-  constructor: ->
-    @state = z.state {
-      $homePage: new HomePage()
-      $redPage: new RedPage()
-      $fourOhFourPage: new FourOhFourPage()
+parseUrl = (url) ->
+  if window?
+    a = document.createElement 'a'
+    a.href = url
+
+    {
+      pathname: a.pathname
+      hash: a.hash
+      search: a.search
+      path: a.pathname + a.search
+    }
+  else
+    # Avoid webpack include
+    _url = 'url'
+    URL = require(_url)
+    parsed = URL.parse url
+
+    {
+      pathname: parsed.pathname
+      hash: parsed.hash
+      search: parsed.search
+      path: parsed.path
     }
 
-  render: ({path}) ->
-    {$homePage, $redPage, $fourOhFourPage} = @state.getValue()
+class RootComponent
+  constructor: ->
+    router = new Routes()
 
-    pathToPage = (path) ->
-      switch path
-        when '/'
-          $homePage
-        when '/red'
-          $redPage
-        else
-          $fourOhFourPage
+    $homePage = new HomePage()
+    $redPage = new RedPage()
+    $fourOhFourPage = new FourOhFourPage()
 
-    $pathPage = pathToPage(path)
+    router.addRoute '/', -> $homePage
+    router.addRoute '/red', -> $redPage
+    router.addRoute '*', -> $fourOhFourPage
 
-    if $pathPage is $fourOhFourPage
+    @state = z.state {
+      router
+      $fourOhFourPage
+    }
+
+  render: ({path}) =>
+    {router, $fourOhFourPage} = @state.getValue()
+
+    url = parseUrl path
+    query = Qs.parse(url.search?.slice(1))
+    route = router.match url.pathname
+
+    $currentPage = route.fn()
+
+    if $currentPage is $fourOhFourPage
       z.server.setStatus 404
 
-    z $pathPage, {styles}
+    z $currentPage, {
+      styles
+      query
+      params: route.params
+    }
 
 module.exports = ->
   new RootComponent()
