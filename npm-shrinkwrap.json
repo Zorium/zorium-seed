@@ -7854,9 +7854,9 @@
       "resolved": "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-0.7.0.tgz"
     },
     "zorium": {
-      "version": "1.0.0-rc13",
-      "from": "zorium@1.0.0-rc13",
-      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0-rc13.tgz",
+      "version": "1.0.0-rc15",
+      "from": "zorium@1.0.0-rc15",
+      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0-rc15.tgz",
       "dependencies": {
         "cookie": {
           "version": "0.1.2",
@@ -7925,16 +7925,9 @@
                   "resolved": "https://registry.npmjs.org/camelize/-/camelize-1.0.0.tgz"
                 },
                 "string-template": {
-                  "version": "0.2.0",
+                  "version": "0.2.1",
                   "from": "string-template@~0.2.0",
-                  "resolved": "https://registry.npmjs.org/string-template/-/string-template-0.2.0.tgz",
-                  "dependencies": {
-                    "js-string-escape": {
-                      "version": "1.0.0",
-                      "from": "js-string-escape@^1.0.0",
-                      "resolved": "https://registry.npmjs.org/js-string-escape/-/js-string-escape-1.0.0.tgz"
-                    }
-                  }
+                  "resolved": "https://registry.npmjs.org/string-template/-/string-template-0.2.1.tgz"
                 },
                 "xtend": {
                   "version": "4.0.0",

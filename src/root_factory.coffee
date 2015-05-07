@@ -99,7 +99,7 @@ class RootComponent
             isActive: false
         , ANIMATION_TIME_MS
 
-    if $currentPage is $fourOhFourPage
+    if $currentPage is $fourOhFourPage and not window?
       z.server.setStatus 404
 
     $head = $currentPage.renderHead {styles}
