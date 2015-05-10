@@ -19,30 +19,6 @@ styles = if not window?
 else
   null
 
-parseUrl = (url) ->
-  if window?
-    a = document.createElement 'a'
-    a.href = url
-
-    {
-      pathname: a.pathname
-      hash: a.hash
-      search: a.search
-      path: a.pathname + a.search
-    }
-  else
-    # Avoid webpack include
-    _url = 'url'
-    URL = require(_url)
-    parsed = URL.parse url
-
-    {
-      pathname: parsed.pathname
-      hash: parsed.hash
-      search: parsed.search
-      path: parsed.path
-    }
-
 module.exports = class App
   constructor: ->
     router = new Routes()
