@@ -3,7 +3,6 @@ Rx = require 'rx-lite'
 
 Head = require '../../components/head'
 Red = require '../../components/red'
-Model = require '../../models/example'
 
 module.exports = class RedPage
   constructor: ->
@@ -11,7 +10,6 @@ module.exports = class RedPage
     @state = z.state
       $head: new Head()
       $red: new Red()
-      model: Model.get()
 
   renderHead: ({styles}) =>
     {$head} = @state.getValue()
@@ -19,8 +17,7 @@ module.exports = class RedPage
     z $head, {styles, title: 'Zorium Seed - Red Page'}
 
   render: =>
-    {$red, model} = @state.getValue()
+    {$red} = @state.getValue()
 
     z '.p-red',
-      if model
-        z $red, {model}
+      $red

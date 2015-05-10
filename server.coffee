@@ -8,7 +8,7 @@ Promise = require 'bluebird'
 request = require 'request-promise'
 
 config = require './src/config'
-rootFactory = require './src/root_factory'
+App = require './src/app'
 
 MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
 HEALTHCHECK_TIMEOUT = 200
@@ -73,6 +73,15 @@ then app.use express['static'](__dirname + '/dist')
 else app.use express['static'](__dirname + '/build')
 
 app.use router
-app.use z.server.factoryToMiddleware rootFactory
+app.use (req, res, next) ->
+  z.renderToString z new App(), {req, res}
+  .then (html) ->
+    res.send '<!DOCTYPE html>' + html
+  .catch (err) ->
+    if err.html
+      log.trace err
+      res.send '<!DOCTYPE html>' + err.html
+    else
+      next err
 
 module.exports = app

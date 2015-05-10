@@ -7,7 +7,7 @@ log = require 'clay-loglevel'
 require './root.styl'
 config = require './config'
 ErrorReportService = require './services/error_report'
-rootFactory = require './root_factory'
+App = require './app'
 
 ###########
 # LOGGING #
@@ -26,11 +26,13 @@ else
 #################
 # ROUTING SETUP #
 #################
+z.router.init
+  $$root: document.getElementById 'zorium-root'
 
-z.server.set
-  $$root: document
-  factory: rootFactory
-z.server.go()
+$app = new App()
+z.router.use (req, res) ->
+  res.send z $app, {req, res}
+z.router.go()
 
 log.info 'App Ready'
 

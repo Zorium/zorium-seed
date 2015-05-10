@@ -67,7 +67,7 @@
     "transform-loader": "^0.2.1",
     "webpack": "^1.8.4",
     "whatwg-fetch": "^0.7.0",
-    "zorium": "^1.0.0-rc15",
+    "zorium": "^1.0.0-rc16",
     "zorium-paper": "^0.4.0-rc8"
   }
 }

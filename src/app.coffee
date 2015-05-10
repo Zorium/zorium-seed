@@ -8,7 +8,6 @@ config = require './config'
 HomePage = require './pages/home'
 RedPage = require './pages/red'
 FourOhFourPage = require './pages/404'
-StateService = require './services/state'
 
 ANIMATION_TIME_MS = 500
 
@@ -44,7 +43,7 @@ parseUrl = (url) ->
       path: parsed.path
     }
 
-class RootComponent
+module.exports = class App
   constructor: ->
     router = new Routes()
 
@@ -65,13 +64,12 @@ class RootComponent
       $fourOhFourPage
     }
 
-  render: ({path}) =>
+  render: ({req, res}) =>
     {router, $fourOhFourPage, $currentPage, $previousTree, isEntering,
      isActive} = @state.getValue()
+    {path, query} = req
 
-    url = parseUrl path
-    query = Qs.parse(url.search?.slice(1))
-    route = router.match url.pathname
+    route = router.match path
 
     $nextPage = route.fn()
 
@@ -99,13 +97,12 @@ class RootComponent
             isActive: false
         , ANIMATION_TIME_MS
 
+    # FIXME
     if $currentPage is $fourOhFourPage and not window?
-      z.server.setStatus 404
-
-    $head = $currentPage.renderHead {styles}
+      res.status 404
 
     z 'html',
-      $head
+      $currentPage.renderHead {styles}
       z 'body',
         z '#zorium-root',
           z '.z-root',
@@ -114,7 +111,3 @@ class RootComponent
               $previousTree
             z '.current',
               renderPage $currentPage
-
-module.exports = ->
-  StateService.clear()
-  new RootComponent()

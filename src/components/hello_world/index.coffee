@@ -12,14 +12,12 @@ module.exports = class HelloWorld
       $button: new Button()
       $input: new Input()
 
-  render: ({model}) =>
+  render: =>
     {$button, $input} = @state.getValue()
 
     z '.z-hello-world',
       z '.content',
         'Hello World'
-        z 'br'
-        model.name
         z 'br'
         z $button,
           text: 'click me'
@@ -30,7 +28,7 @@ module.exports = class HelloWorld
             c600: paperColors.$blue600
             c700: paperColors.$blue700
           onclick: ->
-            z.server.go '/red'
+            z.router.go '/red'
         z 'br'
         z $input,
           hintText: 'abc'

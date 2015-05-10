@@ -7854,14 +7854,19 @@
       "resolved": "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-0.7.0.tgz"
     },
     "zorium": {
-      "version": "1.0.0-rc15",
-      "from": "zorium@1.0.0-rc15",
-      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0-rc15.tgz",
+      "version": "1.0.0-rc16",
+      "from": "zorium@1.0.0-rc16",
+      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0-rc16.tgz",
       "dependencies": {
-        "cookie": {
-          "version": "0.1.2",
-          "from": "cookie@^0.1.2",
-          "resolved": "https://registry.npmjs.org/cookie/-/cookie-0.1.2.tgz"
+        "bluebird": {
+          "version": "2.9.25",
+          "from": "bluebird@^2.9.25",
+          "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.25.tgz"
+        },
+        "qs": {
+          "version": "2.4.2",
+          "from": "qs@^2.4.2",
+          "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.2.tgz"
         },
         "vdom-to-html": {
           "version": "2.0.0",
