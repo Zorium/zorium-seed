@@ -7,14 +7,18 @@ karma = require('karma').server
 webpack = require 'webpack'
 mocha = require 'gulp-mocha'
 Promise = require 'bluebird'
+log = require 'clay-loglevel'
 rename = require 'gulp-rename'
 nodemon = require 'gulp-nodemon'
 gulpWebpack = require 'gulp-webpack'
 coffeelint = require 'gulp-coffeelint'
 RewirePlugin = require 'rewire-webpack'
 istanbul = require 'gulp-coffee-istanbul'
+WebpackDevServer = require 'webpack-dev-server'
 clayLintConfig = require 'clay-coffeescript-style-guide'
 ExtractTextPlugin = require 'extract-text-webpack-plugin'
+
+config = require './src/config'
 
 FUNCTIONAL_TEST_TIMEOUT_MS = 10 * 1000 # 10sec
 
@@ -25,10 +29,37 @@ karmaConf =
     captureConsole: true
     mocha:
       timeout: 1000
-  files: [
-    'build/test/bundle.js'
-  ]
+  files: ['build/test/bundle.js']
   browsers: ['Chrome', 'Firefox']
+
+webpackConfig =
+  devtool: 'source-map'
+  module:
+    exprContextRegExp: /$^/
+    exprContextCritical: false
+    loaders: [
+      { test: /\.coffee$/, loader: 'coffee' }
+      { test: /\.json$/, loader: 'json' }
+      {
+        test: /\.styl$/
+        loader: 'style!css!autoprefixer!' +
+          'stylus?paths[]=bower_components&paths[]=node_modules'
+      }
+    ]
+  plugins: [
+    new webpack.ResolverPlugin(
+      new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(
+        'bower.json', ['main']
+      )
+    )
+  ]
+  resolve:
+    root: [path.join(__dirname, 'bower_components')]
+    extensions: ['.coffee', '.js', '.json', '']
+  output:
+    filename: 'bundle.js'
+    publicPath: '/'
+
 
 paths =
   static: './src/static/**/*'
@@ -87,7 +118,41 @@ gulp.task 'test:karma', ['scripts:test'], ->
   karma.start _.defaults(singleRun: true, karmaConf), mochaKiller()
 
 gulp.task 'server:webpack', ->
-  require('./bin/webpack_server.coffee')
+  webpackDevPort = config.WEBPACK_DEV_PORT
+  webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
+  isMockingApi = config.MOCK
+
+  entries = [
+    "webpack-dev-server/client?http://#{webpackDevHostname}:#{webpackDevPort}"
+    'webpack/hot/dev-server'
+  ]
+  # Order matters because mock overrides window.XMLHttpRequest
+  if isMockingApi
+    entries = entries.concat ['./src/mock']
+  entries = entries.concat ['./src/root']
+
+  new WebpackDevServer webpack(_.defaults {
+    entry: entries
+    devtool: 'inline-source-map'
+    output: _.defaults {
+      path: __dirname
+      publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/"
+    }, webpackConfig
+    module: _.defaults {
+      postLoaders: [
+        { test: /\.coffee$/, loader: 'transform/cacheable?envify' }
+      ]
+    }, webpackConfig.module
+    plugins: webpackConfig.plugins.concat [
+      new webpack.HotModuleReplacementPlugin()
+    ]
+  }, webpackConfig),
+    publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/"
+    hot: true
+  .listen webpackDevPort, (err) ->
+    if err
+      log.trace err
+    log.info 'Webpack listening on port %d', webpackDevPort
 
 gulp.task 'server:dev:watch', ['static:dev'], ->
   nodemon {script: 'bin/dev_server.coffee', ext: 'js json coffee'}
@@ -137,38 +202,17 @@ gulp.task 'static:dev', ->
 
 gulp.task 'scripts:test', ->
   gulp.src paths.rootTests
-  .pipe gulpWebpack
+  .pipe gulpWebpack _.defaults {
     devtool: 'inline-source-map'
-    module:
-      exprContextRegExp: /$^/
-      exprContextCritical: false
+    module: _.defaults {
       postLoaders: [
         { test: /\.coffee$/, loader: 'transform/cacheable?envify' }
       ]
-      loaders: [
-        { test: /\.coffee$/, loader: 'coffee' }
-        { test: /\.json$/, loader: 'json' }
-        {
-          test: /\.styl$/
-          loader: 'style!css!autoprefixer!stylus?' +
-                  'paths[]=bower_components&paths[]=node_modules'
-        }
-      ]
-    plugins: [
-      new webpack.ResolverPlugin(
-        new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(
-          'bower.json', ['main']
-        )
-      )
+    }, webpackConfig.module
+    plugins: webpackConfig.plugins.concat [
       new RewirePlugin()
     ]
-    resolve:
-      root: [path.join(__dirname, 'bower_components')]
-      extensions: ['.coffee', '.js', '.json', '']
-      # browser-builtins is for tests requesting native node modules
-      modulesDirectories: ['web_modules', 'node_modules', './src',
-      './node_modules/browser-builtins/builtin']
-  .pipe rename 'bundle.js'
+  }, webpackConfig
   .pipe gulp.dest paths.build + '/test/'
 
 
@@ -176,7 +220,6 @@ gulp.task 'scripts:test', ->
 # Production compilation
 #
 
-# rm -r dist
 gulp.task 'clean:dist', (cb) ->
   del paths.dist, cb
 
@@ -184,43 +227,31 @@ gulp.task 'static:prod', ['clean:dist'], ->
   gulp.src paths.static
     .pipe gulp.dest paths.dist
 
-# root.coffee --> dist/
 gulp.task 'scripts:prod', ['clean:dist'], ->
   gulp.src paths.root
-  .pipe gulpWebpack
-    devtool: 'source-map'
-    module:
-      exprContextRegExp: /$^/
-      exprContextCritical: false
-      loaders: [
-        { test: /\.coffee$/, loader: 'coffee' }
-        { test: /\.json$/, loader: 'json' }
-        {
-          test: /\.styl$/
-          loader: ExtractTextPlugin.extract 'style-loader',
-            'css!autoprefixer!' +
-            'stylus?paths[]=bower_components&paths[]=node_modules'
-        }
-      ]
-    plugins: [
-      new webpack.ResolverPlugin(
-        new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(
-          'bower.json', ['main']
-        )
-      )
+  .pipe gulpWebpack (_.defaults {
+    plugins: webpackConfig.plugins.concat [
       new webpack.optimize.UglifyJsPlugin()
       new ExtractTextPlugin 'bundle.css'
     ]
-    resolve:
-      root: [path.join(__dirname, 'bower_components')]
-      extensions: ['.coffee', '.js', '.json', '']
-    output:
+    output: _.defaults {
       filename: '[hash].bundle.js'
-      publicPath: '/'
+    }, webpackConfig.output
+    module: _.defaults {
+      loaders: _.map webpackConfig.module.loaders, (load) ->
+        if _.includes load.loader, 'stylus'
+          _.defaults {
+            loader: ExtractTextPlugin.extract \
+              load.loader.split('!')[0] + '-loader',
+              load.loader.slice(load.loader.indexOf('!'), load.loader.length)
+          }, load
+        else
+          load
+    }, webpackConfig.module
+  }, webpackConfig)
   , null, (err, stats) ->
     if err
       return
-
-    fs.writeFileSync "#{__dirname}/#{paths.dist}/stats.json",
-                     JSON.stringify stats.toJson()
+    statsJson = JSON.stringify stats.toJson()
+    fs.writeFileSync "#{__dirname}/#{paths.dist}/stats.json", statsJson
   .pipe gulp.dest paths.dist
