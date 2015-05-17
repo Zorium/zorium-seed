@@ -55,7 +55,7 @@
     "bluebird": "^2.9.24",
     "bower": "^1.4.1",
     "clay-loglevel": "^1.1.0",
-    "clay-request": "^0.1.0",
+    "clay-request": "^0.4.0",
     "coffee-script": "^1.9.2",
     "compression": "^1.4.3",
     "express": "^4.12.3",
