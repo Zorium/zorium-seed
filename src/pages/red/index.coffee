@@ -1,3 +1,4 @@
+_ = require 'lodash'
 z = require 'zorium'
 Rx = require 'rx-lite'
 
@@ -11,10 +12,12 @@ module.exports = class RedPage
       $head: new Head()
       $red: new Red()
 
-  renderHead: ({styles}) =>
+  renderHead: (params) =>
     {$head} = @state.getValue()
 
-    z $head, {styles, title: 'Zorium Seed - Red Page'}
+    z $head, _.defaults {
+      title: 'Zorium Seed - Red Page'
+    }, params
 
   render: =>
     {$red} = @state.getValue()

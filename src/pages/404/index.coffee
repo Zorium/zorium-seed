@@ -7,10 +7,10 @@ module.exports = class FourOhFourPage
     @state = z.state
       $head: new Head()
 
-  renderHead: ({styles}) =>
+  renderHead: (params) =>
     {$head} = @state.getValue()
 
-    z $head, {styles}
+    z $head, params
 
   render: ->
     z '.p-404',

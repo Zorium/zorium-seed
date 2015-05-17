@@ -10,10 +10,10 @@ module.exports = class HomePage
       $head: new Head()
       $hello: new HelloWorld()
 
-  renderHead: ({styles}) =>
+  renderHead: (params) =>
     {$head} = @state.getValue()
 
-    z $head, {styles}
+    z $head, params
 
   render: =>
     {$hello} = @state.getValue()

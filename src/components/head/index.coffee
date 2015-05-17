@@ -5,7 +5,7 @@ config = require '../../config'
 PreloadService = require '../../services/preload'
 
 module.exports = class Head
-  render: ({styles, title}) ->
+  render: ({styles, bundlePath, title}) ->
     isInliningSource = config.ENV is config.ENVS.PROD
     webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
     webpackDevPort = config.WEBPACK_DEV_PORT
@@ -121,5 +121,5 @@ module.exports = class Head
       # scripts
       z 'script',
         async: true
-        src: if isInliningSource then '/bundle.js' \
+        src: if isInliningSource then bundlePath \
              else "//#{webpackDevHostname}:#{webpackDevPort}/bundle.js"

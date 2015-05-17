@@ -11,11 +11,25 @@ FourOhFourPage = require './pages/404'
 
 ANIMATION_TIME_MS = 500
 
+# FIXME: depends on gulpfile
 styles = if not window?
   # Avoid webpack include
   _fs = 'fs'
   fs = require _fs
   fs.readFileSync './dist/bundle.css', 'utf-8'
+else
+  null
+
+# FIXME: depends on gulpfile
+bundlePath = if not window?
+  # Avoid webpack include
+  _fs = 'fs'
+  fs = require _fs
+  try
+    stats = JSON.parse fs.readFileSync './dist/stats.json', 'utf-8'
+    "/#{stats.hash}.bundle.js"
+  catch
+    null
 else
   null
 
@@ -78,7 +92,7 @@ module.exports = class App
       res.status 404
 
     z 'html',
-      $currentPage.renderHead {styles}
+      $currentPage.renderHead {styles, bundlePath}
       z 'body',
         z '#zorium-root',
           z '.z-root',
