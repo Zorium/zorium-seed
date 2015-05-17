@@ -7854,9 +7854,9 @@
       "resolved": "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-0.7.0.tgz"
     },
     "zorium": {
-      "version": "1.0.0-rc16",
-      "from": "zorium@1.0.0-rc16",
-      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0-rc16.tgz",
+      "version": "1.0.0-rc19",
+      "from": "zorium@1.0.0-rc19",
+      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0-rc19.tgz",
       "dependencies": {
         "bluebird": {
           "version": "2.9.25",
@@ -7869,9 +7869,9 @@
           "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.2.tgz"
         },
         "vdom-to-html": {
-          "version": "2.0.0",
+          "version": "2.1.0",
           "from": "vdom-to-html@^2.0.0",
-          "resolved": "https://registry.npmjs.org/vdom-to-html/-/vdom-to-html-2.0.0.tgz",
+          "resolved": "https://registry.npmjs.org/vdom-to-html/-/vdom-to-html-2.1.0.tgz",
           "dependencies": {
             "escape-html": {
               "version": "1.0.1",
@@ -7959,9 +7959,9 @@
               "resolved": "https://registry.npmjs.org/global/-/global-4.3.0.tgz",
               "dependencies": {
                 "min-document": {
-                  "version": "2.14.0",
+                  "version": "2.14.1",
                   "from": "min-document@^2.6.1",
-                  "resolved": "https://registry.npmjs.org/min-document/-/min-document-2.14.0.tgz",
+                  "resolved": "https://registry.npmjs.org/min-document/-/min-document-2.14.1.tgz",
                   "dependencies": {
                     "dom-walk": {
                       "version": "0.1.1",
