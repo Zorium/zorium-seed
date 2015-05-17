@@ -192,9 +192,6 @@ gulp.task 'scripts:prod', ['clean:dist'], ->
     module:
       exprContextRegExp: /$^/
       exprContextCritical: false
-      postLoaders: [
-        { test: /\.coffee$/, loader: 'transform/cacheable?envify' }
-      ]
       loaders: [
         { test: /\.coffee$/, loader: 'coffee' }
         { test: /\.json$/, loader: 'json' }

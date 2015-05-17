@@ -1,6 +1,6 @@
 _ = require 'lodash'
 should = require('clay-chai').should()
-request = require 'request-promise'
+request = require 'clay-request'
 Promise = require 'bluebird'
 revision = require 'git-rev'
 
@@ -21,9 +21,9 @@ revision.short (str) ->
 before ->
   @timeout 90 * 1000 # 90sec
   check = ->
-    request.get APP_URL
+    request APP_URL
     .then ->
-      request.get WEBPACK_URL
+      request WEBPACK_URL
     .catch check
 
   # race condition for server-reload

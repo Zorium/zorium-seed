@@ -1,15 +1,13 @@
 FROM node:0.10
 
-# Cache dependencies
-COPY npm-shrinkwrap.json /tmp/npm-shrinkwrap.json
-COPY package.json /tmp/package.json
-COPY bower.json /tmp/bower.json
+# npm-shrinkwrap.json, package.json, bower.json
+COPY *.json /tmp/
 RUN mkdir -p /opt/app && \
     cd /opt/app && \
     cp /tmp/npm-shrinkwrap.json . && \
     cp /tmp/package.json . && \
     cp /tmp/bower.json . && \
-    npm install --unsafe-perm
+    npm install --production --unsafe-perm
 
 COPY . /opt/app
 

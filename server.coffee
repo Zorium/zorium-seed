@@ -5,7 +5,7 @@ log = require 'clay-loglevel'
 helmet = require 'helmet'
 z = require 'zorium'
 Promise = require 'bluebird'
-request = require 'request-promise'
+request = require 'clay-request'
 
 config = require './src/config'
 App = require './src/app'
@@ -48,7 +48,7 @@ app.disable 'x-powered-by'
 
 app.use '/healthcheck', (req, res, next) ->
   Promise.settle [
-    Promise.cast(request.get(config.API_URL + '/ping'))
+    Promise.cast(request(config.API_URL + '/ping'))
       .timeout HEALTHCHECK_TIMEOUT
   ]
   .spread (api) ->
