@@ -42,10 +42,10 @@ after ->
 # coffeelint: enable=missing_fat_arrows
 
 describe 'functional tests', ->
-  client = Client
+  client = null
 
   before ->
-    client = client
+    client = Client
       .url APP_URL
       .pause(100) # don't question it
 
@@ -60,3 +60,14 @@ describe 'functional tests', ->
       .isVisible '#zorium-root'
       .then (isVisible) ->
         isVisible.should.be true
+
+  it 'navigates on button click', ->
+    client
+      .click '.p-home .z-hello-world button'
+      .getTitle()
+      .then (title) ->
+        title.should.be 'Zorium Seed - Red Page'
+      .click '.p-red .z-red button'
+      .getTitle()
+      .then (title) ->
+        title.should.be 'Zorium Seed'
