@@ -1,5 +1,10 @@
 config = require '../config'
 
+# Report client-side errors to a server-side logging route
+# To configure, simply set a valid ERROR_REPORT_ENDPOINT
+
+ERROR_REPORT_ENDPOINT = config.API_URL + '/log' # stub
+
 class ErrorReportService
   report: ->
     # Remove the circular dependency within error objects
@@ -15,7 +20,7 @@ class ErrorReportService
       then arg.message
       else arg
 
-    window.fetch config.API_URL + '/log',
+    window.fetch ERROR_REPORT_ENDPOINT,
       method: 'POST'
       headers:
         'Accept': 'application/json'

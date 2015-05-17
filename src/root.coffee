@@ -13,14 +13,16 @@ App = require './app'
 # LOGGING #
 ###########
 
-window.addEventListener 'error', ErrorReportService.report
+# TODO: Configure ErrorReportService before usage
+# window.addEventListener 'error', ErrorReportService.report
 
 if config.ENV isnt config.ENVS.PROD
   log.enableAll()
 else
   log.setLevel 'error'
-  log.on 'error', ErrorReportService.report
-  log.on 'trace', ErrorReportService.report
+  # TODO: Configure ErrorReportService before usage
+  # log.on 'error', ErrorReportService.report
+  # log.on 'trace', ErrorReportService.report
 
 
 #################
