@@ -26,15 +26,21 @@ else
 #################
 # ROUTING SETUP #
 #################
-z.router.init
-  $$root: document.getElementById 'zorium-root'
 
-$app = new App()
-z.router.use (req, res) ->
-  res.send z $app, {req, res}
-z.router.go()
+init = ->
+  z.router.init
+    $$root: document.getElementById 'zorium-root'
 
-log.info 'App Ready'
+  $app = new App()
+  z.router.use (req, res) ->
+    res.send z $app, {req, res}
+  z.router.go()
+
+if document.readyState isnt 'complete' and
+    not document.getElementById 'zorium-root'
+  window.addEventListener 'load', init
+else
+  init()
 
 #############################
 # ENABLE WEBPACK HOT RELOAD #
