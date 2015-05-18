@@ -112,16 +112,12 @@ gulp.task 'dev:server', ['build:static:dev'], ->
 gulp.task 'dev:webpack-server', ->
   webpackDevPort = config.WEBPACK_DEV_PORT
   webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
-  isMockingApi = config.MOCK
 
   entries = [
     "webpack-dev-server/client?http://#{webpackDevHostname}:#{webpackDevPort}"
     'webpack/hot/dev-server'
+    './src/root'
   ]
-  # Order matters because mock overrides window.XMLHttpRequest
-  if isMockingApi
-    entries = entries.concat ['./src/mock']
-  entries = entries.concat ['./src/root']
 
   compiler = webpack _.defaults {
     entry: entries

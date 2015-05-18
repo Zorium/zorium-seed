@@ -14,9 +14,6 @@ module.exports =
     PROD: 'production'
     TEST: 'test'
 
-   # Dev only
-  MOCK: process.env.MOCK is '1'
-
   # Server only - Avoid webpack include
   PORT: env.PORT or 3000
   WEBPACK_DEV_HOSTNAME: env.WEBPACK_DEV_HOSTNAME or 'localhost'
