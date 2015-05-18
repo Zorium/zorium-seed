@@ -2,7 +2,6 @@ z = require 'zorium'
 paperColors = require 'zorium-paper/colors.json'
 
 config = require '../../config'
-PreloadService = require '../../services/preload'
 
 module.exports = class Head
   render: ({styles, bundlePath, title}) ->
@@ -114,9 +113,6 @@ module.exports = class Head
           innerHTML: styles
       else
         null
-
-      # preloaded data
-      PreloadService.serializeToComponent()
 
       # scripts
       z 'script.bundle',
