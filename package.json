@@ -24,7 +24,7 @@
     "del": "^1.1.1",
     "envify": "^3.4.0",
     "extract-text-webpack-plugin": "^0.5.0",
-    "flare-gun": "^0.6.0",
+    "flare-gun": "^0.6.1",
     "git-rev": "^0.2.1",
     "gulp": "^3.8.11",
     "gulp-coffee-istanbul": "^0.7.0",

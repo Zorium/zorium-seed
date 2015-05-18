@@ -10,6 +10,9 @@ flare = flareGun.express(app)
 before ->
   nock.enableNetConnect('0.0.0.0')
 
+after ->
+  flare.close()
+
 describe 'server', ->
   it 'is healthy', ->
     nock config.API_URL
