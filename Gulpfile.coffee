@@ -71,8 +71,10 @@ paths =
   cover: [
     './*.coffee'
     './src/**/*.coffee'
+    '!./src/**/*.test.coffee'
+    '!./src/**/test.coffee'
   ]
-  tests: './test/unit/**/*.coffee'
+  tests: ['./src/**/test.coffee', './src/**/*.test.coffee']
   serverTests: './test/server/index.coffee'
   functionalTests: './test/functional/**/*.coffee'
   root: './src/root.coffee'
@@ -107,7 +109,16 @@ gulp.task 'dev', ['server:webpack', 'server:dev:watch']
 gulp.task 'test', ['test:karma', 'test:node:coverage', 'lint']
 
 gulp.task 'watch', ->
-  gulp.watch paths.coffee, ['test:server:watch', 'test:unit:phantom']
+  gulp.watch paths.coffee, ['test:unit']
+
+gulp.task 'watch:phantom', ->
+  gulp.watch paths.coffee, ['test:unit:phantom']
+
+gulp.task 'watch:server', ->
+  gulp.watch paths.coffee, ['test:server:watch']
+
+gulp.task 'watch:functional', ->
+  gulp.watch paths.coffee, ['test:functional:watch']
 
 gulp.task 'lint', ->
   gulp.src paths.coffee
@@ -177,18 +188,19 @@ gulp.task 'test:node:coverage', ->
     .pipe istanbul includeUntested: false
     .pipe istanbul.hookRequire()
     .on 'finish', ->
-      gulp.src [paths.serverTests, paths.tests]
+      gulp.src paths.tests.concat [paths.serverTests]
         .pipe mocha()
         .pipe istanbul.writeReports()
         .on 'error', end
         .once 'end', end
 
-gulp.task 'watch:functional', ->
-  gulp.watch paths.coffee, ['test:functional:watch']
-
 gulp.task 'test:functional:watch', ->
   gulp.src paths.functionalTests
     .pipe mocha(timeout: FUNCTIONAL_TEST_TIMEOUT_MS)
+
+gulp.task 'test:unit', ->
+  gulp.src paths.tests
+    .pipe mocha()
 
 gulp.task 'test:unit:phantom', ['scripts:test'], (cb) ->
   karma.start _.defaults({
@@ -201,7 +213,7 @@ gulp.task 'static:dev', ->
     .pipe gulp.dest paths.build
 
 gulp.task 'scripts:test', ->
-  gulp.src paths.rootTests
+  gulp.src paths.tests
   .pipe gulpWebpack _.defaults {
     devtool: 'inline-source-map'
     module: _.defaults {

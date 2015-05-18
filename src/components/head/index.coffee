@@ -110,7 +110,7 @@ module.exports = class Head
 
       # styles
       if isInliningSource
-        z 'style',
+        z 'style.styles',
           innerHTML: styles
       else
         null
@@ -119,7 +119,7 @@ module.exports = class Head
       PreloadService.serializeToComponent()
 
       # scripts
-      z 'script',
+      z 'script.bundle',
         async: true
         src: if isInliningSource then bundlePath \
              else "//#{webpackDevHostname}:#{webpackDevPort}/bundle.js"

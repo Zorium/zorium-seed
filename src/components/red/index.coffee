@@ -12,6 +12,9 @@ module.exports = class Red
       $button: new Button()
       $input: new Input()
 
+  goToHome: ->
+    z.router.go '/'
+
   render: =>
     {$button, $input} = @state.getValue()
 
@@ -27,8 +30,7 @@ module.exports = class Red
             c500: paperColors.$blue500
             c600: paperColors.$blue600
             c700: paperColors.$blue700
-          onclick: ->
-            z.router.go '/'
+          onclick: @goToHome
         z 'br'
         z $input,
           hintText: 'abc'
