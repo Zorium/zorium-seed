@@ -32,7 +32,7 @@ else
   null
 
 module.exports = class App
-  constructor: ->
+  constructor: ({requests}) ->
     router = new Routes()
 
     $homePage = new HomePage()
@@ -44,35 +44,34 @@ module.exports = class App
     router.addRoute '*', -> $fourOhFourPage
 
     @state = z.state {
-      router
+      requests: requests
       $previousTree: null
       $currentPage: null
       isEntering: false
       isActive: false
     }
 
-  render: ({req, res}) =>
-    {router, $currentPage, $previousTree, isEntering, isActive} =
-      @state.getValue()
-    {path, query} = req
+    # FIXME: should not need subscribe
+    requests.subscribe ({req, res}) =>
+      {$currentTree} = @state.getValue()
 
-    route = router.match path
+      route = router.match req.path
+      $page = route.fn()
 
-    $nextPage = route.fn()
+      if $page instanceof FourOhFourPage
+        res.status? 404
 
-    renderPage = ($page) ->
-      z $page, {query, params: route.params}
-
-    if $nextPage isnt $currentPage
-      $previousTree = if $currentPage then renderPage $currentPage else null
-      $currentPage = $nextPage
+      $previousTree = $currentTree
+      $currentTree = z $page, {query: req.query, params: route.params}
+      isEntering = Boolean $previousTree
       @state.set {
-        $currentPage
         $previousTree
-        isEntering: if $previousTree then true else false
+        $currentTree
+        isEntering
+        $currentPage: $page
       }
 
-      if $previousTree and window?
+      if isEntering and window?
         window.requestAnimationFrame =>
           @state.set
             isActive: true
@@ -84,8 +83,12 @@ module.exports = class App
             isActive: false
         , ANIMATION_TIME_MS
 
-    if $currentPage instanceof FourOhFourPage
-      res.status? 404
+  render: =>
+    {$currentPage, $currentTree, $previousTree, isEntering, isActive} =
+      @state.getValue()
+
+    unless $currentPage
+      return
 
     z 'html',
       $currentPage.renderHead {styles, bundlePath}
@@ -96,4 +99,4 @@ module.exports = class App
             z '.previous',
               $previousTree
             z '.current',
-              renderPage $currentPage
+              $currentTree

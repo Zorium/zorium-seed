@@ -3,6 +3,7 @@ require './polyfill'
 _ = require 'lodash'
 z = require 'zorium'
 log = require 'clay-loglevel'
+Rx = require 'rx-lite'
 
 require './root.styl'
 config = require './config'
@@ -33,9 +34,11 @@ init = ->
   z.router.init
     $$root: document.getElementById 'zorium-root'
 
-  $app = new App()
+  requests = new Rx.ReplaySubject(1)
+  $app = new App({requests})
   z.router.use (req, res) ->
-    res.send z $app, {req, res}
+    requests.onNext {req, res}
+    res.send $app
   z.router.go()
 
 if document.readyState isnt 'complete' and

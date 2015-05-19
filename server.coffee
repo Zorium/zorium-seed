@@ -6,6 +6,7 @@ helmet = require 'helmet'
 z = require 'zorium'
 Promise = require 'bluebird'
 request = require 'clay-request'
+Rx = require 'rx-lite'
 
 config = require './src/config'
 gulpConfig = require './gulp_config'
@@ -76,7 +77,7 @@ else app.use express['static'](gulpConfig.paths.build)
 
 app.use router
 app.use (req, res, next) ->
-  z.renderToString z new App(), {req, res}
+  z.renderToString new App({requests: Rx.Observable.just({req, res})})
   .then (html) ->
     res.send '<!DOCTYPE html>' + html
   .catch (err) ->
