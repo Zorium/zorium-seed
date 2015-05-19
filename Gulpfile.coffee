@@ -84,7 +84,9 @@ gulp.task 'test:coverage', ->
     .on 'finish', ->
       gulp.src paths.unitTests.concat [paths.serverTests]
         .pipe mocha()
-        .pipe istanbul.writeReports()
+        .pipe istanbul.writeReports({
+          reporters: ['html', 'text', 'text-summary']
+        })
 
 gulp.task 'test:unit', ->
   gulp.src paths.unitTests

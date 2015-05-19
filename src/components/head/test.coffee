@@ -5,7 +5,7 @@ should = require('clay-chai').should()
 
 Head = rewire './index'
 
-describe 'HelloWorld', ->
+describe 'z-head', ->
   it 'renders title', ->
     $head = new Head()
     $ = query $head.render {title: 'test_title'}

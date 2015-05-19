@@ -9,3 +9,8 @@ describe 'red page', ->
 
     $ = query $page.renderHead({})
     $('head title').contents.should.be 'Zorium Seed - Red Page'
+
+  it 'renders', ->
+    $page = new RedPage()
+
+    $page.render()
