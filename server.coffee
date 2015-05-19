@@ -8,6 +8,7 @@ Promise = require 'bluebird'
 request = require 'clay-request'
 
 config = require './src/config'
+gulpConfig = require './gulp_config'
 App = require './src/app'
 
 MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
@@ -20,7 +21,8 @@ log.enableAll()
 
 app.use compress()
 
-webpackDevHost = config.WEBPACK_DEV_HOSTNAME + ':' + config.WEBPACK_DEV_PORT
+webpackDevHost = "#{gulpConfig.WEBPACK_DEV_HOSTNAME}:" +
+                 "#{gulpConfig.WEBPACK_DEV_PORT}"
 scriptSrc = [
   '\'self\''
   '\'unsafe-inline\''
@@ -69,8 +71,8 @@ app.use '/demo', (req, res) ->
   res.json {name: 'Zorium'}
 
 if config.ENV is config.ENVS.PROD
-then app.use express['static'](__dirname + '/dist')
-else app.use express['static'](__dirname + '/build')
+then app.use express['static'](gulpConfig.paths.dist)
+else app.use express['static'](gulpConfig.paths.build)
 
 app.use router
 app.use (req, res, next) ->

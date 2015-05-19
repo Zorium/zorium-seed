@@ -2,31 +2,31 @@ webdriverio = require 'clay-webdriverio'
 SauceLabs = require 'saucelabs'
 Promise = require 'bluebird'
 
-config = require '../../src/config'
+gulpConfig = require '../../gulp_config'
 
-client = if config.REMOTE_SELENIUM
+client = if gulpConfig.REMOTE_SELENIUM
   webdriverio.remote
     desiredCapabilities:
-      browserName: config.SELENIUM_BROWSER
+      browserName: gulpConfig.SELENIUM_BROWSER
       name: 'Zorium Seed'
       tags: ['zorium_seed']
     host: 'ondemand.saucelabs.com'
     port: 80
-    user: config.SAUCE_USERNAME
-    key: config.SAUCE_ACCESS_KEY
+    user: gulpConfig.SAUCE_USERNAME
+    key: gulpConfig.SAUCE_ACCESS_KEY
 else
   webdriverio.remote
     desiredCapabilities:
-      browserName: config.SELENIUM_BROWSER
+      browserName: gulpConfig.SELENIUM_BROWSER
 
 client.addCommand 'sauceJobStatus', (status) ->
-  unless config.REMOTE_SELENIUM
+  unless gulpConfig.REMOTE_SELENIUM
     return
 
   sessionID = client.requestHandler.sessionID
   sauceAccount = new SauceLabs
-    username: config.SAUCE_USERNAME
-    password: config.SAUCE_ACCESS_KEY
+    username: gulpConfig.SAUCE_USERNAME
+    password: gulpConfig.SAUCE_ACCESS_KEY
 
   new Promise (resolve, reject) ->
     sauceAccount.updateJob sessionID, status, (err) ->

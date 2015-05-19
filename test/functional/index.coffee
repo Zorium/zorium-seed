@@ -5,16 +5,12 @@ Promise = require 'bluebird'
 revision = require 'git-rev'
 
 config = require '../../src/config'
+gulpConfig = require '../../gulp_config'
 Client = require './client'
 
 APP_URL = "http://#{config.HOSTNAME}:#{config.PORT}"
-WEBPACK_URL = "http://#{config.WEBPACK_DEV_HOSTNAME}:#{config.WEBPACK_DEV_PORT}"
-
-build = null
-
-# Race!
-revision.short (str) ->
-  build = str
+WEBPACK_URL = "http://#{gulpConfig.WEBPACK_DEV_HOSTNAME}:" +
+              "#{gulpConfig.WEBPACK_DEV_PORT}"
 
 # Wait for server to be up
 # coffeelint: disable=missing_fat_arrows
@@ -33,12 +29,15 @@ before ->
     Client.init()
 
 after ->
-  Client
-    .sauceJobStatus
-      passed: _.every this.test.parent.tests, {state: 'passed'}
-      public: 'public'
-      build: build
-    .end()
+  new Promise (resolve) ->
+    revision.short resolve
+  .then (build) =>
+    Client
+      .sauceJobStatus
+        passed: _.every this.test.parent.tests, {state: 'passed'}
+        public: 'public'
+        build: build
+      .end()
 # coffeelint: enable=missing_fat_arrows
 
 describe 'functional tests', ->

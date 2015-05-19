@@ -5,31 +5,29 @@ Routes = require 'routes'
 Qs = require 'qs'
 
 config = require './config'
+gulpConfig = require '../gulp_config'
 HomePage = require './pages/home'
 RedPage = require './pages/red'
 FourOhFourPage = require './pages/404'
 
 ANIMATION_TIME_MS = 500
 
-# FIXME: depends on gulpfile
-styles = if not window?
+styles = if not window? and config.ENV is config.ENVS.PROD
   # Avoid webpack include
   _fs = 'fs'
   fs = require _fs
-  fs.readFileSync './dist/bundle.css', 'utf-8'
+  fs.readFileSync gulpConfig.paths.dist + '/bundle.css', 'utf-8'
 else
   null
 
-# FIXME: depends on gulpfile
-bundlePath = if not window?
+bundlePath = if not window? and config.ENV is config.ENVS.PROD
   # Avoid webpack include
   _fs = 'fs'
   fs = require _fs
-  try
-    stats = JSON.parse fs.readFileSync './dist/stats.json', 'utf-8'
-    "/#{stats.hash}.bundle.js"
-  catch
-    null
+  stats = JSON.parse \
+    fs.readFileSync gulpConfig.paths.dist + '/stats.json', 'utf-8'
+
+  "/#{stats.hash}.bundle.js"
 else
   null
 
@@ -51,12 +49,11 @@ module.exports = class App
       $currentPage: null
       isEntering: false
       isActive: false
-      $fourOhFourPage
     }
 
   render: ({req, res}) =>
-    {router, $fourOhFourPage, $currentPage, $previousTree, isEntering,
-     isActive} = @state.getValue()
+    {router, $currentPage, $previousTree, isEntering, isActive} =
+      @state.getValue()
     {path, query} = req
 
     route = router.match path
@@ -87,9 +84,8 @@ module.exports = class App
             isActive: false
         , ANIMATION_TIME_MS
 
-    # FIXME
-    if $currentPage is $fourOhFourPage and not window?
-      res.status 404
+    if $currentPage instanceof FourOhFourPage
+      res.status? 404
 
     z 'html',
       $currentPage.renderHead {styles, bundlePath}

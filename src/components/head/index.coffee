@@ -2,12 +2,13 @@ z = require 'zorium'
 paperColors = require 'zorium-paper/colors.json'
 
 config = require '../../config'
+gulpConfig = require '../../../gulp_config'
 
 module.exports = class Head
   render: ({styles, bundlePath, title}) ->
     isInliningSource = config.ENV is config.ENVS.PROD
-    webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
-    webpackDevPort = config.WEBPACK_DEV_PORT
+    webpackDevHostname = gulpConfig.WEBPACK_DEV_HOSTNAME
+    webpackDevPort = gulpConfig.WEBPACK_DEV_PORT
     title ?= 'Zorium Seed'
     description = 'Zorium Seed - (╯°□°）╯︵ ┻━┻)'
     keywords = 'Zorium'

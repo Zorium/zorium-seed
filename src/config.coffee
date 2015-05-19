@@ -16,10 +16,4 @@ module.exports =
 
   # Server only - Avoid webpack include
   PORT: env.PORT or 3000
-  WEBPACK_DEV_HOSTNAME: env.WEBPACK_DEV_HOSTNAME or 'localhost'
-  WEBPACK_DEV_PORT: env.WEBPACK_DEV_PORT or 3001
   HOSTNAME: env.HOSTNAME or 'localhost'
-  REMOTE_SELENIUM: env.REMOTE_SELENIUM is '1'
-  SELENIUM_BROWSER: env.SELENIUM_BROWSER or 'chrome'
-  SAUCE_USERNAME: env.SAUCE_USERNAME
-  SAUCE_ACCESS_KEY: env.SAUCE_ACCESS_KEY

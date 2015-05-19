@@ -5,6 +5,13 @@ export NODE_ENV=production
 
 mkdir -p $LOG_DIR
 
+paths_dist=`./node_modules/coffee-script/bin/coffee -e "process.stdout.write require('./gulp_config').paths.dist"`
+
+if [ ! -d $paths_dist ]; then
+  echo "./dist directory not found. make sure to run 'npm run build' beforehand" | tee $LOG_DIR/$LOG_NAME.build.log
+  exit 1
+fi
+
 # Replace REPLACE_ENV_* with environment variable
 while read -d $'\0' -r file; do
   echo "replacing environment variables in $file" | tee $LOG_DIR/$LOG_NAME.build.log
@@ -16,7 +23,7 @@ while read -d $'\0' -r file; do
       sed -i s/REPLACE_ENV_$env_name/\"$env_value\"/g $file
     fi
   done < <(grep -o "REPLACE_ENV_[A-Z0-9_]\+" $file | uniq)
-done < <(find ./dist -iname '*.bundle.js' -print0)
+done < <(find $paths_dist -iname '*.bundle.js' -print0)
 
 ./node_modules/pm2/bin/pm2 \
   start ./bin/server.coffee \
