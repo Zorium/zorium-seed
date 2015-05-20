@@ -73,8 +73,9 @@ module.exports = class App
 
       if isEntering and window?
         window.requestAnimationFrame =>
-          @state.set
-            isActive: true
+          setTimeout =>
+            @state.set
+              isActive: true
 
         setTimeout =>
           @state.set
@@ -86,9 +87,6 @@ module.exports = class App
   render: =>
     {$currentPage, $currentTree, $previousTree, isEntering, isActive} =
       @state.getValue()
-
-    unless $currentPage
-      return
 
     z 'html',
       $currentPage.renderHead {styles, bundlePath}

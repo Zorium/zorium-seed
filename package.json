@@ -72,7 +72,7 @@
     "rx-lite": "^2.5.2",
     "vtree-query": "^0.2.0",
     "whatwg-fetch": "^0.7.0",
-    "zorium": "1.0.0-rc19",
+    "zorium": "^1.0.0-rc20.1",
     "zorium-paper": "^0.4.0-rc8"
   }
 }
