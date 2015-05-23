@@ -73,6 +73,6 @@
     "vtree-query": "^0.2.0",
     "whatwg-fetch": "^0.7.0",
     "zorium": "^1.0.0",
-    "zorium-paper": "^0.4.0-rc8"
+    "zorium-paper": "^0.4.0"
   }
 }
