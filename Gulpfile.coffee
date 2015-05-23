@@ -18,7 +18,7 @@ cfg = require './gulp_config' # gulpConfig
 
 gulp.task 'dev', ['dev:webpack-server', 'dev:server']
 gulp.task 'test', ['test:lint', 'test:coverage', 'test:karma']
-gulp.task 'build', ['build:scripts:prod', 'build:static:prod']
+gulp.task 'dist', ['dist:scripts', 'dist:static']
 
 gulp.task 'watch', ->
   gulp.watch cfg.paths.coffee, ['test:unit']
@@ -129,14 +129,14 @@ gulp.task 'build:scripts:test', ->
   }
   .pipe gulp.dest cfg.paths.build
 
-gulp.task 'build:clean:dist', (cb) ->
+gulp.task 'dist:clean', (cb) ->
   del cfg.paths.dist, cb
 
-gulp.task 'build:static:prod', ['build:clean:dist'], ->
+gulp.task 'dist:static', ['dist:clean'], ->
   gulp.src cfg.paths.static
     .pipe gulp.dest cfg.paths.dist
 
-gulp.task 'build:scripts:prod', ['build:clean:dist'], ->
+gulp.task 'dist:scripts', ['dist:clean'], ->
   webpackConfig = _.merge {}, cfg.webpack, {
     devtool: 'source-map'
     plugins: [

@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "postinstall": "node_modules/bower/bin/bower install --allow-root",
-    "build": "./bin/build.sh",
+    "dist": "./bin/dist.sh",
+    "replace-env": "./bin/replace_env.sh",
     "test": "./bin/test.sh",
     "test-functional": "./bin/functional_test.sh",
     "start": "./bin/start.sh",

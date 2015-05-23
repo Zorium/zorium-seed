@@ -5,6 +5,57 @@
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/Zolmeister.svg)](https://saucelabs.com/u/Zolmeister)
 
+This project provides the base Zorium setup, following all current best practices.  
+
+## Dev
+
+Run live-updating webpack dev-server
+
+  - `npm run dev`
+    - `http://localhost:3000`
+
+
+## Production
+
+Compile and minify files locally, then use Docker to start the server  
+Environment variable are dynamically injected at runtime
+
+  - `npm run dist`
+  - `npm start`
+
+```bash
+npm run build
+docker build -t zorium-seed .
+
+docker run \
+    --restart on-failure \
+    -v /var/log:/var/log \
+    -p 3000:3000 \
+    -e PORT=3000 \
+    -e LOG_DIR=/var/log \
+    -e LOG_NAME=zorium_seed \
+    --name zorium-site \
+    -d \
+    -t zorium-site
+```
+
+## Testing
+
+  - `npm test`
+    - real-browser karma tests
+    - server/client unit tests
+    - code coverage
+  - `npm run test-functional`
+    - see functional tests (multi-browser) below
+  - `npm run watch`
+    - auto-run client unit tests
+  - `npm run watch-phantom`
+    - auto-run karma tests
+  - `npm run watch-server`
+    - auto-run server tests
+  - `npm run watch-functional`
+    - see functional tests (fast local) below
+
 #### functional tests - fast local
 
 run local selenium server  
