@@ -5,7 +5,7 @@
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/Zolmeister.svg)](https://saucelabs.com/u/Zolmeister)
 
-This project provides the base Zorium setup, following all current best practices.  
+This project provides the base [Zorium](https://zorium.org) setup, following all current best practices.  
 
 ## Dev
 
