@@ -5,13 +5,10 @@ Head = require '../../components/head'
 
 module.exports = class FourOhFourPage
   constructor: ->
-    @state = z.state
-      $head: new Head()
+    @$head = new Head()
 
   renderHead: (params) =>
-    {$head} = @state.getValue()
-
-    z $head, _.defaults {
+    z @$head, _.defaults {
       title: 'Zorium Seed - 404'
     }, params
 

@@ -8,21 +8,18 @@ if window?
 
 module.exports = class HelloWorld
   constructor: ->
-    @state = z.state
-      $button: new Button()
-      $input: new Input()
+    @$button = new Button()
+    @$input = new Input()
 
   goToRed: ->
     z.router.go '/red'
 
   render: =>
-    {$button, $input} = @state.getValue()
-
     z '.z-hello-world',
       z '.content',
         'Hello World'
         z 'br'
-        z $button,
+        z @$button,
           text: 'click me'
           isRaised: true
           colors:
@@ -32,7 +29,7 @@ module.exports = class HelloWorld
             c700: paperColors.$blue700
           onclick: @goToRed
         z 'br'
-        z $input,
+        z @$input,
           hintText: 'abc'
           colors:
             c200: paperColors.$blue200

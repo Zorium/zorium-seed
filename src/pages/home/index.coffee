@@ -6,17 +6,12 @@ HelloWorld = require '../../components/hello_world'
 
 module.exports = class HomePage
   constructor: ->
-    @state = z.state
-      $head: new Head()
-      $hello: new HelloWorld()
+    @$head = new Head()
+    @$hello = new HelloWorld()
 
   renderHead: (params) =>
-    {$head} = @state.getValue()
-
-    z $head, params
+    z @$head, params
 
   render: =>
-    {$hello} = @state.getValue()
-
     z '.p-home',
-      $hello
+      @$hello

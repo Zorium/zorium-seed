@@ -4256,9 +4256,9 @@
       "resolved": "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-0.7.0.tgz"
     },
     "zorium": {
-      "version": "1.0.0-rc20.1",
-      "from": "zorium@1.0.0-rc20.1",
-      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0-rc20.1.tgz",
+      "version": "1.0.0",
+      "from": "zorium@1.0.0",
+      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0.tgz",
       "dependencies": {
         "vdom-to-html": {
           "version": "2.1.0",
