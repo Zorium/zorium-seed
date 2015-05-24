@@ -1,7 +1,7 @@
 _ = require 'lodash'
 query = require 'vtree-query'
 rewire = require 'rewire'
-should = require('clay-chai').should()
+should = require('chai').should()
 
 Head = rewire './index'
 
@@ -10,7 +10,7 @@ describe 'z-head', ->
     $head = new Head()
     $ = query $head.render {title: 'test_title'}
 
-    $('title').contents.should.be 'test_title'
+    $('title').contents.should.eql 'test_title'
 
   it 'has viewport meta', ->
     $head = new Head()
@@ -27,7 +27,7 @@ describe 'z-head', ->
     }) ->
       $head = new Head()
       $ = query $head.render({styles: 'xxx'})
-      $('.styles').innerHTML.should.be 'xxx'
+      $('.styles').innerHTML.should.eql 'xxx'
 
   it 'uses bundle path in production mode', ->
     config = Head.__get__('config')
@@ -38,4 +38,4 @@ describe 'z-head', ->
     }) ->
       $head = new Head()
       $ = query $head.render({bundlePath: 'xxx'})
-      $('.bundle').src.should.be 'xxx'
+      $('.bundle').src.should.eql 'xxx'

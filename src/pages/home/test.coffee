@@ -1,4 +1,4 @@
-should = require('clay-chai').should()
+should = require('chai').should()
 query = require 'vtree-query'
 
 HomePage = require './index'
@@ -8,7 +8,7 @@ describe 'home page', ->
     $page = new HomePage()
 
     $ = query $page.renderHead({})
-    $('head title').contents.should.be 'Zorium Seed'
+    $('head title').contents.should.eql 'Zorium Seed'
 
   it 'renders', ->
     $page = new HomePage()

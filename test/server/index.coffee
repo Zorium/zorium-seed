@@ -1,6 +1,6 @@
 flareGun = require 'flare-gun'
 nock = require 'nock'
-should = require('clay-chai').should()
+should = require('chai').should()
 
 app = require '../../server'
 config = require '../../src/config'

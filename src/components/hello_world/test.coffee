@@ -1,5 +1,5 @@
 rewire = require 'rewire'
-should = require('clay-chai').should()
+should = require('chai').should()
 query = require 'vtree-query'
 
 HelloWorld = rewire './index'
@@ -8,7 +8,7 @@ describe 'z-hello-world', ->
   it 'goes to red page', (done) ->
     HelloWorld.__with__({
       'z.router.go': (path) ->
-        path.should.be '/red'
+        path.should.eql '/red'
         done()
     }) ->
       $hello = new HelloWorld()
@@ -19,4 +19,4 @@ describe 'z-hello-world', ->
     $hello = new HelloWorld()
 
     $ = query($hello.render())
-    $('.content').contents.should.be 'Hello World'
+    $('.content').contents.should.eql 'Hello World'

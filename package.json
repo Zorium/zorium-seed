@@ -17,7 +17,7 @@
   "devDependencies": {
     "autoprefixer-loader": "^1.2.0",
     "browser-builtins": "^3.3.0",
-    "clay-chai": "0.0.3",
+    "chai": "^2.3.0",
     "clay-coffeescript-style-guide": "^1.0.0",
     "clay-webdriverio": "^3.0.0-rc2-clay",
     "coffee-loader": "^0.7.2",
