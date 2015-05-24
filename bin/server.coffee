@@ -1,5 +1,5 @@
 #!/usr/bin/env coffee
-log = require 'clay-loglevel'
+log = require 'loglevel'
 
 app = require '../server'
 config = require '../src/config'

@@ -2,7 +2,7 @@ require './polyfill'
 
 _ = require 'lodash'
 z = require 'zorium'
-log = require 'clay-loglevel'
+log = require 'loglevel'
 Rx = require 'rx-lite'
 
 require './root.styl'
@@ -14,17 +14,24 @@ App = require './app'
 # LOGGING #
 ###########
 
-# TODO: Configure ErrorReportService before usage
-# window.addEventListener 'error', ErrorReportService.report
-
 if config.ENV isnt config.ENVS.PROD
   log.enableAll()
 else
-  log.setLevel 'error'
   # TODO: Configure ErrorReportService before usage
-  # log.on 'error', ErrorReportService.report
-  # log.on 'trace', ErrorReportService.report
+  # originalFactory = log.methodFactory
+  # log.methodFactory = (methodName, logLevel) ->
+  #   rawMethod = originalFactory(methodName, logLevel)
+  #   (args...) ->
+  #     ErrorReportService.report args...
+  #     return rawMethod args...
+  log.setLevel 'warn' # Note: required to apply plugin
 
+# Note: window.onerror != window.addEventListener('error')
+oldOnError = window.onerror
+window.onerror = (message, file, line, column, error) ->
+  log.error error or message
+  if oldOnError
+    return oldOnError arguments...
 
 #################
 # ROUTING SETUP #

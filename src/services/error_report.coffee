@@ -5,6 +5,7 @@ config = require '../config'
 
 ERROR_REPORT_ENDPOINT = config.API_URL + '/log' # stub
 
+# FIXME: Move this into a node module as a loglevel plugin
 class ErrorReportService
   report: ->
     # Remove the circular dependency within error objects

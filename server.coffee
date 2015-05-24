@@ -1,7 +1,7 @@
 express = require 'express'
 _ = require 'lodash'
 compress = require 'compression'
-log = require 'clay-loglevel'
+log = require 'loglevel'
 helmet = require 'helmet'
 z = require 'zorium'
 Promise = require 'bluebird'
@@ -82,7 +82,7 @@ app.use (req, res, next) ->
     res.send '<!DOCTYPE html>' + html
   .catch (err) ->
     if err.html
-      log.trace err
+      log.error err
       res.send '<!DOCTYPE html>' + err.html
     else
       next err
