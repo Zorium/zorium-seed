@@ -6,23 +6,23 @@ body
 
 .z-root
   &.is-entering
-    position: absolute
+    position: fixed
     width: 100%
     height: 100%
     top: 0
     left: 0
     overflow: hidden
 
-    > .previous
-      position: absolute
+    > .current
+      position: fixed
       width: 100%
       height: 100%
       top: 0
       left: 0
       transition: left 0.5s
 
-    > .current
-      position: absolute
+    > .next
+      position: fixed
       width: 100%
       height: 100%
       top: 0
@@ -30,8 +30,8 @@ body
       transition: left 0.5s
 
   &.is-entering&.is-active
-    > .previous
-      left: -100%
+    > .next
+      left: 0
 
     > .current
-      left: 0
+      left: -100%

@@ -45,15 +45,15 @@ module.exports = class App
 
     @state = z.state {
       requests: requests
-      $previousTree: null
       $currentPage: null
+      $nextPage: null
       isEntering: false
       isActive: false
     }
 
     # FIXME: should not need subscribe
     requests.subscribe ({req, res}) =>
-      {$currentTree} = @state.getValue()
+      {$currentPage} = @state.getValue()
 
       route = router.match req.path
       $page = route.fn()
@@ -61,17 +61,14 @@ module.exports = class App
       if $page instanceof FourOhFourPage
         res.status? 404
 
-      $previousTree = $currentTree
-      $currentTree = z $page, {query: req.query, params: route.params}
-      isEntering = Boolean $previousTree
-      @state.set {
-        $previousTree
-        $currentTree
-        isEntering
-        $currentPage: $page
-      }
+      isEntering = Boolean $currentPage
 
       if isEntering and window?
+        @state.set {
+          isEntering
+          $nextPage: $page
+        }
+
         window.requestAnimationFrame =>
           setTimeout =>
             @state.set
@@ -79,14 +76,17 @@ module.exports = class App
 
         setTimeout =>
           @state.set
-            $previousTree: null
+            $currentPage: $page
+            $nextPage: null
             isEntering: false
             isActive: false
         , ANIMATION_TIME_MS
+      else
+        @state.set
+          $currentPage: $page
 
   render: =>
-    {$currentPage, $currentTree, $previousTree, isEntering, isActive} =
-      @state.getValue()
+    {$nextPage, $currentPage, isEntering, isActive} = @state.getValue()
 
     z 'html',
       $currentPage.renderHead {styles, bundlePath}
@@ -94,7 +94,7 @@ module.exports = class App
         z '#zorium-root',
           z '.z-root',
             className: z.classKebab {isEntering, isActive}
-            z '.previous',
-              $previousTree
             z '.current',
-              $currentTree
+              $currentPage
+            z '.next',
+              $nextPage
