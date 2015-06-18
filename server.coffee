@@ -72,8 +72,8 @@ app.use '/demo', (req, res) ->
   res.json {name: 'Zorium'}
 
 if config.ENV is config.ENVS.PROD
-then app.use express['static'](gulpConfig.paths.dist)
-else app.use express['static'](gulpConfig.paths.build)
+then app.use express.static(gulpConfig.paths.dist, {maxAge: '4h'})
+else app.use express.static(gulpConfig.paths.build, {maxAge: '4h'})
 
 app.use router
 app.use (req, res, next) ->
