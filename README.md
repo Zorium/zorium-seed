@@ -70,10 +70,10 @@ run dev server
 npm run dev
 ```
 
-(HOSTNAME is your local ip address)  
+(HOST is your local ip address)  
 
 ```bash
-HOSTNAME=192.168.1.1 npm run watch-functional
+HOST=192.168.1.1 npm run watch-functional
 ```
 
 #### functional tests - full multi-browser
@@ -97,5 +97,5 @@ npm run dev
 ```
 
 ```bash
-HOSTNAME=192.168.1.1 npm run test-functional
+HOST=192.168.1.1 npm run test-functional
 ```
