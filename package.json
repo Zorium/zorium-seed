@@ -2,7 +2,6 @@
   "name": "zorium-seed",
   "private": true,
   "scripts": {
-    "postinstall": "node_modules/bower/bin/bower install --allow-root",
     "dist": "./bin/dist.sh",
     "test": "./bin/test.sh",
     "test-functional": "./bin/functional_test.sh",
@@ -56,7 +55,6 @@
   },
   "dependencies": {
     "bluebird": "^2.9.24",
-    "bower": "^1.4.1",
     "clay-request": "^0.4.1",
     "coffee-script": "^1.9.2",
     "compression": "^1.4.3",
@@ -64,6 +62,7 @@
     "helmet": "^0.7.1",
     "lodash": "^3.6.0",
     "loglevel": "^1.2.0",
+    "normalize-styl": "^3.0.3",
     "pm2": "^0.12.10",
     "promiz": "^1.0.3",
     "qs": "^2.4.1",

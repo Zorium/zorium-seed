@@ -1,8 +1,0 @@
-{
-  "name": "zorium-seed",
-  "homepage": "http://zorium.org",
-  "private": true,
-  "dependencies": {
-    "normalize.styl": "~3.0.2"
-  }
-}

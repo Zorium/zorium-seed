@@ -91,9 +91,6 @@ gulp.task 'dev:webpack-server', ->
         { test: /\.styl$/, loader: 'style!' + cfg.cssLoader}
       ]
     plugins: [
-      new webpack.ResolverPlugin \
-        new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin \
-          'bower.json', ['main']
       new webpack.HotModuleReplacementPlugin()
     ]
   }
@@ -121,9 +118,6 @@ gulp.task 'build:scripts:test', ->
         { test: /\.styl$/, loader: 'style!' + cfg.cssLoader}
       ]
     plugins: [
-      new webpack.ResolverPlugin \
-        new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin \
-          'bower.json', ['main']
       new RewirePlugin()
     ]
   }
@@ -140,9 +134,6 @@ gulp.task 'dist:scripts', ['dist:clean'], ->
   webpackConfig = _.merge {}, cfg.webpack, {
     devtool: 'source-map'
     plugins: [
-      new webpack.ResolverPlugin \
-        new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin \
-          'bower.json', ['main']
       new webpack.optimize.UglifyJsPlugin()
       new ExtractTextPlugin 'bundle.css'
     ]

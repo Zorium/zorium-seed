@@ -20,8 +20,7 @@ karma =
   files: [paths.build + '/bundle.js']
   browsers: ['Chrome', 'Firefox']
 
-cssLoader = 'css!autoprefixer!' +
-            'stylus?paths[]=bower_components&paths[]=node_modules'
+cssLoader = 'css!autoprefixer!stylus?paths[]=node_modules'
 webpack =
   devtool: 'inline-source-map'
   module:
@@ -32,7 +31,6 @@ webpack =
       { test: /\.json$/, loader: 'json' }
     ]
   resolve:
-    root: [__dirname + '/bower_components']
     extensions: ['.coffee', '.js', '.json', '']
   output:
     filename: 'bundle.js'
