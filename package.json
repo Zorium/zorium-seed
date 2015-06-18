@@ -4,7 +4,6 @@
   "scripts": {
     "postinstall": "node_modules/bower/bin/bower install --allow-root",
     "dist": "./bin/dist.sh",
-    "replace-env": "./bin/replace_env.sh",
     "test": "./bin/test.sh",
     "test-functional": "./bin/functional_test.sh",
     "start": "./bin/start.sh",
