@@ -53,3 +53,11 @@ if document.readyState isnt 'complete' and
   window.addEventListener 'load', init
 else
   init()
+
+#############################
+# ENABLE WEBPACK HOT RELOAD #
+#############################
+
+if module.hot
+  module.hot.accept()
+  init()
