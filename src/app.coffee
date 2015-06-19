@@ -35,28 +35,28 @@ module.exports = class App
   constructor: ({requests}) ->
     router = new Routes()
 
-    $homePage = new HomePage()
-    $redPage = new RedPage()
-    $fourOhFourPage = new FourOhFourPage()
+    requests = requests.map ({req, res}) ->
+      route = router.match req.path
+      $page = route.fn()
+
+      return {req, res, route, $page}
+
+    $homePage = new HomePage({
+      requests: requests.filter ({$page}) -> $page instanceof HomePage
+    })
+    $redPage = new RedPage({
+      requests: requests.filter ({$page}) -> $page instanceof RedPage
+    })
+    $fourOhFourPage = new FourOhFourPage({
+      requests: requests.filter ({$page}) -> $page instanceof FourOhFourPage
+    })
 
     router.addRoute '/', -> $homePage
     router.addRoute '/red', -> $redPage
     router.addRoute '*', -> $fourOhFourPage
 
-    @state = z.state {
-      requests: requests
-      $currentPage: null
-      $nextPage: null
-      isEntering: false
-      isActive: false
-    }
-
-    # FIXME: should not need subscribe
-    requests.subscribe ({req, res}) =>
+    handleRequest = requests.doOnNext ({req, res, route, $page}) =>
       {$currentPage} = @state.getValue()
-
-      route = router.match req.path
-      $page = route.fn()
 
       if $page instanceof FourOhFourPage
         res.status? 404
@@ -85,11 +85,19 @@ module.exports = class App
         @state.set
           $currentPage: $page
 
+    @state = z.state {
+      handleRequest: handleRequest
+      $currentPage: null
+      $nextPage: null
+      isEntering: false
+      isActive: false
+    }
+
   render: =>
     {$nextPage, $currentPage, isEntering, isActive} = @state.getValue()
 
     z 'html',
-      $currentPage.renderHead {styles, bundlePath}
+      $currentPage?.renderHead {styles, bundlePath}
       z 'body',
         z '#zorium-root',
           z '.z-root',
