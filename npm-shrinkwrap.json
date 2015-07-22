@@ -2060,19 +2060,19 @@
       "resolved": "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-0.7.0.tgz"
     },
     "zorium": {
-      "version": "1.0.0",
-      "from": "zorium@^1.0.0",
-      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.0.tgz",
+      "version": "1.0.2",
+      "from": "zorium@1.0.2",
+      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.2.tgz",
       "dependencies": {
         "vdom-to-html": {
-          "version": "2.1.0",
+          "version": "2.1.1",
           "from": "vdom-to-html@^2.0.0",
-          "resolved": "https://registry.npmjs.org/vdom-to-html/-/vdom-to-html-2.1.0.tgz",
+          "resolved": "https://registry.npmjs.org/vdom-to-html/-/vdom-to-html-2.1.1.tgz",
           "dependencies": {
             "escape-html": {
-              "version": "1.0.1",
+              "version": "1.0.2",
               "from": "escape-html@^1.0.1",
-              "resolved": "https://registry.npmjs.org/escape-html/-/escape-html-1.0.1.tgz"
+              "resolved": "https://registry.npmjs.org/escape-html/-/escape-html-1.0.2.tgz"
             },
             "param-case": {
               "version": "1.1.1",
@@ -2101,9 +2101,9 @@
           }
         },
         "vdom-virtualize": {
-          "version": "0.0.7",
-          "from": "vdom-virtualize@0.0.7",
-          "resolved": "https://registry.npmjs.org/vdom-virtualize/-/vdom-virtualize-0.0.7.tgz"
+          "version": "0.0.8",
+          "from": "vdom-virtualize@0.0.8",
+          "resolved": "https://registry.npmjs.org/vdom-virtualize/-/vdom-virtualize-0.0.8.tgz"
         },
         "virtual-dom": {
           "version": "2.0.1",
@@ -2155,9 +2155,9 @@
               "resolved": "https://registry.npmjs.org/global/-/global-4.3.0.tgz",
               "dependencies": {
                 "min-document": {
-                  "version": "2.14.1",
+                  "version": "2.16.0",
                   "from": "min-document@^2.6.1",
-                  "resolved": "https://registry.npmjs.org/min-document/-/min-document-2.14.1.tgz",
+                  "resolved": "https://registry.npmjs.org/min-document/-/min-document-2.16.0.tgz",
                   "dependencies": {
                     "dom-walk": {
                       "version": "0.1.1",

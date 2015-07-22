@@ -85,10 +85,10 @@ gulp.task 'dev:webpack-server', ->
       publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/"
     module:
       postLoaders: [
-        { test: /\.coffee$/, loader: 'transform/cacheable?envify' }
+        {test: /\.coffee$/, loader: 'transform/cacheable?envify'}
       ]
       loaders: cfg.webpack.module.loaders.concat [
-        { test: /\.styl$/, loader: 'style!' + cfg.cssLoader}
+        {test: /\.styl$/, loader: 'style!' + cfg.cssLoader}
       ]
     plugins: [
       new webpack.HotModuleReplacementPlugin()
@@ -112,10 +112,10 @@ gulp.task 'build:scripts:test', ->
   .pipe gulpWebpack _.merge {}, cfg.webpack, {
     module:
       postLoaders: [
-        { test: /\.coffee$/, loader: 'transform/cacheable?envify' }
+        {test: /\.coffee$/, loader: 'transform/cacheable?envify'}
       ]
       loaders: cfg.webpack.module.loaders.concat [
-        { test: /\.styl$/, loader: 'style!' + cfg.cssLoader}
+        {test: /\.styl$/, loader: 'style!' + cfg.cssLoader}
       ]
     plugins: [
       new RewirePlugin()

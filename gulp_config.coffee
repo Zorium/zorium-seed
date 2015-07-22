@@ -27,8 +27,8 @@ webpack =
     exprContextRegExp: /$^/
     exprContextCritical: false
     loaders: [
-      { test: /\.coffee$/, loader: 'coffee' }
-      { test: /\.json$/, loader: 'json' }
+      {test: /\.coffee$/, loader: 'coffee'}
+      {test: /\.json$/, loader: 'json'}
     ]
   resolve:
     extensions: ['.coffee', '.js', '.json', '']
