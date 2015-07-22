@@ -3,8 +3,6 @@
 
 HOST = process.env.HOST or REPLACE__HOST? and REPLACE__HOST or 'localhost'
 
-env = process.env
-
 hostToHostname = (host) ->
   host.split(':')[0]
 
@@ -19,7 +17,8 @@ module.exports =
     DEV: 'development'
     PROD: 'production'
     TEST: 'test'
+  HOST: HOST
   HOSTNAME: hostToHostname(HOST)
 
-  # Server only - Avoid webpack include
-  PORT: env.PORT or 3000
+  # Server only
+  PORT: process.env.PORT or 3000
