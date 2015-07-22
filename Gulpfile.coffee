@@ -78,7 +78,8 @@ gulp.task 'dev:webpack-server', ->
     cfg.paths.root
   ]
 
-  compiler = webpack _.merge {}, cfg.webpack, {
+  compiler = webpack _.defaultsDeep {
+    devtool: 'inline-source-map'
     entry: entries
     output:
       path: __dirname
@@ -87,13 +88,15 @@ gulp.task 'dev:webpack-server', ->
       postLoaders: [
         {test: /\.coffee$/, loader: 'transform/cacheable?envify'}
       ]
-      loaders: cfg.webpack.module.loaders.concat [
+      loaders: [
+        {test: /\.coffee$/, loader: 'coffee'}
+        {test: /\.json$/, loader: 'json'}
         {test: /\.styl$/, loader: 'style!' + cfg.cssLoader}
       ]
     plugins: [
       new webpack.HotModuleReplacementPlugin()
     ]
-  }
+  }, cfg.webpack
 
   new WebpackDevServer compiler,
     publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/"
@@ -109,18 +112,21 @@ gulp.task 'build:static:dev', ->
 
 gulp.task 'build:scripts:test', ->
   gulp.src cfg.paths.unitTests
-  .pipe gulpWebpack _.merge {}, cfg.webpack, {
+  .pipe gulpWebpack _.defaultsDeep {
+    devtool: 'inline-source-map'
     module:
       postLoaders: [
         {test: /\.coffee$/, loader: 'transform/cacheable?envify'}
       ]
-      loaders: cfg.webpack.module.loaders.concat [
+      loaders: [
+        {test: /\.coffee$/, loader: 'coffee'}
+        {test: /\.json$/, loader: 'json'}
         {test: /\.styl$/, loader: 'style!' + cfg.cssLoader}
       ]
     plugins: [
       new RewirePlugin()
     ]
-  }
+  }, cfg.webpack
   .pipe gulp.dest cfg.paths.build
 
 gulp.task 'dist:clean', (cb) ->
@@ -131,7 +137,7 @@ gulp.task 'dist:static', ['dist:clean'], ->
     .pipe gulp.dest cfg.paths.dist
 
 gulp.task 'dist:scripts', ['dist:clean'], ->
-  webpackConfig = _.merge {}, cfg.webpack, {
+  webpackConfig = _.defaultsDeep {
     devtool: 'source-map'
     plugins: [
       new webpack.optimize.UglifyJsPlugin()
@@ -140,13 +146,15 @@ gulp.task 'dist:scripts', ['dist:clean'], ->
     output:
       filename: '[hash].bundle.js'
     module:
-      loaders: cfg.webpack.module.loaders.concat [
+      loaders: [
+        {test: /\.coffee$/, loader: 'coffee'}
+        {test: /\.json$/, loader: 'json'}
         {
           test: /\.styl$/
           loader: ExtractTextPlugin.extract 'style', cfg.cssLoader
         }
       ]
-  }
+  }, cfg.webpack
 
   gulp.src cfg.paths.root
   .pipe gulpWebpack webpackConfig, null, (err, stats) ->

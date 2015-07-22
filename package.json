@@ -61,7 +61,7 @@
     "compression": "^1.4.3",
     "express": "^4.12.3",
     "helmet": "^0.7.1",
-    "lodash": "^3.6.0",
+    "lodash": "^3.10.0",
     "loglevel": "^1.2.0",
     "normalize-styl": "^3.0.3",
     "pm2": "^0.12.10",

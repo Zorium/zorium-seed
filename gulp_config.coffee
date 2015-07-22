@@ -22,14 +22,9 @@ karma =
 
 cssLoader = 'css!autoprefixer!stylus?paths[]=node_modules'
 webpack =
-  devtool: 'inline-source-map'
   module:
     exprContextRegExp: /$^/
     exprContextCritical: false
-    loaders: [
-      {test: /\.coffee$/, loader: 'coffee'}
-      {test: /\.json$/, loader: 'json'}
-    ]
   resolve:
     extensions: ['.coffee', '.js', '.json', '']
   output:

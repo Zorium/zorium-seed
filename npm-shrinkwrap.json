@@ -1,6 +1,17 @@
 {
   "name": "zorium-seed",
   "dependencies": {
+    "assert-none-missing": {
+      "version": "0.1.0",
+      "from": "assert-none-missing@",
+      "dependencies": {
+        "lodash": {
+          "version": "3.10.0",
+          "from": "lodash@^3.10.0",
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.10.0.tgz"
+        }
+      }
+    },
     "bluebird": {
       "version": "2.9.25",
       "from": "bluebird@^2.9.24",
@@ -466,9 +477,9 @@
       }
     },
     "lodash": {
-      "version": "3.9.1",
-      "from": "lodash@^3.6.0",
-      "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.9.1.tgz"
+      "version": "3.10.0",
+      "from": "lodash@3.10.0",
+      "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.10.0.tgz"
     },
     "loglevel": {
       "version": "1.2.0",
