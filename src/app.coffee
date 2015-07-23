@@ -97,6 +97,8 @@ module.exports = class App
     {$nextPage, $currentPage, isEntering, isActive} = @state.getValue()
 
     z 'html',
+      if config.ENV is config.ENVS.PROD
+        manifest: 'app.manifest'
       $currentPage?.renderHead {styles, bundlePath}
       z 'body',
         z '#zorium-root',

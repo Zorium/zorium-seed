@@ -6,6 +6,7 @@ karma = require('karma').server
 webpack = require 'webpack'
 mocha = require 'gulp-mocha'
 nodemon = require 'gulp-nodemon'
+manifest = require 'gulp-manifest'
 gulpWebpack = require 'gulp-webpack'
 coffeelint = require 'gulp-coffeelint'
 RewirePlugin = require 'rewire-webpack'
@@ -18,7 +19,7 @@ cfg = require './gulp_config' # gulpConfig
 
 gulp.task 'dev', ['dev:webpack-server', 'dev:server']
 gulp.task 'test', ['test:lint', 'test:coverage', 'test:karma']
-gulp.task 'dist', ['dist:scripts', 'dist:static']
+gulp.task 'dist', ['dist:scripts', 'dist:static', 'dist:manifest']
 
 gulp.task 'watch', ->
   gulp.watch cfg.paths.coffee, ['test:unit']
@@ -161,6 +162,15 @@ gulp.task 'dist:scripts', ['dist:clean'], ->
     if err
       console.trace err
       return
-    statsJson = JSON.stringify stats.toJson()
+    statsJson = JSON.stringify {hash: stats.toJson().hash}
     fs.writeFileSync "#{__dirname}/#{cfg.paths.dist}/stats.json", statsJson
   .pipe gulp.dest cfg.paths.dist
+
+gulp.task 'dist:manifest', ['dist:static', 'dist:scripts'], ->
+  gulp.src cfg.paths.dist + '/**/*'
+    .pipe manifest {
+      hash: true
+      timestamp: false
+      preferOnline: true
+    }
+    .pipe gulp.dest cfg.paths.dist
