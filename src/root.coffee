@@ -4,11 +4,17 @@ _ = require 'lodash'
 z = require 'zorium'
 log = require 'loglevel'
 Rx = require 'rx-lite'
+request = require 'clay-request'
+cookie = require 'cookie'
 
 require './root.styl'
+
 config = require './config'
 ErrorReportService = require './services/error_report'
+CookieService = require './services/cookie'
 App = require './app'
+Model = require './models'
+
 
 ###########
 # LOGGING #
@@ -36,13 +42,26 @@ window.onerror = (message, file, line, column, error) ->
 #################
 # ROUTING SETUP #
 #################
+setCookies = (currentCookies) ->
+  (cookies) ->
+    _.map cookies, (value, key) ->
+      unless currentCookies[key] is value
+        document.cookie = cookie.serialize \
+          key, value, CookieService.getCookieOpts()
+    currentCookies = cookies
 
 init = ->
+  currentCookies = cookie.parse(document.cookie)
+  cookieSubject = new Rx.BehaviorSubject currentCookies
+  cookieSubject.subscribeOnNext setCookies(currentCookies)
+
+  model = new Model({cookieSubject, proxy: request})
+
   z.router.init
     $$root: document.getElementById 'zorium-root'
 
   requests = new Rx.ReplaySubject(1)
-  $app = new App({requests})
+  $app = new App({requests, model})
   z.router.use (req, res) ->
     requests.onNext {req, res}
     res.send $app

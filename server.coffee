@@ -11,6 +11,8 @@ Rx = require 'rx-lite'
 config = require './src/config'
 gulpConfig = require './gulp_config'
 App = require './src/app'
+Model = require './src/models'
+CookieService = require './src/services/cookie'
 
 MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
 HEALTHCHECK_TIMEOUT = 200
@@ -77,7 +79,25 @@ else app.use express.static(gulpConfig.paths.build, {maxAge: '4h'})
 
 app.use router
 app.use (req, res, next) ->
-  z.renderToString new App({requests: Rx.Observable.just({req, res})})
+  setCookies = (currentCookies) ->
+    (cookies) ->
+      _.map cookies, (value, key) ->
+        unless currentCookies[key] is value
+          res.cookie(key, value, CookieService.getCookieOpts())
+      currentCookies = cookies
+
+  cookieSubject = new Rx.BehaviorSubject req.cookies
+  cookieSubject.subscribeOnNext setCookies(req.cookies)
+
+  proxy = (url, opts = {}) ->
+    request url, _.merge {
+      headers:
+        userAgent: req.headers['user-agent']
+        acceptLanguage: req.headers['accept-language']
+    }, opts
+  model = new Model({cookieSubject, proxy})
+
+  z.renderToString new App({requests: Rx.Observable.just({req, res}), model})
   .then (html) ->
     res.send '<!DOCTYPE html>' + html
   .catch (err) ->
