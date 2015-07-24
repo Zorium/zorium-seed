@@ -69,7 +69,7 @@ module.exports = class Head
       z 'link', {rel: 'shortcut icon', href: "#{favicon}"}
 
       # cache
-      z 'script',
+      z 'script.cache',
         innerHTML: "window['#{proxyCacheKey}']=#{JSON.stringify proxyCache}"
 
       # fonts

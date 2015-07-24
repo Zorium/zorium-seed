@@ -46,6 +46,8 @@ describe 'server', ->
     nock config.API_URL
     .get '/demo'
     .reply 200, {name: 'Zorium'}
+    .post '/demo/users/me'
+    .reply 200, {}
 
     flare
       .get '/'

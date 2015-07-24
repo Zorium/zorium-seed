@@ -22,10 +22,10 @@ module.exports = class HelloWorld
 
     z '.z-hello-world',
       z '.content',
-        'Hello World'
-        z '.username'
+        z '.hello',
+          'Hello World'
+        z '.username',
           "username: #{username}"
-        z 'br'
         z @$button,
           text: 'click me'
           isRaised: true

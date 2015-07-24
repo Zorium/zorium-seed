@@ -3,6 +3,7 @@ should = require('chai').should()
 request = require 'clay-request'
 Promise = require 'bluebird'
 revision = require 'git-rev'
+url = require 'url'
 
 config = require '../../src/config'
 gulpConfig = require '../../gulp_config'
@@ -63,10 +64,11 @@ describe 'functional tests', ->
   it 'navigates on button click', ->
     client
       .click '.p-home .z-hello-world button'
-      .getTitle()
-      .then (title) ->
-        title.should.eql 'Zorium Seed - Red Page'
+      .url()
+      .then ({value}) ->
+        url.parse(value).pathname.should.eql '/red'
+      .waitForExist '.p-red .z-red button'
       .click '.p-red .z-red button'
-      .getTitle()
-      .then (title) ->
-        title.should.eql 'Zorium Seed'
+      .url()
+      .then ({value}) ->
+        url.parse(value).pathname.should.eql '/'

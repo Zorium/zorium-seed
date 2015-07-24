@@ -5,15 +5,19 @@ should = require('chai').should()
 
 Head = rewire './index'
 
+mockModel =
+  getProxyCacheKey: -> 'mock'
+  getProxyCache: -> {test: 'cached'}
+
 describe 'z-head', ->
   it 'renders title', ->
-    $head = new Head()
+    $head = new Head({model: mockModel})
     $ = query $head.render {title: 'test_title'}
 
     $('title').contents.should.eql 'test_title'
 
   it 'has viewport meta', ->
-    $head = new Head()
+    $head = new Head({model: mockModel})
     $ = query $head.render({})
 
     should.exist $('meta[name=viewport]')
@@ -25,7 +29,7 @@ describe 'z-head', ->
         ENV: config.ENVS.PROD
       }, config
     }) ->
-      $head = new Head()
+      $head = new Head({model: mockModel})
       $ = query $head.render({styles: 'xxx'})
       $('.styles').innerHTML.should.eql 'xxx'
 
@@ -36,6 +40,14 @@ describe 'z-head', ->
         ENV: config.ENVS.PROD
       }, config
     }) ->
-      $head = new Head()
+      $head = new Head({model: mockModel})
       $ = query $head.render({bundlePath: 'xxx'})
       $('.bundle').src.should.eql 'xxx'
+
+  it 'caches from model proxy', ->
+    $head = new Head({model: mockModel})
+    $ = query $head.render({})
+
+    $('.cache').innerHTML.should.eql """
+      window['mock']={"test":"cached"}
+    """
