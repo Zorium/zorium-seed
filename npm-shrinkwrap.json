@@ -123,6 +123,18 @@
       "from": "cookie@",
       "resolved": "https://registry.npmjs.org/cookie/-/cookie-0.1.3.tgz"
     },
+    "cookie-parser": {
+      "version": "1.3.5",
+      "from": "cookie-parser@",
+      "resolved": "https://registry.npmjs.org/cookie-parser/-/cookie-parser-1.3.5.tgz",
+      "dependencies": {
+        "cookie-signature": {
+          "version": "1.0.6",
+          "from": "cookie-signature@1.0.6",
+          "resolved": "https://registry.npmjs.org/cookie-signature/-/cookie-signature-1.0.6.tgz"
+        }
+      }
+    },
     "express": {
       "version": "4.12.4",
       "from": "express@^4.12.3",
@@ -2076,9 +2088,9 @@
       "resolved": "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-0.7.0.tgz"
     },
     "zorium": {
-      "version": "1.0.2",
-      "from": "zorium@1.0.2",
-      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.2.tgz",
+      "version": "1.0.3",
+      "from": "zorium@1.0.3",
+      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.3.tgz",
       "dependencies": {
         "vdom-to-html": {
           "version": "2.1.1",
