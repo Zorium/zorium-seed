@@ -4,7 +4,6 @@ _ = require 'lodash'
 z = require 'zorium'
 log = require 'loglevel'
 Rx = require 'rx-lite'
-request = require 'clay-request'
 cookie = require 'cookie'
 
 require './root.styl'
@@ -55,7 +54,7 @@ init = ->
   cookieSubject = new Rx.BehaviorSubject currentCookies
   cookieSubject.subscribeOnNext setCookies(currentCookies)
 
-  model = new Model({cookieSubject, proxy: request})
+  model = new Model({cookieSubject})
 
   z.router.init
     $$root: document.getElementById 'zorium-root'

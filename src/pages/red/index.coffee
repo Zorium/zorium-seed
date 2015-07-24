@@ -6,8 +6,8 @@ Head = require '../../components/head'
 Red = require '../../components/red'
 
 module.exports = class RedPage
-  constructor: ->
-    @$head = new Head()
+  constructor: ({model}) ->
+    @$head = new Head({model})
     @$red = new Red()
 
   renderHead: (params) =>

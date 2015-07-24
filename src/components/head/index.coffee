@@ -5,7 +5,14 @@ config = require '../../config'
 gulpConfig = require '../../../gulp_config'
 
 module.exports = class Head
-  render: ({styles, bundlePath, title}) ->
+  constructor: ({model}) ->
+    @state = z.state
+      proxyCacheKey: model.getProxyCacheKey()
+      proxyCache: model.getProxyCache()
+
+  render: ({styles, bundlePath, title}) =>
+    {proxyCache, proxyCacheKey} = @state.getValue()
+
     isInliningSource = config.ENV is config.ENVS.PROD
     webpackDevHostname = gulpConfig.WEBPACK_DEV_HOSTNAME
     webpackDevPort = gulpConfig.WEBPACK_DEV_PORT
@@ -60,6 +67,10 @@ module.exports = class Head
       # misc
       z 'meta', {name: 'theme-color', content: "#{themeColor}"}
       z 'link', {rel: 'shortcut icon', href: "#{favicon}"}
+
+      # cache
+      z 'script',
+        innerHTML: "window['#{proxyCacheKey}']=#{JSON.stringify proxyCache}"
 
       # fonts
       z 'style',

@@ -4,8 +4,8 @@ _ = require 'lodash'
 Head = require '../../components/head'
 
 module.exports = class FourOhFourPage
-  constructor: ->
-    @$head = new Head()
+  constructor: ({model}) ->
+    @$head = new Head({model})
 
   renderHead: (params) =>
     z @$head, _.defaults {

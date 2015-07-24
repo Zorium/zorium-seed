@@ -46,9 +46,11 @@ module.exports = class App
       requests: requests.filter ({$page}) -> $page instanceof HomePage
     })
     $redPage = new RedPage({
+      model
       requests: requests.filter ({$page}) -> $page instanceof RedPage
     })
     $fourOhFourPage = new FourOhFourPage({
+      model
       requests: requests.filter ({$page}) -> $page instanceof FourOhFourPage
     })
 

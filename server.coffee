@@ -120,13 +120,7 @@ app.use (req, res, next) ->
   cookieSubject = new Rx.BehaviorSubject req.cookies
   cookieSubject.subscribeOnNext setCookies(req.cookies)
 
-  proxy = (url, opts = {}) ->
-    request url, _.merge {
-      headers:
-        userAgent: req.headers['user-agent']
-        acceptLanguage: req.headers['accept-language']
-    }, opts
-  model = new Model({cookieSubject, proxy})
+  model = new Model({cookieSubject, serverHeaders: req.headers})
 
   z.renderToString new App({requests: Rx.Observable.just({req, res}), model})
   .then (html) ->
