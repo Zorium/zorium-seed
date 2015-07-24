@@ -12,7 +12,7 @@ This project provides the base [Zorium](https://zorium.org) setup, following all
 Run live-updating webpack dev-server
 
   - `npm run dev`
-    - `http://localhost:3000`
+    - `http://127.0.0.1:3000`
 
 
 ## Production

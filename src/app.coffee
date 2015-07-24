@@ -32,7 +32,7 @@ else
   null
 
 module.exports = class App
-  constructor: ({requests}) ->
+  constructor: ({requests, model}) ->
     router = new Routes()
 
     requests = requests.map ({req, res}) ->
@@ -42,6 +42,7 @@ module.exports = class App
       return {req, res, route, $page}
 
     $homePage = new HomePage({
+      model
       requests: requests.filter ({$page}) -> $page instanceof HomePage
     })
     $redPage = new RedPage({

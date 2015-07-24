@@ -18,14 +18,14 @@
       "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.25.tgz"
     },
     "clay-request": {
-      "version": "0.4.1",
-      "from": "clay-request@^0.4.1",
-      "resolved": "https://registry.npmjs.org/clay-request/-/clay-request-0.4.1.tgz",
+      "version": "0.4.2",
+      "from": "clay-request@0.4.2",
+      "resolved": "https://registry.npmjs.org/clay-request/-/clay-request-0.4.2.tgz",
       "dependencies": {
         "node-fetch": {
-          "version": "1.2.1",
+          "version": "1.3.2",
           "from": "node-fetch@^1.1.0",
-          "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-1.2.1.tgz",
+          "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-1.3.2.tgz",
           "dependencies": {
             "encoding": {
               "version": "0.1.11",
@@ -33,9 +33,9 @@
               "resolved": "https://registry.npmjs.org/encoding/-/encoding-0.1.11.tgz",
               "dependencies": {
                 "iconv-lite": {
-                  "version": "0.4.8",
+                  "version": "0.4.11",
                   "from": "iconv-lite@~0.4.4",
-                  "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.8.tgz"
+                  "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.11.tgz"
                 }
               }
             }

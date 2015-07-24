@@ -5,9 +5,9 @@ Head = require '../../components/head'
 HelloWorld = require '../../components/hello_world'
 
 module.exports = class HomePage
-  constructor: ->
+  constructor: ({model}) ->
     @$head = new Head()
-    @$hello = new HelloWorld()
+    @$hello = new HelloWorld({model})
 
   renderHead: (params) =>
     z @$head, params

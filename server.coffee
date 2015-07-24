@@ -7,6 +7,7 @@ z = require 'zorium'
 Promise = require 'bluebird'
 request = require 'clay-request'
 Rx = require 'rx-lite'
+cookieParser = require 'cookie-parser'
 
 config = require './src/config'
 gulpConfig = require './gulp_config'
@@ -50,6 +51,7 @@ app.use helmet.hsts
 app.use helmet.noSniff()
 app.use helmet.crossdomain()
 app.disable 'x-powered-by'
+app.use cookieParser()
 
 app.use '/healthcheck', (req, res, next) ->
   Promise.settle [
@@ -70,8 +72,37 @@ app.use '/healthcheck', (req, res, next) ->
 app.use '/ping', (req, res) ->
   res.send 'pong'
 
-app.use '/demo', (req, res) ->
+# TODO: remove demo routes
+# BEGIN DEMO ROUTES
+demoDB = {}
+app.get '/demo', (req, res) ->
   res.json {name: 'Zorium'}
+
+app.get '/demo/users/me', (req, res) ->
+  authHeader = req.header('Authorization') or ''
+  [authScheme, accessToken] = authHeader.split(' ')
+
+  unless demoDB[accessToken]
+    return res.status(401).send()
+
+  res.json demoDB[accessToken]
+
+app.post '/demo/users/me', (req, res) ->
+  authHeader = req.header('Authorization') or ''
+  [authScheme, accessToken] = authHeader.split(' ')
+
+  if demoDB[accessToken]
+    return res.json demoDB[accessToken]
+
+  id = _.keys(demoDB).length
+  user = {
+    id: id
+    username: "test_#{id}"
+    accessToken: "#{id}_#{Math.random().toFixed(10)}"
+  }
+
+  res.json demoDB[user.accessToken] = user
+# END DEMO ROUTES
 
 if config.ENV is config.ENVS.PROD
 then app.use express.static(gulpConfig.paths.dist, {maxAge: '4h'})
