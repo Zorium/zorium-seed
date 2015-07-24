@@ -67,7 +67,7 @@ describe 'functional tests', ->
       .url()
       .then ({value}) ->
         url.parse(value).pathname.should.eql '/red'
-      .waitForExist '.p-red .z-red button'
+      .waitForVisible '.p-red .z-red button'
       .click '.p-red .z-red button'
       .url()
       .then ({value}) ->

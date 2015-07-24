@@ -1,4 +1,4 @@
-webdriverio = require 'clay-webdriverio'
+webdriverio = require 'webdriverio'
 SauceLabs = require 'saucelabs'
 Promise = require 'bluebird'
 

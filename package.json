@@ -17,7 +17,6 @@
     "browser-builtins": "^3.3.0",
     "chai": "^2.3.0",
     "clay-coffeescript-style-guide": "^1.1.0",
-    "clay-webdriverio": "^3.0.0-rc3-clay",
     "coffee-loader": "^0.7.2",
     "css-loader": "^0.10.1",
     "del": "^1.1.1",
@@ -72,6 +71,7 @@
     "qs": "^2.4.1",
     "routes": "^2.0.0",
     "rx-lite": "^2.5.2",
+    "webdriverio": "^3.1.0",
     "whatwg-fetch": "^0.7.0",
     "zorium": "^1.0.3",
     "zorium-paper": "^0.4.0"
