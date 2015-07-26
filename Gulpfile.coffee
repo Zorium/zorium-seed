@@ -18,19 +18,19 @@ ExtractTextPlugin = require 'extract-text-webpack-plugin'
 cfg = require './gulp_config' # gulpConfig
 
 gulp.task 'dev', ['dev:webpack-server', 'dev:server']
-gulp.task 'test', ['test:lint', 'test:coverage', 'test:karma']
+gulp.task 'test', ['lint', 'test:coverage', 'test:browser']
 gulp.task 'dist', ['dist:scripts', 'dist:static', 'dist:manifest']
 
 gulp.task 'watch', ->
   gulp.watch cfg.paths.coffee, ['test:unit']
 gulp.task 'watch:phantom', ->
-  gulp.watch cfg.paths.coffee, ['test:karma:phantom']
+  gulp.watch cfg.paths.coffee, ['test:browser:phantom']
 gulp.task 'watch:server', ->
   gulp.watch cfg.paths.coffee, ['test:server']
 gulp.task 'watch:functional', ->
   gulp.watch cfg.paths.coffee, ['test:functional']
 
-gulp.task 'test:lint', ->
+gulp.task 'lint', ->
   gulp.src cfg.paths.coffee
     .pipe coffeelint(null, clayLintConfig)
     .pipe coffeelint.reporter()
@@ -50,7 +50,7 @@ gulp.task 'test:unit', ->
   gulp.src cfg.paths.unitTests
     .pipe mocha()
 
-gulp.task 'test:karma:phantom', ['build:scripts:test'], (cb) ->
+gulp.task 'test:browser:phantom', ['build:scripts:test'], (cb) ->
   karma.start _.defaults({
     browsers: ['PhantomJS']
   }, cfg.karma), cb
@@ -59,7 +59,7 @@ gulp.task 'test:server', ->
   gulp.src cfg.paths.serverTests
     .pipe mocha()
 
-gulp.task 'test:karma', ['build:scripts:test'], (cb) ->
+gulp.task 'test:browser', ['build:scripts:test'], (cb) ->
   karma.start cfg.karma, cb
 
 gulp.task 'test:functional', ->
