@@ -2,7 +2,7 @@ require './polyfill'
 
 _ = require 'lodash'
 z = require 'zorium'
-log = require 'loglevel'
+log = require 'loga'
 Rx = require 'rx-lite'
 cookie = require 'cookie'
 
@@ -19,17 +19,10 @@ Model = require './models'
 # LOGGING #
 ###########
 
-if config.ENV isnt config.ENVS.PROD
-  log.enableAll()
-else
-  # TODO: Configure ErrorReportService before usage
-  # originalFactory = log.methodFactory
-  # log.methodFactory = (methodName, logLevel) ->
-  #   rawMethod = originalFactory(methodName, logLevel)
-  #   (args...) ->
-  #     ErrorReportService.report args...
-  #     return rawMethod args...
-  log.setLevel 'warn' # Note: required to apply plugin
+if config.ENV is config.ENVS.PROD
+  log.level = 'warn'
+  # TODO: configure
+  # log.on 'error', ErrorReportService.report
 
 # Note: window.onerror != window.addEventListener('error')
 oldOnError = window.onerror

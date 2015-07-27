@@ -1,7 +1,7 @@
 express = require 'express'
 _ = require 'lodash'
 compress = require 'compression'
-log = require 'loglevel'
+log = require 'loga'
 helmet = require 'helmet'
 z = require 'zorium'
 Promise = require 'bluebird'
@@ -20,8 +20,6 @@ HEALTHCHECK_TIMEOUT = 200
 
 app = express()
 router = express.Router()
-
-log.enableAll()
 
 app.use compress()
 
