@@ -41,7 +41,6 @@
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-webpack": "^1.5.0",
     "mocha": "^2.2.4",
-    "nock": "^1.6.0",
     "rewire": "^2.3.1",
     "rewire-webpack": "^1.0.0",
     "saucelabs": "^0.1.1",
@@ -51,10 +50,10 @@
     "vtree-query": "^0.2.0",
     "webpack": "^1.8.4",
     "webpack-dev-server": "^1.8.0",
-    "zock": "0.0.11"
+    "zock": "^0.1.2"
   },
   "dependencies": {
-    "assert-none-missing": "^0.1.0",
+    "assert-none-missing": "^0.1.1",
     "bluebird": "^2.9.24",
     "clay-request": "^0.4.2",
     "coffee-script": "^1.9.2",

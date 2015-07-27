@@ -1,5 +1,5 @@
 flareGun = require 'flare-gun'
-nock = require 'nock'
+zock = require 'zock'
 should = require('chai').should()
 
 app = require '../../server'
@@ -7,35 +7,34 @@ config = require '../../src/config'
 
 flare = flareGun.express(app)
 
-before ->
-  nock.enableNetConnect('0.0.0.0')
-
 after ->
   flare.close()
 
 describe 'server', ->
   it 'is healthy', ->
-    nock config.API_URL
+    zock
+    .base config.API_URL
     .get '/ping'
     .reply 200, 'pong'
-
-    flare
-      .get '/healthcheck'
-      .expect 200, {
-        healthy: true
-      }
+    .withOverride ->
+      flare
+        .get '/healthcheck'
+        .expect 200, {
+          healthy: true
+        }
 
   it 'fails if not healthy', ->
-    nock config.API_URL
+    zock
+    .base config.API_URL
     .get '/ping'
-    .reply 503, 'error'
-
-    flare
-      .get '/healthcheck'
-      .expect 500, {
-        api: false
-        healthy: false
-      }
+    .reply 503
+    .withOverride ->
+      flare
+        .get '/healthcheck'
+        .expect 500, {
+          api: false
+          healthy: false
+        }
 
   it 'pongs', ->
     flare
@@ -43,15 +42,16 @@ describe 'server', ->
       .expect 200, 'pong'
 
   it 'renders /', ->
-    nock config.API_URL
+    zock
+    .base config.API_URL
     .get '/demo'
     .reply 200, {name: 'Zorium'}
     .post '/demo/users/me'
     .reply 200, {}
-
-    flare
-      .get '/'
-      .expect 200
+    .withOverride ->
+      flare
+        .get '/'
+        .expect 200
 
   it 'renders /404', ->
     flare
