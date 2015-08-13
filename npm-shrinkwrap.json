@@ -1999,9 +1999,9 @@
       }
     },
     "zorium-paper": {
-      "version": "0.4.0",
-      "from": "https://registry.npmjs.org/zorium-paper/-/zorium-paper-0.4.0.tgz",
-      "resolved": "https://registry.npmjs.org/zorium-paper/-/zorium-paper-0.4.0.tgz"
+      "version": "0.4.1",
+      "from": "zorium-paper@0.4.1",
+      "resolved": "https://registry.npmjs.org/zorium-paper/-/zorium-paper-0.4.1.tgz"
     }
   }
 }
