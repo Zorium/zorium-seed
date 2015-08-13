@@ -1,3 +1,5 @@
+_ = require 'lodash'
+
 config = require '../config'
 
 # Report client-side errors to a server-side logging route
