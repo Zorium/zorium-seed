@@ -74,7 +74,7 @@
     "rx-lite": "^2.5.2",
     "whatwg-fetch": "^0.7.0",
     "zorium": "^1.0.3",
-    "zorium-paper": "^0.4.0"
+    "zorium-paper": "^0.4.1"
   },
   "directories": {
     "test": "test"
