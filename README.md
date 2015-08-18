@@ -32,8 +32,6 @@ docker run \
     -v /var/log:/var/log \
     -p 3000:3000 \
     -e PORT=3000 \
-    -e LOG_DIR=/var/log \
-    -e LOG_NAME=zorium_seed \
     --name zorium-site \
     -d \
     -t zorium-site
