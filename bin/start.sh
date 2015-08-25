@@ -28,9 +28,9 @@ while read -d $'\0' -r file; do
       env_name="${BASH_REMATCH[1]}"
       env_value=$(echo $(eval "echo \$$env_name") | sed -e 's/[\/&]/\\&/g')
       echo "replacing $env_name with '$env_value'"
-      sed -i s/REPLACE__$env_name/\"$env_value\"/g $file
+      sed -i.bak s/REPLACE__$env_name/\"$env_value\"/g $file
     fi
   done < <(grep -o "REPLACE__[A-Z0-9_]\+" $file | uniq)
-done < <(find $paths_dist -maxdepth 1 -iname '*.bundle.js' -print0)
+done < <(find $paths_dist -maxdepth 1 -iname '*.js' -print0)
 
 ./node_modules/coffee-script/bin/coffee ./bin/server.coffee
