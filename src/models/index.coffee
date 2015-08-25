@@ -14,13 +14,24 @@ else
   require bluebird
 
 PROXY_CACHE_KEY = 'ZORIUM_PROXY_CACHE'
+CACHE_EXPIRE_TIME_MS = 1000 * 10 # 10 seconds
 
 isGetRequest = (opts) ->
   not opts.method or opts.method.toLowerCase() is 'get'
 
 module.exports = class Model
   constructor: ({cookieSubject, serverHeaders}) ->
-    proxyCache = new Rx.BehaviorSubject(window?[PROXY_CACHE_KEY] or {})
+    existingCache = window?[PROXY_CACHE_KEY]
+    isCacheValid = existingCache? and \
+      Date.now() < existingCache._expireTime and \
+      # Because client clock may be incorrect and set way in the past
+      Date.now() > existingCache._expireTime - CACHE_EXPIRE_TIME_MS
+    proxyCache = if isCacheValid
+      new Rx.BehaviorSubject(existingCache)
+    else
+      new Rx.BehaviorSubject({
+        _expireTime: Date.now() + CACHE_EXPIRE_TIME_MS
+      })
 
     proxy = (url, opts = {}) ->
       cacheKey = JSON.stringify(opts) + '__z__' + url
