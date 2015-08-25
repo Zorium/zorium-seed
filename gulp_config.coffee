@@ -13,6 +13,13 @@ paths =
   root: './src/root.coffee'
   dist: './dist'
   build: './build'
+  manifest: [
+    './dist/**/*'
+    '!./dist/**/*.map'
+    '!./dist/humans.txt'
+    '!./dist/robots.txt'
+    '!./dist/stats.json'
+  ]
 
 karma =
   singleRun: true

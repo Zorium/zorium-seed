@@ -167,7 +167,7 @@ gulp.task 'dist:scripts', ['dist:clean'], ->
   .pipe gulp.dest cfg.paths.dist
 
 gulp.task 'dist:manifest', ['dist:static', 'dist:scripts'], ->
-  gulp.src cfg.paths.dist + '/**/*'
+  gulp.src cfg.paths.manifest
     .pipe manifest {
       hash: true
       timestamp: false
