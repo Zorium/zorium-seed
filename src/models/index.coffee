@@ -45,8 +45,10 @@ module.exports = class Model
       proxyOpts = if serverHeaders
         _.merge {
           headers:
-            userAgent: serverHeaders['user-agent']
-            acceptLanguage: serverHeaders['accept-language']
+            'cookie': serverHeaders['cookie']
+            'user-agent': serverHeaders['user-agent']
+            'accept-language': serverHeaders['accept-language']
+            'x-forwarded-for': serverHeaders['x-forwarded-for']
         }, opts
       else
         opts
