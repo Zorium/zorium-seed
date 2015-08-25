@@ -13,7 +13,7 @@
     "watch-functional": "./bin/watch_functional.sh"
   },
   "devDependencies": {
-    "autoprefixer-loader": "^1.2.0",
+    "autoprefixer-loader": "^2.0.0",
     "browser-builtins": "^3.3.0",
     "chai": "^2.3.0",
     "clay-coffeescript-style-guide": "^1.1.0",

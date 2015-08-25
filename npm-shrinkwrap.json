@@ -3,8 +3,83 @@
   "dependencies": {
     "assert-none-missing": {
       "version": "0.1.2",
-      "from": "assert-none-missing@0.1.2",
+      "from": "https://registry.npmjs.org/assert-none-missing/-/assert-none-missing-0.1.2.tgz",
       "resolved": "https://registry.npmjs.org/assert-none-missing/-/assert-none-missing-0.1.2.tgz"
+    },
+    "autoprefixer-loader": {
+      "version": "2.0.0",
+      "from": "autoprefixer-loader@2.0.0",
+      "resolved": "https://registry.npmjs.org/autoprefixer-loader/-/autoprefixer-loader-2.0.0.tgz",
+      "dependencies": {
+        "autoprefixer-core": {
+          "version": "5.2.1",
+          "from": "autoprefixer-core@^5.1.0",
+          "resolved": "https://registry.npmjs.org/autoprefixer-core/-/autoprefixer-core-5.2.1.tgz",
+          "dependencies": {
+            "browserslist": {
+              "version": "0.4.0",
+              "from": "browserslist@~0.4.0",
+              "resolved": "https://registry.npmjs.org/browserslist/-/browserslist-0.4.0.tgz"
+            },
+            "num2fraction": {
+              "version": "1.1.0",
+              "from": "num2fraction@^1.1.0",
+              "resolved": "https://registry.npmjs.org/num2fraction/-/num2fraction-1.1.0.tgz"
+            },
+            "caniuse-db": {
+              "version": "1.0.30000276",
+              "from": "caniuse-db@^1.0.30000214",
+              "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000276.tgz"
+            }
+          }
+        },
+        "loader-utils": {
+          "version": "0.2.11",
+          "from": "loader-utils@^0.2.5",
+          "resolved": "https://registry.npmjs.org/loader-utils/-/loader-utils-0.2.11.tgz",
+          "dependencies": {
+            "big.js": {
+              "version": "3.1.3",
+              "from": "big.js@^3.0.2",
+              "resolved": "https://registry.npmjs.org/big.js/-/big.js-3.1.3.tgz"
+            },
+            "json5": {
+              "version": "0.4.0",
+              "from": "json5@^0.4.0",
+              "resolved": "https://registry.npmjs.org/json5/-/json5-0.4.0.tgz"
+            }
+          }
+        },
+        "postcss": {
+          "version": "4.1.16",
+          "from": "postcss@^4.1.11",
+          "resolved": "https://registry.npmjs.org/postcss/-/postcss-4.1.16.tgz",
+          "dependencies": {
+            "es6-promise": {
+              "version": "2.3.0",
+              "from": "es6-promise@~2.3.0",
+              "resolved": "https://registry.npmjs.org/es6-promise/-/es6-promise-2.3.0.tgz"
+            },
+            "source-map": {
+              "version": "0.4.4",
+              "from": "source-map@~0.4.2",
+              "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.4.4.tgz",
+              "dependencies": {
+                "amdefine": {
+                  "version": "1.0.0",
+                  "from": "amdefine@>=0.0.4",
+                  "resolved": "https://registry.npmjs.org/amdefine/-/amdefine-1.0.0.tgz"
+                }
+              }
+            },
+            "js-base64": {
+              "version": "2.1.9",
+              "from": "js-base64@~2.1.8",
+              "resolved": "https://registry.npmjs.org/js-base64/-/js-base64-2.1.9.tgz"
+            }
+          }
+        }
+      }
     },
     "bluebird": {
       "version": "2.9.25",
@@ -494,11 +569,12 @@
     },
     "loga": {
       "version": "0.1.1",
-      "from": "loga@",
+      "from": "loga@0.1.1",
+      "resolved": "https://registry.npmjs.org/loga/-/loga-0.1.1.tgz",
       "dependencies": {
         "coffee-script": {
           "version": "1.9.3",
-          "from": "coffee-script@^1.9.3",
+          "from": "https://registry.npmjs.org/coffee-script/-/coffee-script-1.9.3.tgz",
           "resolved": "https://registry.npmjs.org/coffee-script/-/coffee-script-1.9.3.tgz"
         }
       }
@@ -673,7 +749,7 @@
     },
     "zorium-paper": {
       "version": "0.4.1",
-      "from": "zorium-paper@0.4.1",
+      "from": "https://registry.npmjs.org/zorium-paper/-/zorium-paper-0.4.1.tgz",
       "resolved": "https://registry.npmjs.org/zorium-paper/-/zorium-paper-0.4.1.tgz"
     }
   }
