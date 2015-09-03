@@ -57,7 +57,7 @@
   "dependencies": {
     "assert-none-missing": "^0.1.2",
     "bluebird": "^2.9.24",
-    "clay-request": "^0.4.2",
+    "clay-request": "^0.4.3",
     "coffee-script": "^1.9.2",
     "compression": "^1.4.3",
     "cookie": "^0.1.3",
