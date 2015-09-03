@@ -52,7 +52,7 @@
     "webdriverio": "^3.1.0",
     "webpack": "^1.8.4",
     "webpack-dev-server": "^1.8.0",
-    "zock": "^0.1.2"
+    "zock": "^0.2.0"
   },
   "dependencies": {
     "assert-none-missing": "^0.1.2",

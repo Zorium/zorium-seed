@@ -16,7 +16,7 @@ describe 'server', ->
     .base config.API_URL
     .get '/ping'
     .reply 200, 'pong'
-    .withOverride ->
+    .withOverrides ->
       flare
         .get '/healthcheck'
         .expect 200, {
@@ -28,7 +28,7 @@ describe 'server', ->
     .base config.API_URL
     .get '/ping'
     .reply 503
-    .withOverride ->
+    .withOverrides ->
       flare
         .get '/healthcheck'
         .expect 500, {
@@ -48,7 +48,7 @@ describe 'server', ->
     .reply 200, {name: 'Zorium'}
     .post '/demo/users/me'
     .reply 200, {}
-    .withOverride ->
+    .withOverrides ->
       flare
         .get '/'
         .expect 200
