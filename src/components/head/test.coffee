@@ -2,12 +2,12 @@ _ = require 'lodash'
 query = require 'vtree-query'
 rewire = require 'rewire'
 should = require('chai').should()
+Netox = require 'netox'
 
 Head = rewire './index'
 
 mockModel =
-  getProxyCacheKey: -> 'mock'
-  getProxyCache: -> {test: 'cached'}
+  netox: new Netox()
 
 describe 'z-head', ->
   it 'renders title', ->
@@ -43,11 +43,3 @@ describe 'z-head', ->
       $head = new Head({model: mockModel})
       $ = query $head.render({bundlePath: 'xxx'})
       $('.bundle').src.should.eql 'xxx'
-
-  it 'caches from model proxy', ->
-    $head = new Head({model: mockModel})
-    $ = query $head.render({})
-
-    $('.cache').innerHTML.should.eql """
-      window['mock']={"test":"cached"}
-    """

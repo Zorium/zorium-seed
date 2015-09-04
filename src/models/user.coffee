@@ -1,29 +1,35 @@
 _ = require 'lodash'
 Rx = require 'rx-lite'
+log = require 'loga'
 
 config = require '../config'
 
 module.exports = class User
-  constructor: ({@cookieSubject, @proxy}) -> null
-  login: =>
-    @proxy config.API_URL + '/demo/users/me', {method: 'POST'}
+  constructor: ({@cookieSubject, @netox}) ->
+    @validAccessTokens = new Rx.ReplaySubject(1)
+
+    @loginAnon(@cookieSubject.getValue()[config.AUTH_COOKIE])
+    .catch =>
+      @loginAnon()
+    .catch log.error
+
+  loginAnon: (accessToken = null) =>
+    @netox.fetch config.API_URL + '/demo/users/me',
+      method: 'POST'
+      isIdempotent: true
+      headers:
+        'Authorization': accessToken? and "Token #{accessToken}" or undefined
+    .then (user) =>
+      @validAccessTokens.onNext user.accessToken
+      authCookies = {}
+      authCookies[config.AUTH_COOKIE] = user.accessToken
+      @cookieSubject.onNext \
+        _.defaults authCookies, @cookieSubject.getValue()
+      return user
 
   getMe: =>
-    Rx.Observable.defer =>
-      accessToken = @cookieSubject.getValue()[config.AUTH_COOKIE]
-      (if accessToken
-        @proxy config.API_URL + '/demo/users/me',
-          headers:
-            Authorization: "Token #{accessToken}"
-        .catch (err) =>
-          unless err.status is 401
-            throw err
-
-          @login()
-      else
-        @login()
-      ).then (user) =>
-        authCookies = {}
-        authCookies[config.AUTH_COOKIE] = user.accessToken
-        @cookieSubject.onNext _.defaults authCookies, @cookieSubject.getValue()
-        return user
+    @validAccessTokens
+    .flatMapLatest (accessToken) =>
+      @netox.stream config.API_URL + '/demo/users/me',
+        headers:
+          Authorization: "Token #{accessToken}"

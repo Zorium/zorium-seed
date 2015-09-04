@@ -7,11 +7,10 @@ gulpConfig = require '../../../gulp_config'
 module.exports = class Head
   constructor: ({model}) ->
     @state = z.state
-      proxyCacheKey: model.getProxyCacheKey()
-      proxyCache: model.getProxyCache()
+      netoxSerialization: model.netox.getSerializationStream()
 
   render: ({styles, bundlePath, title}) =>
-    {proxyCache, proxyCacheKey} = @state.getValue()
+    {netoxSerialization} = @state.getValue()
 
     isInliningSource = config.ENV is config.ENVS.PROD
     webpackDevHostname = gulpConfig.WEBPACK_DEV_HOSTNAME
@@ -69,8 +68,8 @@ module.exports = class Head
       z 'link', {rel: 'shortcut icon', href: "#{favicon}"}
 
       # cache
-      z 'script.cache',
-        innerHTML: "window['#{proxyCacheKey}']=#{JSON.stringify proxyCache}"
+      z 'script.netox',
+        innerHTML: netoxSerialization or ''
 
       # fonts
       z 'style',
