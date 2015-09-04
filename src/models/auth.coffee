@@ -13,15 +13,20 @@ module.exports = class Auth
       unless initialAuthPromise?
         cookieAccessToken = cookieSubject.getValue()[config.AUTH_COOKIE]
 
-        initialAuthPromise = @netox.stream config.API_URL + '/demo/users/me',
-          headers:
-            Authorization: "Token #{cookieAccessToken}"
-        .take(1).toPromise()
-        .catch =>
+        initialAuthPromise = (if cookieAccessToken?
+          @netox.stream config.API_URL + '/demo/users/me',
+            headers:
+              Authorization: "Token #{cookieAccessToken}"
+          .take(1).toPromise()
+          .catch =>
+            @netox.fetch config.API_URL + '/demo/users/me',
+              method: 'POST'
+              isIdempotent: true
+        else
           @netox.fetch config.API_URL + '/demo/users/me',
             method: 'POST'
             isIdempotent: true
-        .then ({accessToken}) => accessToken
+        ).then ({accessToken}) -> accessToken
       return initialAuthPromise
 
     @accessTokens = @accessTokenStreams.switch()
