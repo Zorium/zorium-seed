@@ -72,7 +72,8 @@ app.use '/ping', (req, res) ->
 
 # TODO: remove demo routes
 # BEGIN DEMO ROUTES
-demoDB = {}
+demoUserDB = {}
+demoCount = 0
 app.get '/demo', (req, res) ->
   res.json {name: 'Zorium'}
 
@@ -80,26 +81,45 @@ app.get '/demo/users/me', (req, res) ->
   authHeader = req.header('Authorization') or ''
   [authScheme, accessToken] = authHeader.split(' ')
 
-  unless demoDB[accessToken]
+  unless demoUserDB[accessToken]
     return res.status(401).send()
 
-  res.json demoDB[accessToken]
+  res.json demoUserDB[accessToken]
 
 app.post '/demo/users/me', (req, res) ->
   authHeader = req.header('Authorization') or ''
   [authScheme, accessToken] = authHeader.split(' ')
 
-  if demoDB[accessToken]
-    return res.json demoDB[accessToken]
+  if demoUserDB[accessToken]
+    return res.json demoUserDB[accessToken]
 
-  id = _.keys(demoDB).length
+  id = _.keys(demoUserDB).length
   user = {
     id: id
     username: "test_#{id}"
     accessToken: "#{id}_#{Math.random().toFixed(10)}"
   }
 
-  res.json demoDB[user.accessToken] = user
+  res.json demoUserDB[user.accessToken] = user
+
+app.get '/demo/count', (req, res) ->
+  authHeader = req.header('Authorization') or ''
+  [authScheme, accessToken] = authHeader.split(' ')
+
+  unless demoUserDB[accessToken]
+    return res.status(401).send()
+
+  res.json {count: demoCount}
+
+app.post '/demo/count', (req, res) ->
+  authHeader = req.header('Authorization') or ''
+  [authScheme, accessToken] = authHeader.split(' ')
+
+  unless demoUserDB[accessToken]
+    return res.status(401).send()
+
+  demoCount += 1
+  res.json {count: demoCount}
 # END DEMO ROUTES
 
 if config.ENV is config.ENVS.PROD
