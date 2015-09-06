@@ -1,7 +1,7 @@
 z = require 'zorium'
 paperColors = require 'zorium-paper/colors.json'
 Rx = require 'rx-lite'
-Routes = require 'routes'
+HttpHash = require 'http-hash'
 Qs = require 'qs'
 
 Rx.config.Promise = if window?
@@ -41,11 +41,12 @@ else
 
 module.exports = class App
   constructor: ({requests, model}) ->
-    router = new Routes()
+    router = new HttpHash()
 
+    defaultHandler = -> $fourOhFourPage
     requests = requests.map ({req, res}) ->
-      route = router.match req.path
-      $page = route.fn()
+      route = router.get req.path
+      $page = if route.handler? then route.handler() else defaultHandler()
 
       return {req, res, route, $page}
 
@@ -62,9 +63,8 @@ module.exports = class App
       requests: requests.filter ({$page}) -> $page instanceof FourOhFourPage
     })
 
-    router.addRoute '/', -> $homePage
-    router.addRoute '/red', -> $redPage
-    router.addRoute '*', -> $fourOhFourPage
+    router.set '/', -> $homePage
+    router.set '/red', -> $redPage
 
     handleRequest = requests.doOnNext ({req, res, route, $page}) =>
       {$currentPage} = @state.getValue()
