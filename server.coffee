@@ -10,7 +10,7 @@ Rx = require 'rx-lite'
 cookieParser = require 'cookie-parser'
 
 config = require './src/config'
-gulpConfig = require './gulp_config'
+gulpPaths = require './gulp_paths'
 App = require './src/app'
 Model = require './src/models'
 CookieService = require './src/services/cookie'
@@ -23,8 +23,8 @@ router = express.Router()
 
 app.use compress()
 
-webpackDevHost = "#{gulpConfig.WEBPACK_DEV_HOSTNAME}:" +
-                 "#{gulpConfig.WEBPACK_DEV_PORT}"
+webpackDevHost = "#{config.WEBPACK_DEV_HOSTNAME}:" +
+                 "#{config.WEBPACK_DEV_PORT}"
 scriptSrc = [
   '\'self\''
   '\'unsafe-inline\''
@@ -123,8 +123,8 @@ app.post '/demo/count', (req, res) ->
 # END DEMO ROUTES
 
 if config.ENV is config.ENVS.PROD
-then app.use express.static(gulpConfig.paths.dist, {maxAge: '4h'})
-else app.use express.static(gulpConfig.paths.build, {maxAge: '4h'})
+then app.use express.static(gulpPaths.dist, {maxAge: '4h'})
+else app.use express.static(gulpPaths.build, {maxAge: '4h'})
 
 app.use router
 app.use (req, res, next) ->

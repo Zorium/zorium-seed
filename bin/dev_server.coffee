@@ -3,10 +3,9 @@ log = require 'loga'
 
 app = require '../server'
 config = require '../src/config'
-gulpConfig = require '../gulp_config'
 
-webpackDevPort = gulpConfig.WEBPACK_DEV_PORT
-webpackDevHostname = gulpConfig.WEBPACK_DEV_HOSTNAME
+webpackDevPort = config.WEBPACK_DEV_PORT
+webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
 
 app.all '/*', (req, res, next) ->
   res.header(

@@ -15,68 +15,89 @@ WebpackDevServer = require 'webpack-dev-server'
 clayLintConfig = require 'clay-coffeescript-style-guide'
 ExtractTextPlugin = require 'extract-text-webpack-plugin'
 
-cfg = require './gulp_config' # gulpConfig
+config = require './src/config'
+paths = require './gulp_paths'
+
+FUNCTIONAL_TEST_TIMEOUT_MS = 10 * 1000 # 10sec
+
+karmaConfig =
+  singleRun: true
+  frameworks: ['mocha']
+  files: [paths.build + '/bundle.js']
+  browsers: ['Chrome', 'Firefox']
+
+cssLoader = 'css!autoprefixer!stylus?paths[]=node_modules'
+
+webpackBase =
+  module:
+    exprContextRegExp: /$^/
+    exprContextCritical: false
+  resolve:
+    extensions: ['.coffee', '.js', '.json', '']
+  output:
+    filename: 'bundle.js'
+    publicPath: '/'
 
 gulp.task 'dev', ['dev:webpack-server', 'dev:server']
 gulp.task 'test', ['lint', 'test:coverage', 'test:browser']
 gulp.task 'dist', ['dist:scripts', 'dist:static', 'dist:manifest']
 
 gulp.task 'watch', ->
-  gulp.watch cfg.paths.coffee, ['test:unit']
+  gulp.watch paths.coffee, ['test:unit']
 gulp.task 'watch:phantom', ->
-  gulp.watch cfg.paths.coffee, ['test:browser:phantom']
+  gulp.watch paths.coffee, ['test:browser:phantom']
 gulp.task 'watch:server', ->
-  gulp.watch cfg.paths.coffee, ['test:server']
+  gulp.watch paths.coffee, ['test:server']
 gulp.task 'watch:functional', ->
-  gulp.watch cfg.paths.coffee, ['test:functional']
+  gulp.watch paths.coffee, ['test:functional']
 
 gulp.task 'lint', ->
-  gulp.src cfg.paths.coffee
+  gulp.src paths.coffee
     .pipe coffeelint(null, clayLintConfig)
     .pipe coffeelint.reporter()
 
 gulp.task 'test:coverage', ->
-  gulp.src cfg.paths.cover
+  gulp.src paths.cover
     .pipe istanbul includeUntested: false
     .pipe istanbul.hookRequire()
     .on 'finish', ->
-      gulp.src cfg.paths.unitTests.concat [cfg.paths.serverTests]
+      gulp.src paths.unitTests.concat [paths.serverTests]
         .pipe mocha()
         .pipe istanbul.writeReports({
           reporters: ['html', 'text', 'text-summary']
         })
 
 gulp.task 'test:unit', ->
-  gulp.src cfg.paths.unitTests
+  gulp.src paths.unitTests
     .pipe mocha()
 
 gulp.task 'test:browser:phantom', ['build:scripts:test'], (cb) ->
   karma.start _.defaults({
     browsers: ['PhantomJS']
-  }, cfg.karma), cb
+  }, karmaConfig), cb
 
 gulp.task 'test:server', ->
-  gulp.src cfg.paths.serverTests
+  gulp.src paths.serverTests
     .pipe mocha()
 
 gulp.task 'test:browser', ['build:scripts:test'], (cb) ->
-  karma.start cfg.karma, cb
+  karma.start karmaConfig, cb
 
 gulp.task 'test:functional', ->
-  gulp.src cfg.paths.functionalTests
-    .pipe mocha(timeout: cfg.FUNCTIONAL_TEST_TIMEOUT_MS)
+  gulp.src paths.functionalTests
+    .pipe mocha(timeout: FUNCTIONAL_TEST_TIMEOUT_MS)
 
 gulp.task 'dev:server', ['build:static:dev'], ->
   nodemon {script: 'bin/dev_server.coffee', ext: 'js json coffee'}
 
 gulp.task 'dev:webpack-server', ->
-  webpackDevPort = cfg.WEBPACK_DEV_PORT
-  webpackDevHostname = cfg.WEBPACK_DEV_HOSTNAME
+  webpackDevPort = config.WEBPACK_DEV_PORT
+  webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
 
   entries = [
     "webpack-dev-server/client?http://#{webpackDevHostname}:#{webpackDevPort}"
     'webpack/hot/dev-server'
-    cfg.paths.root
+    paths.root
   ]
 
   compiler = webpack _.defaultsDeep {
@@ -92,12 +113,12 @@ gulp.task 'dev:webpack-server', ->
       loaders: [
         {test: /\.coffee$/, loader: 'coffee'}
         {test: /\.json$/, loader: 'json'}
-        {test: /\.styl$/, loader: 'style!' + cfg.cssLoader}
+        {test: /\.styl$/, loader: 'style!' + cssLoader}
       ]
     plugins: [
       new webpack.HotModuleReplacementPlugin()
     ]
-  }, cfg.webpack
+  }, webpackBase
 
   new WebpackDevServer compiler,
     publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/"
@@ -109,11 +130,11 @@ gulp.task 'dev:webpack-server', ->
     console.log 'Webpack listening on port %d', webpackDevPort
 
 gulp.task 'build:static:dev', ->
-  gulp.src cfg.paths.static
-    .pipe gulp.dest cfg.paths.build
+  gulp.src paths.static
+    .pipe gulp.dest paths.build
 
 gulp.task 'build:scripts:test', ->
-  gulp.src cfg.paths.unitTests
+  gulp.src paths.unitTests
   .pipe gulpWebpack _.defaultsDeep {
     devtool: 'inline-source-map'
     module:
@@ -123,23 +144,23 @@ gulp.task 'build:scripts:test', ->
       loaders: [
         {test: /\.coffee$/, loader: 'coffee'}
         {test: /\.json$/, loader: 'json'}
-        {test: /\.styl$/, loader: 'style!' + cfg.cssLoader}
+        {test: /\.styl$/, loader: 'style!' + cssLoader}
       ]
     plugins: [
       new RewirePlugin()
     ]
-  }, cfg.webpack
-  .pipe gulp.dest cfg.paths.build
+  }, webpackBase
+  .pipe gulp.dest paths.build
 
 gulp.task 'dist:clean', (cb) ->
-  del cfg.paths.dist, cb
+  del paths.dist, cb
 
 gulp.task 'dist:static', ['dist:clean'], ->
-  gulp.src cfg.paths.static
-    .pipe gulp.dest cfg.paths.dist
+  gulp.src paths.static
+    .pipe gulp.dest paths.dist
 
 gulp.task 'dist:scripts', ['dist:clean'], ->
-  webpackConfig = _.defaultsDeep {
+  scriptsConfig = _.defaultsDeep {
     devtool: 'source-map'
     plugins: [
       new webpack.optimize.UglifyJsPlugin()
@@ -153,25 +174,25 @@ gulp.task 'dist:scripts', ['dist:clean'], ->
         {test: /\.json$/, loader: 'json'}
         {
           test: /\.styl$/
-          loader: ExtractTextPlugin.extract 'style', cfg.cssLoader
+          loader: ExtractTextPlugin.extract 'style', cssLoader
         }
       ]
-  }, cfg.webpack
+  }, webpackBase
 
-  gulp.src cfg.paths.root
-  .pipe gulpWebpack webpackConfig, null, (err, stats) ->
+  gulp.src paths.root
+  .pipe gulpWebpack scriptsConfig, null, (err, stats) ->
     if err
       console.trace err
       return
     statsJson = JSON.stringify {hash: stats.toJson().hash}
-    fs.writeFileSync "#{__dirname}/#{cfg.paths.dist}/stats.json", statsJson
-  .pipe gulp.dest cfg.paths.dist
+    fs.writeFileSync "#{__dirname}/#{paths.dist}/stats.json", statsJson
+  .pipe gulp.dest paths.dist
 
 gulp.task 'dist:manifest', ['dist:static', 'dist:scripts'], ->
-  gulp.src cfg.paths.manifest
+  gulp.src paths.manifest
     .pipe manifest {
       hash: true
       timestamp: false
       preferOnline: true
     }
-    .pipe gulp.dest cfg.paths.dist
+    .pipe gulp.dest paths.dist

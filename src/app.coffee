@@ -13,7 +13,7 @@ else
   require bluebird
 
 config = require './config'
-gulpConfig = require '../gulp_config'
+gulpPaths = require '../gulp_paths'
 HomePage = require './pages/home'
 RedPage = require './pages/red'
 FourOhFourPage = require './pages/404'
@@ -24,7 +24,7 @@ styles = if not window? and config.ENV is config.ENVS.PROD
   # Avoid webpack include
   _fs = 'fs'
   fs = require _fs
-  fs.readFileSync gulpConfig.paths.dist + '/bundle.css', 'utf-8'
+  fs.readFileSync gulpPaths.dist + '/bundle.css', 'utf-8'
 else
   null
 
@@ -33,7 +33,7 @@ bundlePath = if not window? and config.ENV is config.ENVS.PROD
   _fs = 'fs'
   fs = require _fs
   stats = JSON.parse \
-    fs.readFileSync gulpConfig.paths.dist + '/stats.json', 'utf-8'
+    fs.readFileSync gulpPaths.dist + '/stats.json', 'utf-8'
 
   "/#{stats.hash}.bundle.js"
 else

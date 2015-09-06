@@ -2,7 +2,6 @@ z = require 'zorium'
 paperColors = require 'zorium-paper/colors.json'
 
 config = require '../../config'
-gulpConfig = require '../../../gulp_config'
 
 module.exports = class Head
   constructor: ({model}) ->
@@ -13,8 +12,8 @@ module.exports = class Head
     {netoxSerialization} = @state.getValue()
 
     isInliningSource = config.ENV is config.ENVS.PROD
-    webpackDevHostname = gulpConfig.WEBPACK_DEV_HOSTNAME
-    webpackDevPort = gulpConfig.WEBPACK_DEV_PORT
+    webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
+    webpackDevPort = config.WEBPACK_DEV_PORT
     title ?= 'Zorium Seed'
     description = 'Zorium Seed - (╯°□°）╯︵ ┻━┻)'
     keywords = 'Zorium'
