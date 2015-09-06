@@ -1,7 +1,7 @@
 _ = require 'lodash'
 query = require 'vtree-query'
 rewire = require 'rewire'
-should = require('chai').should()
+b = require 'b-assert'
 Netox = require 'netox'
 
 Head = rewire './index'
@@ -14,13 +14,13 @@ describe 'z-head', ->
     $head = new Head({model: mockModel})
     $ = query $head.render {title: 'test_title'}
 
-    $('title').contents.should.eql 'test_title'
+    b $('title').contents, 'test_title'
 
   it 'has viewport meta', ->
     $head = new Head({model: mockModel})
     $ = query $head.render({})
 
-    should.exist $('meta[name=viewport]')
+    b $('meta[name=viewport]')?
 
   it 'inlines styles in production mode', ->
     config = Head.__get__('config')
@@ -31,7 +31,7 @@ describe 'z-head', ->
     }) ->
       $head = new Head({model: mockModel})
       $ = query $head.render({styles: 'xxx'})
-      $('.styles').innerHTML.should.eql 'xxx'
+      b $('.styles').innerHTML, 'xxx'
 
   it 'uses bundle path in production mode', ->
     config = Head.__get__('config')
@@ -42,4 +42,4 @@ describe 'z-head', ->
     }) ->
       $head = new Head({model: mockModel})
       $ = query $head.render({bundlePath: 'xxx'})
-      $('.bundle').src.should.eql 'xxx'
+      b $('.bundle').src, 'xxx'

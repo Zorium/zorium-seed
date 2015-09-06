@@ -1,5 +1,5 @@
 _ = require 'lodash'
-should = require('chai').should()
+b = require 'b-assert'
 request = require 'clay-request'
 Promise = require 'bluebird'
 revision = require 'git-rev'
@@ -53,22 +53,22 @@ describe 'functional tests', ->
     client
       .getTitle()
       .then (title) ->
-        title.should.eql 'Zorium Seed'
+        b title, 'Zorium Seed'
 
   it 'checks root node', ->
     client
       .isVisible '#zorium-root'
       .then (isVisible) ->
-        isVisible.should.eql true
+        b isVisible, true
 
   it 'navigates on button click', ->
     client
       .click '.p-home .z-hello-world button'
       .url()
       .then ({value}) ->
-        url.parse(value).pathname.should.eql '/red'
+        b url.parse(value).pathname, '/red'
       .waitForVisible '.p-red .z-red button'
       .click '.p-red .z-red button'
       .url()
       .then ({value}) ->
-        url.parse(value).pathname.should.eql '/'
+        b url.parse(value).pathname, '/'

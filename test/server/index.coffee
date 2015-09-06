@@ -1,6 +1,5 @@
 flareGun = require 'flare-gun'
 zock = require 'zock'
-should = require('chai').should()
 
 app = require '../../server'
 config = require '../../src/config'
@@ -48,6 +47,10 @@ describe 'server', ->
     .reply 200, {name: 'Zorium'}
     .post '/demo/users/me'
     .reply 200, {}
+    .get '/demo/users/me'
+    .reply 200, {}
+    .get '/demo/count'
+    .reply 200, 0
     .withOverrides ->
       flare
         .get '/'

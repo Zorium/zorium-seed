@@ -1,4 +1,4 @@
-should = require('chai').should()
+b = require 'b-assert'
 query = require 'vtree-query'
 
 FourOhFourPage = require './index'
@@ -6,4 +6,4 @@ FourOhFourPage = require './index'
 describe '404 page', ->
   it 'renders', ->
     $ = query FourOhFourPage.prototype.render()
-    $('.').className.should.eql 'p-404'
+    b $('.').className, 'p-404'

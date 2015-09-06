@@ -1,11 +1,13 @@
 Rx = require 'rx-lite'
 rewire = require 'rewire'
-should = require('chai').should()
+b = require 'b-assert'
 query = require 'vtree-query'
 
 HelloWorld = rewire './index'
 
 mockModel =
+  example:
+    getCount: -> Rx.Observable.just null
   user:
     getMe: -> Rx.Observable.just null
 
@@ -13,7 +15,7 @@ describe 'z-hello-world', ->
   it 'goes to red page', (done) ->
     HelloWorld.__with__({
       'z.router.go': (path) ->
-        path.should.eql '/red'
+        b path, '/red'
         done()
     }) ->
       $hello = new HelloWorld({model: mockModel})
@@ -24,4 +26,4 @@ describe 'z-hello-world', ->
     $hello = new HelloWorld({model: mockModel})
 
     $ = query($hello.render())
-    $('.hello').contents.should.eql 'Hello World'
+    b $('.hello').contents, 'Hello World'

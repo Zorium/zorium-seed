@@ -14,8 +14,8 @@
   },
   "devDependencies": {
     "autoprefixer-loader": "^2.0.0",
+    "b-assert": "^0.1.2",
     "browser-builtins": "^3.3.0",
-    "chai": "^2.3.0",
     "clay-coffeescript-style-guide": "^1.1.0",
     "coffee-loader": "^0.7.2",
     "css-loader": "^0.10.1",
