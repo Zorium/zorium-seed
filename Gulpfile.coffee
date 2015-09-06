@@ -102,6 +102,7 @@ gulp.task 'dev:webpack-server', ->
   new WebpackDevServer compiler,
     publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/"
     hot: true
+    noInfo: true
   .listen webpackDevPort, (err) ->
     if err
       console.trace err
