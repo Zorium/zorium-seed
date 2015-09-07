@@ -12,7 +12,6 @@ coffeelint = require 'gulp-coffeelint'
 RewirePlugin = require 'rewire-webpack'
 istanbul = require 'gulp-coffee-istanbul'
 WebpackDevServer = require 'webpack-dev-server'
-clayLintConfig = require 'clay-coffeescript-style-guide'
 ExtractTextPlugin = require 'extract-text-webpack-plugin'
 
 config = require './src/config'
@@ -53,7 +52,7 @@ gulp.task 'watch:functional', ->
 
 gulp.task 'lint', ->
   gulp.src paths.coffee
-    .pipe coffeelint(null, clayLintConfig)
+    .pipe coffeelint()
     .pipe coffeelint.reporter()
 
 gulp.task 'test:coverage', ->
