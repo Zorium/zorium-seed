@@ -18,6 +18,7 @@
     "browser-builtins": "^3.3.0",
     "clay-coffeescript-style-guide": "^1.1.0",
     "coffee-loader": "^0.7.2",
+    "coffeelint": "^1.11.1",
     "css-loader": "^0.10.1",
     "del": "^1.1.1",
     "envify": "^3.4.0",
