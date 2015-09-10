@@ -17,9 +17,7 @@ Run live-updating webpack dev-server
 
 
 ## Production
-
-Compile and minify files locally, then use Docker to start the server  
-Environment variable are dynamically injected at runtime
+Environment variable are dynamically injected at runtime (for running in Docker)
 
   - `npm run dist`
   - `npm start`
@@ -29,7 +27,7 @@ npm run build
 docker build -t zorium-seed .
 
 docker run \
-    --restart on-failure \
+    --restart always \
     -p 3000:3000 \
     -e PORT=3000 \
     --name zorium-seed \
