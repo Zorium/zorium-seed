@@ -12,7 +12,7 @@ isomorphic =
   API_URL:
     serverEnv.PRIVATE_API_URL or # server
     process.env.API_URL or # client
-    "http://127.0.0.1:#{process.env.PORT or 3000}" # default
+    'http://127.0.0.1:3005' # default
   AUTH_COOKIE: 'accessToken'
   ENV:
     serverEnv.NODE_ENV or

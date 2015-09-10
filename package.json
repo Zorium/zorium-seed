@@ -11,15 +11,18 @@
     "watch-phantom": "./bin/watch_phantom.sh",
     "watch-server": "./bin/watch_server.sh",
     "watch-functional": "./bin/watch_functional.sh",
-    "sauce-tunnel": "./bin/sauce_tunnel.sh"
+    "sauce-tunnel": "./bin/sauce_tunnel.sh",
+    "demo-api": "./node_modules/coffee-script/bin/coffee demo_api.coffee"
   },
   "devDependencies": {
     "autoprefixer-loader": "^2.0.0",
     "b-assert": "^0.1.2",
+    "body-parser": "^1.13.3",
     "browser-builtins": "^3.3.0",
     "clay-coffeescript-style-guide": "^1.1.0",
     "coffee-loader": "^0.7.2",
     "coffeelint": "^1.11.1",
+    "cors": "^2.7.1",
     "css-loader": "^0.10.1",
     "del": "^1.1.1",
     "envify": "^3.4.0",

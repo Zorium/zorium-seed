@@ -8,7 +8,6 @@ Promise = require 'bluebird'
 request = require 'clay-request'
 Rx = require 'rx-lite'
 cookieParser = require 'cookie-parser'
-bodyParser = require 'body-parser'
 
 config = require './src/config'
 gulpPaths = require './gulp_paths'
@@ -51,7 +50,6 @@ app.use helmet.noSniff()
 app.use helmet.crossdomain()
 app.disable 'x-powered-by'
 app.use cookieParser()
-app.use bodyParser.json()
 
 app.use '/healthcheck', (req, res, next) ->
   Promise.settle [
@@ -71,65 +69,6 @@ app.use '/healthcheck', (req, res, next) ->
 
 app.use '/ping', (req, res) ->
   res.send 'pong'
-
-# TODO: remove demo routes
-# BEGIN DEMO ROUTES
-demoUserDB = {}
-demoCount = 0
-app.get '/demo', (req, res) ->
-  res.json {name: 'Zorium'}
-
-app.post '/log', (req, res) ->
-  log.info JSON.stringify
-    event: 'client_error'
-    trace: req.body?.trace
-    message: req.body?.message
-  res.status(204).send()
-
-app.get '/demo/users/me', (req, res) ->
-  authHeader = req.header('Authorization') or ''
-  [authScheme, accessToken] = authHeader.split(' ')
-
-  unless demoUserDB[accessToken]
-    return res.status(401).send()
-
-  res.json demoUserDB[accessToken]
-
-app.post '/demo/users/me', (req, res) ->
-  authHeader = req.header('Authorization') or ''
-  [authScheme, accessToken] = authHeader.split(' ')
-
-  if demoUserDB[accessToken]
-    return res.json demoUserDB[accessToken]
-
-  id = _.keys(demoUserDB).length
-  user = {
-    id: id
-    username: "test_#{id}"
-    accessToken: "#{id}_#{Math.random().toFixed(10)}"
-  }
-
-  res.json demoUserDB[user.accessToken] = user
-
-app.get '/demo/count', (req, res) ->
-  authHeader = req.header('Authorization') or ''
-  [authScheme, accessToken] = authHeader.split(' ')
-
-  unless demoUserDB[accessToken]
-    return res.status(401).send()
-
-  res.json {count: demoCount}
-
-app.post '/demo/count', (req, res) ->
-  authHeader = req.header('Authorization') or ''
-  [authScheme, accessToken] = authHeader.split(' ')
-
-  unless demoUserDB[accessToken]
-    return res.status(401).send()
-
-  demoCount += 1
-  res.json {count: demoCount}
-# END DEMO ROUTES
 
 if config.ENV is config.ENVS.PROD
 then app.use express.static(gulpPaths.dist, {maxAge: '4h'})
