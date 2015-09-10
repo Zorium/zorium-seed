@@ -5,15 +5,14 @@ z = require 'zorium'
 log = require 'loga'
 Rx = require 'rx-lite'
 cookie = require 'cookie'
+StackTrace = require 'stacktrace-js'
 
 require './root.styl'
 
 config = require './config'
-ErrorReportService = require './services/error_report'
 CookieService = require './services/cookie'
 App = require './app'
 Model = require './models'
-
 
 ###########
 # LOGGING #
@@ -21,8 +20,23 @@ Model = require './models'
 
 if config.ENV is config.ENVS.PROD
   log.level = 'warn'
-  # TODO: configure
-  # log.on 'error', ErrorReportService.report
+
+# Report errors to API_URL/log
+log.on 'error', (err) ->
+  try
+    trace = StackTrace({e: err, guess: true}).join('\n')
+    window.fetch config.API_URL + '/log',
+      method: 'POST'
+      headers:
+        'Accept': 'application/json'
+        'Content-Type': 'application/json'
+      body: JSON.stringify
+        trace: trace
+        message: err?.message or String(err)
+    .catch (err) ->
+      console?.error err
+  catch err
+    console?.error err
 
 # Note: window.onerror != window.addEventListener('error')
 oldOnError = window.onerror

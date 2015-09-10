@@ -550,6 +550,11 @@
       "from": "https://registry.npmjs.org/rx-lite/-/rx-lite-2.5.2.tgz",
       "resolved": "https://registry.npmjs.org/rx-lite/-/rx-lite-2.5.2.tgz"
     },
+    "stacktrace-js": {
+      "version": "0.6.4",
+      "from": "stacktrace-js@",
+      "resolved": "https://registry.npmjs.org/stacktrace-js/-/stacktrace-js-0.6.4.tgz"
+    },
     "whatwg-fetch": {
       "version": "0.7.0",
       "from": "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-0.7.0.tgz",

@@ -58,6 +58,7 @@
   "dependencies": {
     "assert-none-missing": "^0.1.2",
     "bluebird": "^2.9.24",
+    "body-parser": "^1.13.3",
     "clay-request": "^0.4.3",
     "coffee-script": "^1.9.2",
     "compression": "^1.4.3",
@@ -73,6 +74,7 @@
     "promiz": "^1.0.3",
     "qs": "^2.4.1",
     "rx-lite": "^2.5.2",
+    "stacktrace-js": "^0.6.4",
     "whatwg-fetch": "^0.7.0",
     "zorium": "^1.0.3",
     "zorium-paper": "^0.4.1"

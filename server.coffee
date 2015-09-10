@@ -8,6 +8,7 @@ Promise = require 'bluebird'
 request = require 'clay-request'
 Rx = require 'rx-lite'
 cookieParser = require 'cookie-parser'
+bodyParser = require 'body-parser'
 
 config = require './src/config'
 gulpPaths = require './gulp_paths'
@@ -50,6 +51,7 @@ app.use helmet.noSniff()
 app.use helmet.crossdomain()
 app.disable 'x-powered-by'
 app.use cookieParser()
+app.use bodyParser.json()
 
 app.use '/healthcheck', (req, res, next) ->
   Promise.settle [
@@ -76,6 +78,13 @@ demoUserDB = {}
 demoCount = 0
 app.get '/demo', (req, res) ->
   res.json {name: 'Zorium'}
+
+app.post '/log', (req, res) ->
+  log.info JSON.stringify
+    event: 'client_error'
+    trace: req.body?.trace
+    message: req.body?.message
+  res.status(204).send()
 
 app.get '/demo/users/me', (req, res) ->
   authHeader = req.header('Authorization') or ''
