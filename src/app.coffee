@@ -4,14 +4,6 @@ Rx = require 'rx-lite'
 HttpHash = require 'http-hash'
 Qs = require 'qs'
 
-Rx.config.Promise = if window?
-  window.Promise
-else
-  # TODO: remove once v8 has promises
-  # Avoid webpack include
-  bluebird = 'bluebird'
-  require bluebird
-
 config = require './config'
 gulpPaths = require '../gulp_paths'
 HomePage = require './pages/home'

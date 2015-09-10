@@ -1,6 +1,5 @@
 webdriverio = require 'webdriverio'
 SauceLabs = require 'saucelabs'
-Promise = require 'bluebird'
 
 config = require '../../src/config'
 
