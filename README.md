@@ -30,7 +30,6 @@ docker build -t zorium-seed .
 
 docker run \
     --restart on-failure \
-    -v /var/log:/var/log \
     -p 3000:3000 \
     -e PORT=3000 \
     --name zorium-seed \

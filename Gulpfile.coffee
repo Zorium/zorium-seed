@@ -2,7 +2,7 @@ fs = require 'fs'
 _ = require 'lodash'
 del = require 'del'
 gulp = require 'gulp'
-karma = require('karma').server
+KarmaServer = require('karma').Server
 webpack = require 'webpack'
 mocha = require 'gulp-mocha'
 nodemon = require 'gulp-nodemon'
@@ -71,16 +71,18 @@ gulp.task 'test:unit', ->
     .pipe mocha()
 
 gulp.task 'test:browser:phantom', ['build:scripts:test'], (cb) ->
-  karma.start _.defaults({
+  new KarmaServer _.defaults({
     browsers: ['PhantomJS']
   }, karmaConfig), cb
+  .start()
 
 gulp.task 'test:server', ->
   gulp.src paths.serverTests
     .pipe mocha()
 
 gulp.task 'test:browser', ['build:scripts:test'], (cb) ->
-  karma.start karmaConfig, cb
+  new KarmaServer karmaConfig, cb
+  .start()
 
 gulp.task 'test:functional', ->
   gulp.src paths.functionalTests
@@ -106,9 +108,6 @@ gulp.task 'dev:webpack-server', ->
       path: __dirname
       publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/"
     module:
-      postLoaders: [
-        {test: /\.coffee$/, loader: 'transform/cacheable?envify'}
-      ]
       loaders: [
         {test: /\.coffee$/, loader: 'coffee'}
         {test: /\.json$/, loader: 'json'}
@@ -116,6 +115,8 @@ gulp.task 'dev:webpack-server', ->
       ]
     plugins: [
       new webpack.HotModuleReplacementPlugin()
+      new webpack.DefinePlugin
+        'process.env': _.mapValues process.env, (val) -> JSON.stringify val
     ]
   }, webpackBase
 
@@ -137,9 +138,6 @@ gulp.task 'build:scripts:test', ->
   .pipe gulpWebpack _.defaultsDeep {
     devtool: 'inline-source-map'
     module:
-      postLoaders: [
-        {test: /\.coffee$/, loader: 'transform/cacheable?envify'}
-      ]
       loaders: [
         {test: /\.coffee$/, loader: 'coffee'}
         {test: /\.json$/, loader: 'json'}
@@ -147,6 +145,8 @@ gulp.task 'build:scripts:test', ->
       ]
     plugins: [
       new RewirePlugin()
+      new webpack.DefinePlugin
+        'process.env': _.mapValues process.env, (val) -> JSON.stringify val
     ]
   }, webpackBase
   .pipe gulp.dest paths.build

@@ -47,7 +47,6 @@ app.use helmet.hsts
   preload: true # include in Google Chrome
   force: true
 app.use helmet.noSniff()
-app.use helmet.crossdomain()
 app.disable 'x-powered-by'
 app.use cookieParser()
 
