@@ -7,7 +7,7 @@ webpack = require 'webpack'
 mocha = require 'gulp-mocha'
 nodemon = require 'gulp-nodemon'
 manifest = require 'gulp-manifest'
-gulpWebpack = require 'gulp-webpack'
+webpackStream = require 'webpack-stream'
 coffeelint = require 'gulp-coffeelint'
 RewirePlugin = require 'rewire-webpack'
 istanbul = require 'gulp-coffee-istanbul'
@@ -135,7 +135,7 @@ gulp.task 'build:static:dev', ->
 
 gulp.task 'build:scripts:test', ->
   gulp.src paths.unitTests
-  .pipe gulpWebpack _.defaultsDeep {
+  .pipe webpackStream _.defaultsDeep {
     devtool: 'inline-source-map'
     module:
       loaders: [
@@ -181,7 +181,7 @@ gulp.task 'dist:scripts', ['dist:clean'], ->
   }, webpackBase
 
   gulp.src paths.root
-  .pipe gulpWebpack scriptsConfig, null, (err, stats) ->
+  .pipe webpackStream scriptsConfig, null, (err, stats) ->
     if err
       console.trace err
       return
