@@ -1,3 +1,4 @@
+_ = require 'lodash'
 z = require 'zorium'
 Button = require 'zorium-paper/button'
 Input = require 'zorium-paper/input'
@@ -6,20 +7,20 @@ if window?
   require './index.styl'
 
 module.exports = class Red
-  constructor: ->
+  constructor: ({router}) ->
     @$button = new Button({
       $children: 'click me'
       isRaised: true
       color: 'blue'
-      onclick: @goToHome
+      onclick: _.partial @goToHome, router
     })
     @$input = new Input({
       label: 'abc'
       color: 'blue'
     })
 
-  goToHome: ->
-    z.router.go '/'
+  goToHome: (router) ->
+    router.go '/'
 
   render: =>
     z '.z-red',

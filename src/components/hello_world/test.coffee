@@ -1,29 +1,20 @@
-Rx = require 'rx-lite'
-rewire = require 'rewire'
 b = require 'b-assert'
 query = require 'vtree-query'
 
-HelloWorld = rewire './index'
-
-mockModel =
-  example:
-    getCount: -> Rx.Observable.just null
-  user:
-    getMe: -> Rx.Observable.just null
+HelloWorld = require './index'
 
 describe 'z-hello-world', ->
   it 'goes to red page', (done) ->
-    HelloWorld.__with__({
-      'z.router.go': (path) ->
+    HelloWorld::goToRed
+      go: (path) ->
         b path, '/red'
         done()
-    }) ->
-      $hello = new HelloWorld({model: mockModel})
-
-      $hello.goToRed()
 
   it 'says Hello World', ->
-    $hello = new HelloWorld({model: mockModel})
+    $ = query HelloWorld::render.call
+      state:
+        getValue: ->
+          username: 'test_name'
+          count: 20
 
-    $ = query($hello.render())
     b $('.hello').contents, 'Hello World'

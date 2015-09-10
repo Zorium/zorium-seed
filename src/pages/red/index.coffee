@@ -6,9 +6,9 @@ Head = require '../../components/head'
 Red = require '../../components/red'
 
 module.exports = class RedPage
-  constructor: ({model}) ->
+  constructor: ({model, router}) ->
     @$head = new Head({model})
-    @$red = new Red()
+    @$red = new Red({router})
 
   renderHead: (params) =>
     z @$head, _.defaults {

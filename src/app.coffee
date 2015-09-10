@@ -31,22 +31,24 @@ else
   null
 
 module.exports = class App
-  constructor: ({requests, model}) ->
-    router = new HttpHash()
+  constructor: ({requests, model, router}) ->
+    routes = new HttpHash()
 
     defaultHandler = -> $fourOhFourPage
     requests = requests.map ({req, res}) ->
-      route = router.get req.path
+      route = routes.get req.path
       $page = if route.handler? then route.handler() else defaultHandler()
 
       return {req, res, route, $page}
 
     $homePage = new HomePage({
       model
+      router
       requests: requests.filter ({$page}) -> $page instanceof HomePage
     })
     $redPage = new RedPage({
       model
+      router
       requests: requests.filter ({$page}) -> $page instanceof RedPage
     })
     $fourOhFourPage = new FourOhFourPage({
@@ -54,8 +56,8 @@ module.exports = class App
       requests: requests.filter ({$page}) -> $page instanceof FourOhFourPage
     })
 
-    router.set '/', -> $homePage
-    router.set '/red', -> $redPage
+    routes.set '/', -> $homePage
+    routes.set '/red', -> $redPage
 
     handleRequest = requests.doOnNext ({req, res, route, $page}) =>
       {$currentPage} = @state.getValue()

@@ -62,16 +62,17 @@ init = ->
   cookieSubject.subscribeOnNext setCookies(currentCookies)
 
   model = new Model({cookieSubject})
+  router = z.router
 
-  z.router.init
+  router.init
     $$root: document.getElementById 'zorium-root'
 
   requests = new Rx.ReplaySubject(1)
-  $app = new App({requests, model})
-  z.router.use (req, res) ->
+  $app = new App({requests, model, router})
+  router.use (req, res) ->
     requests.onNext {req, res}
     res.send $app
-  z.router.go()
+  router.go()
 
 if document.readyState isnt 'complete' and
     not document.getElementById 'zorium-root'

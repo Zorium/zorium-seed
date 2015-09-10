@@ -8,7 +8,7 @@ if window?
   require './index.styl'
 
 module.exports = class HelloWorld
-  constructor: ({model}) ->
+  constructor: ({model, router}) ->
     @$increment = new Button({
       $children: 'increment counter'
       isRaised: true
@@ -19,7 +19,7 @@ module.exports = class HelloWorld
       $children: 'click me'
       isRaised: true
       color: 'blue'
-      onclick: @goToRed
+      onclick: _.partial @goToRed, router
     })
     @$input = new Input({
       label: 'abc'
@@ -31,15 +31,15 @@ module.exports = class HelloWorld
       count: model.example.getCount()
       username: model.user.getMe().map ({username}) -> username
 
-  goToRed: ->
-    z.router.go '/red'
+  goToRed: (router) ->
+    router.go '/red'
 
   increment: (model) ->
     model.example.incrementCount()
     .catch log.error
 
   render: =>
-    {model, username, count} = @state.getValue()
+    {username, count} = @state.getValue()
 
     z '.z-hello-world',
       z '.content',
