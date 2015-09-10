@@ -487,6 +487,11 @@
         }
       }
     },
+    "http-hash": {
+      "version": "2.0.0",
+      "from": "http-hash@",
+      "resolved": "https://registry.npmjs.org/http-hash/-/http-hash-2.0.0.tgz"
+    },
     "lodash": {
       "version": "3.10.0",
       "from": "https://registry.npmjs.org/lodash/-/lodash-3.10.0.tgz",
