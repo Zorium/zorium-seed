@@ -21,10 +21,6 @@ isomorphic =
     DEV: 'development'
     PROD: 'production'
     TEST: 'test'
-  HOSTNAME:
-    serverEnv.HOSTNAME or
-    process.env.HOSTNAME or
-    '127.0.0.1'
 
 # Server only
 # All keys must have values at run-time (value may be null)
