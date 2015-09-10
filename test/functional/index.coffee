@@ -8,19 +8,19 @@ url = require 'url'
 config = require '../../src/config'
 Client = require './client'
 
-APP_URL = "http://#{config.HOSTNAME}:#{config.PORT}"
-WEBPACK_URL = "http://#{config.WEBPACK_DEV_HOSTNAME}:" +
-              "#{config.WEBPACK_DEV_PORT}"
-
 # Wait for server to be up
 # coffeelint: disable=missing_fat_arrows
 before ->
   @timeout 90 * 1000 # 90sec
+  count = 0
   check = ->
-    request APP_URL
-    .then ->
-      request WEBPACK_URL
-    .catch check
+    request config.SELENIUM_TARGET_URL
+    .catch ->
+      count += 1
+      if count > 50
+        throw new Error "Could not connect to #{config.SELENIUM_TARGET_URL}"
+      Promise.delay 100
+      .then check
 
   # race condition for server-reload
   Promise.delay 1000
@@ -45,7 +45,7 @@ describe 'functional tests', ->
 
   before ->
     client = Client
-      .url APP_URL
+      .url config.SELENIUM_TARGET_URL
       .pause(100) # don't question it
 
   it 'checks title', ->
@@ -62,12 +62,12 @@ describe 'functional tests', ->
 
   it 'navigates on button click', ->
     client
-      .click '.p-home .z-hello-world button'
+      .click '.p-home .z-hello-world .t-click-me'
       .url()
       .then ({value}) ->
         b url.parse(value).pathname, '/red'
-      .waitForVisible '.p-red .z-red button'
-      .click '.p-red .z-red button'
+      .waitForVisible '.p-red .z-red .t-click-me'
+      .click '.p-red .z-red .t-click-me'
       .url()
       .then ({value}) ->
         b url.parse(value).pathname, '/'

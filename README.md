@@ -32,9 +32,9 @@ docker run \
     -v /var/log:/var/log \
     -p 3000:3000 \
     -e PORT=3000 \
-    --name zorium-site \
+    --name zorium-seed \
     -d \
-    -t zorium-site
+    -t zorium-seed
 ```
 
 ## Testing
@@ -52,48 +52,30 @@ docker run \
   - `npm run watch-server`
     - auto-run server tests
   - `npm run watch-functional`
-    - see functional tests (fast local) below
+    - see functional tests (watch) below
 
-#### functional tests - fast local
-
-run local selenium server  
-
+#### functional tests - watch
 ```bash
-docker run -i --rm -p 4444:4444 selenium/standalone-chrome:2.45.0
+# Before starting, make sure dev server is running (npm run dev)
+# SELENIUM_TARGET_URL (note 127.0.0.1 won't work because connections come from a Docker instance)
+export SELENIUM_TARGET_URL=http://192.168.1.100:3000
+npm run watch-functional
 ```
 
-run dev server
+#### functional tests - multi-browser
 
 ```bash
-npm run dev
-```
-
-(HOST is your local ip address)  
-
-```bash
-HOST=192.168.1.1 npm run watch-functional
-```
-
-#### functional tests - full multi-browser
-
-Download and run [SauceConnect](https://docs.saucelabs.com/reference/sauce-connect/)  
-
-```bash
-wget https://saucelabs.com/downloads/sc-4.3.8-linux.tar.gz && \
-echo "0ae5960a9b4b33e5a8e8cad9ec4b610b68eb3520 *sc-4.3.8-linux.tar.gz" | sha1sum -c - && \
-tar xvzf sc-4.3.8-linux.tar.gz
+# Start local sauce tunnel in order to use all sauce-hosted selenium server
+export SAUCE_USERNAME=$SAUCE_USERNAME
+export SAUCE_ACCESS_KEY=$SAUCE_ACCESS_KEY
+npm run sauce-tunnel
 ```
 
 ```bash
-./sc-4.3.8-linux/bin/sc -u $SAUCE_USERNAME -k $SAUCE_ACCESS_KEY
-```
-
-run dev server
-
-```bash
-npm run dev
-```
-
-```bash
-HOST=192.168.1.1 npm run test-functional
+# Before starting, make sure dev server is running (npm run dev)
+export SAUCE_USERNAME=$SAUCE_USERNAME
+export SAUCE_ACCESS_KEY=$SAUCE_ACCESS_KEY
+# SELENIUM_TARGET_URL (note 127.0.0.1 won't work because connections come from a remote host)
+export SELENIUM_TARGET_URL=http://192.168.1.100:3000
+npm run test-functional
 ```

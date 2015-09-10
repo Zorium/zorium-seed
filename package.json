@@ -4,13 +4,14 @@
   "scripts": {
     "dist": "./bin/dist.sh",
     "test": "./bin/test.sh",
-    "test-functional": "./bin/functional_test.sh",
+    "test-functional": "./bin/test_functional.sh",
     "start": "./bin/start.sh",
     "dev": "./bin/dev.sh",
     "watch": "./bin/watch.sh",
     "watch-phantom": "./bin/watch_phantom.sh",
     "watch-server": "./bin/watch_server.sh",
-    "watch-functional": "./bin/watch_functional.sh"
+    "watch-functional": "./bin/watch_functional.sh",
+    "sauce-tunnel": "./bin/sauce_tunnel.sh"
   },
   "devDependencies": {
     "autoprefixer-loader": "^2.0.0",

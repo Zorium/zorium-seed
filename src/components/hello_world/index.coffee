@@ -46,15 +46,16 @@ module.exports = class HelloWorld
             c600: paperColors.$blue600
             c700: paperColors.$blue700
           onclick: _.partial @increment, model
-        z @$button,
-          text: 'click me'
-          isRaised: true
-          colors:
-            c200: paperColors.$blue200
-            c500: paperColors.$blue500
-            c600: paperColors.$blue600
-            c700: paperColors.$blue700
-          onclick: @goToRed
+        z '.t-click-me',
+          z @$button,
+            text: 'click me'
+            isRaised: true
+            colors:
+              c200: paperColors.$blue200
+              c500: paperColors.$blue500
+              c600: paperColors.$blue600
+              c700: paperColors.$blue700
+            onclick: @goToRed
         z 'br'
         z @$input,
           hintText: 'abc'
