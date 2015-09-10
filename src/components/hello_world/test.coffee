@@ -12,9 +12,8 @@ describe 'z-hello-world', ->
 
   it 'says Hello World', ->
     $ = query HelloWorld::render.call
-      state:
-        getValue: ->
-          username: 'test_name'
-          count: 20
+      state: getValue: ->
+        username: 'test_name'
+        count: 20
 
     b $('.hello').contents, 'Hello World'

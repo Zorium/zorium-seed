@@ -9,7 +9,6 @@ nodemon = require 'gulp-nodemon'
 manifest = require 'gulp-manifest'
 webpackStream = require 'webpack-stream'
 coffeelint = require 'gulp-coffeelint'
-RewirePlugin = require 'rewire-webpack'
 istanbul = require 'gulp-coffee-istanbul'
 WebpackDevServer = require 'webpack-dev-server'
 ExtractTextPlugin = require 'extract-text-webpack-plugin'
@@ -144,7 +143,6 @@ gulp.task 'build:scripts:test', ->
         {test: /\.styl$/, loader: 'style!' + cssLoader}
       ]
     plugins: [
-      new RewirePlugin()
       new webpack.DefinePlugin
         'process.env': _.mapValues process.env, (val) -> JSON.stringify val
     ]
