@@ -3,16 +3,28 @@ z = require 'zorium'
 log = require 'loga'
 Button = require 'zorium-paper/button'
 Input = require 'zorium-paper/input'
-paperColors = require 'zorium-paper/colors.json'
 
 if window?
   require './index.styl'
 
 module.exports = class HelloWorld
   constructor: ({model}) ->
-    @$button = new Button()
-    @$increment = new Button()
-    @$input = new Input()
+    @$increment = new Button({
+      $children: 'increment counter'
+      isRaised: true
+      color: 'amber'
+      onclick: _.partial @increment, model
+    })
+    @$button = new Button({
+      $children: 'click me'
+      isRaised: true
+      color: 'blue'
+      onclick: @goToRed
+    })
+    @$input = new Input({
+      label: 'abc'
+      color: 'blue'
+    })
 
     @state = z.state
       model: model
@@ -37,30 +49,7 @@ module.exports = class HelloWorld
           "username: #{username}"
         z '.count',
           "count: #{count}"
-        z @$increment,
-          text: 'increment counter'
-          isRaised: true
-          colors:
-            c200: paperColors.$blue200
-            c500: paperColors.$blue500
-            c600: paperColors.$blue600
-            c700: paperColors.$blue700
-          onclick: _.partial @increment, model
+        @$increment
         z '.t-click-me',
-          z @$button,
-            text: 'click me'
-            isRaised: true
-            colors:
-              c200: paperColors.$blue200
-              c500: paperColors.$blue500
-              c600: paperColors.$blue600
-              c700: paperColors.$blue700
-            onclick: @goToRed
-        z 'br'
-        z @$input,
-          hintText: 'abc'
-          colors:
-            c200: paperColors.$blue200
-            c500: paperColors.$blue500
-            c600: paperColors.$blue600
-            c700: paperColors.$blue700
+          @$button
+        @$input

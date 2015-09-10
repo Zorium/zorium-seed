@@ -1,5 +1,4 @@
 z = require 'zorium'
-paperColors = require 'zorium-paper/colors.json'
 Rx = require 'rx-lite'
 HttpHash = require 'http-hash'
 Qs = require 'qs'

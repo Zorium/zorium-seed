@@ -928,9 +928,9 @@
       }
     },
     "zorium-paper": {
-      "version": "0.4.1",
-      "from": "zorium-paper@*",
-      "resolved": "https://registry.npmjs.org/zorium-paper/-/zorium-paper-0.4.1.tgz",
+      "version": "0.5.0",
+      "from": "zorium-paper@0.5.0",
+      "resolved": "https://registry.npmjs.org/zorium-paper/-/zorium-paper-0.5.0.tgz",
       "dependencies": {
         "rx-lite": {
           "version": "2.5.2",

@@ -1,5 +1,5 @@
 z = require 'zorium'
-paperColors = require 'zorium-paper/colors.json'
+colors = require 'zorium-paper/colors.json'
 
 config = require '../../config'
 
@@ -19,7 +19,7 @@ module.exports = class Head
     keywords = 'Zorium'
     name = 'Zorium Seed'
     twitterHandle = '@ZoriumJS'
-    themeColor = paperColors.$teal700
+    themeColor = colors.$teal700
     favicon = '/images/zorium_icon_32.png'
     icon1024 = '/images/zorium_icon_1024.png'
     icon256 = '/images/zorium_icon_256.png'
