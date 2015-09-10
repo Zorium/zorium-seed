@@ -30,6 +30,17 @@ module.exports = class Head
       z 'meta', {name: 'description', content: "#{description}"}
       z 'meta', {name: 'keywords', content: "#{keywords}"}
 
+      # Appcache
+      if config.ENV is config.ENVS.PROD
+        z 'iframe',
+          src: '/manifest.html'
+          style:
+            width: 0
+            height: 0
+            visibility: 'hidden'
+            position: 'absolute'
+            border: 'none'
+
       # mobile
       z 'meta',
         name: 'viewport'

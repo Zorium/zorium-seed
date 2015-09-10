@@ -19,4 +19,5 @@ module.exports =
     '!./dist/humans.txt'
     '!./dist/robots.txt'
     '!./dist/stats.json'
+    '!./dist/manifest.html'
   ]

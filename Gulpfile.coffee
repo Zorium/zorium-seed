@@ -195,5 +195,6 @@ gulp.task 'dist:manifest', ['dist:static', 'dist:scripts'], ->
       hash: true
       timestamp: false
       preferOnline: true
+      fallback: ['/ /offline.html']
     }
     .pipe gulp.dest paths.dist
