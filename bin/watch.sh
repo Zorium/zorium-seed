@@ -1,4 +1,20 @@
 #!/bin/sh
 export NODE_ENV=test
 
-node_modules/gulp/bin/gulp.js watch
+case $1 in
+  phantom)
+    GULP_COMMAND="watch:phantom"
+  ;;
+  server)
+    GULP_COMMAND="watch:server"
+  ;;
+  functional)
+    docker run -i --rm -p 4444:4444 selenium/standalone-chrome:2.47.1 >> /dev/null &
+    GULP_COMMAND="watch:functional"
+  ;;
+  *)
+    GULP_COMMAND="watch"
+  ;;
+esac
+
+node_modules/gulp/bin/gulp.js $GULP_COMMAND

@@ -8,9 +8,6 @@
     "start": "./bin/start.sh",
     "dev": "./bin/dev.sh",
     "watch": "./bin/watch.sh",
-    "watch-phantom": "./bin/watch_phantom.sh",
-    "watch-server": "./bin/watch_server.sh",
-    "watch-functional": "./bin/watch_functional.sh",
     "sauce-tunnel": "./bin/sauce_tunnel.sh",
     "demo-api": "./node_modules/coffee-script/bin/coffee demo_api.coffee"
   },

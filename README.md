@@ -47,11 +47,11 @@ docker run \
     - see functional tests (multi-browser) below
   - `npm run watch`
     - auto-run client unit tests
-  - `npm run watch-phantom`
+  - `npm run watch -- phantom`
     - auto-run karma tests
-  - `npm run watch-server`
+  - `npm run watch -- server`
     - auto-run server tests
-  - `npm run watch-functional`
+  - `npm run watch -- functional`
     - see functional tests (watch) below
 
 #### functional tests - watch
