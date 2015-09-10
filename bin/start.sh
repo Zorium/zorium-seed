@@ -20,17 +20,22 @@ else
   cp $paths_dist/*.js $paths_dist/backup/
 fi
 
-# Replace REPLACE__* with environment variable
+# Replace process.env.* with environment variable
 while read -d $'\0' -r file; do
   echo "replacing environment variables in $file"
   while read line; do
-    if [[ $line =~ REPLACE__([A-Z0-9_]+) ]]; then
+    if [[ $line =~ process\.env\.([A-Z0-9_]+) ]]; then
       env_name="${BASH_REMATCH[1]}"
-      env_value=$(echo $(eval "echo \$$env_name") | sed -e 's/[\/&]/\\&/g')
-      echo "replacing $env_name with '$env_value'"
-      sed -i.bak s/REPLACE__$env_name/\"$env_value\"/g $file
+      env_string=$(echo $(eval "echo \$$env_name") | sed -e 's/[\/&]/\\&/g')
+      if [ -z $env_string ]; then
+        env_value="undefined"
+      else
+        env_value="'$env_string'"
+      fi
+      echo "replacing $env_name with $env_value"
+      sed -i.bak s/process\.env\.$env_name/$env_value/g $file
     fi
-  done < <(grep -o "REPLACE__[A-Z0-9_]\+" $file | uniq)
+  done < <(grep -o "process\.env\.[A-Z0-9_]\+" $file | uniq)
 done < <(find $paths_dist -maxdepth 1 -iname '*.js' -print0)
 
 ./node_modules/coffee-script/bin/coffee ./bin/server.coffee

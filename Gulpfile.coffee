@@ -162,7 +162,9 @@ gulp.task 'dist:scripts', ['dist:clean'], ->
   scriptsConfig = _.defaultsDeep {
     devtool: 'source-map'
     plugins: [
-      new webpack.optimize.UglifyJsPlugin()
+      new webpack.optimize.UglifyJsPlugin
+        mangle:
+          except: ['process']
       new ExtractTextPlugin 'bundle.css'
     ]
     output:

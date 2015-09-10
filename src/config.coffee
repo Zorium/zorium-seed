@@ -1,45 +1,47 @@
-# REPLACE__* is replaced at run-time with * environment variable when
-# starting production server. This is necessary to avoid re-building at run-time
+# process.env.* is replaced at run-time with * environment variable
+# Note that simply env.* is not replaced, and thus suitible for private config
+
 _ = require 'lodash'
 assertNoneMissing = require 'assert-none-missing'
 
-HOST = process.env.HOST or REPLACE__HOST? and REPLACE__HOST or '127.0.0.1'
+# Don't let server environment variables leak into client code
+serverEnv = process.env
 
-env = process.env
-
-hostToHostname = (host) ->
-  host.split(':')[0]
-
+# All keys must have values at run-time (value may be null)
 isomorphic =
-  API_URL: process.env.API_URL or
-           REPLACE__API_URL? and REPLACE__API_URL or
-           "http://127.0.0.1:#{process.env.PORT or 3000}"
+  API_URL:
+    serverEnv.PRIVATE_API_URL or # server
+    process.env.API_URL or # client
+    "http://127.0.0.1:#{process.env.PORT or 3000}" # default
   AUTH_COOKIE: 'accessToken'
-  ENV: process.env.NODE_ENV or REPLACE__NODE_ENV
+  ENV:
+    serverEnv.NODE_ENV or
+    process.env.NODE_ENV
   ENVS:
     DEV: 'development'
     PROD: 'production'
     TEST: 'test'
-  HOST: HOST
-  HOSTNAME: hostToHostname(HOST)
+  HOSTNAME:
+    serverEnv.HOSTNAME or
+    process.env.HOSTNAME or
+    '127.0.0.1'
 
+# Server only
+# All keys must have values at run-time (value may be null)
 server =
-  # Server only
-  PORT: env.PORT or 3000
+  PORT: serverEnv.PORT or 3000
 
   # Development
-  WEBPACK_DEV_HOSTNAME: env.WEBPACK_DEV_HOSTNAME or 'localhost'
-  WEBPACK_DEV_PORT: env.WEBPACK_DEV_PORT or 3001
-  REMOTE_SELENIUM: env.REMOTE_SELENIUM is '1'
-  SELENIUM_BROWSER: env.SELENIUM_BROWSER or 'chrome'
-  SAUCE_USERNAME: env.SAUCE_USERNAME
-  SAUCE_ACCESS_KEY: env.SAUCE_ACCESS_KEY
+  WEBPACK_DEV_HOSTNAME: serverEnv.WEBPACK_DEV_HOSTNAME or '127.0.0.1'
+  WEBPACK_DEV_PORT: serverEnv.WEBPACK_DEV_PORT or 3001
+  REMOTE_SELENIUM: serverEnv.REMOTE_SELENIUM is '1'
+  SELENIUM_BROWSER: serverEnv.SELENIUM_BROWSER or 'chrome'
+  SAUCE_USERNAME: serverEnv.SAUCE_USERNAME or null
+  SAUCE_ACCESS_KEY: serverEnv.SAUCE_ACCESS_KEY or null
 
-config = _.merge isomorphic, server
-
+assertNoneMissing isomorphic
 if window?
-  assertNoneMissing isomorphic
+  module.exports = isomorphic
 else
-  assertNoneMissing config
-
-module.exports = config
+  assertNoneMissing server
+  module.exports = _.merge isomorphic, server
