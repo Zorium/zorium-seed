@@ -22,6 +22,8 @@ karmaConfig =
   singleRun: true
   frameworks: ['mocha']
   files: [paths.build + '/bundle.js']
+  preprocessors:
+    '**/*.js': ['sourcemap']
   browsers: ['Chrome', 'Firefox']
 
 cssLoader = 'css!autoprefixer!stylus?paths[]=node_modules'
