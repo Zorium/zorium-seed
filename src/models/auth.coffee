@@ -10,24 +10,22 @@ module.exports = class Auth
 
     @accessTokenStreams = new Rx.ReplaySubject(1)
     @accessTokenStreams.onNext Rx.Observable.defer =>
-      unless initialAuthPromise?
-        cookieAccessToken = cookieSubject.getValue()[config.AUTH_COOKIE]
+      if initialAuthPromise?
+        return initialAuthPromise
 
-        initialAuthPromise = (if cookieAccessToken?
-          @netox.stream config.API_URL + '/demo/users/me',
-            headers:
-              Authorization: "Token #{cookieAccessToken}"
-          .take(1).toPromise()
-          .catch =>
-            @netox.fetch config.API_URL + '/demo/users/me',
-              method: 'POST'
-              isIdempotent: true
-        else
-          @netox.fetch config.API_URL + '/demo/users/me',
-            method: 'POST'
-            isIdempotent: true
-        ).then ({accessToken}) -> accessToken
-      return initialAuthPromise
+      cookieAccessToken = cookieSubject.getValue()[config.AUTH_COOKIE]
+
+      return initialAuthPromise = (if cookieAccessToken?
+        @netox.stream config.API_URL + '/demo/users/me',
+          headers:
+            Authorization: "Token #{cookieAccessToken}"
+        .take(1).toPromise()
+        .catch =>
+          @loginAnon()
+      else
+        @loginAnon()
+      ).then ({accessToken}) ->
+        accessToken
 
     @accessTokens = @accessTokenStreams.switch()
     .doOnNext (accessToken) ->
@@ -35,6 +33,9 @@ module.exports = class Auth
       cookies[config.AUTH_COOKIE] = accessToken
       cookieSubject.onNext \
         _.defaults cookies, cookieSubject.getValue()
+
+  setAccessToken: (accessToken) =>
+    @accessTokenStreams.onNext Rx.Observable.just accessToken
 
   stream: (url, opts) =>
     @accessTokens
@@ -53,9 +54,6 @@ module.exports = class Auth
       }, opts
 
   loginAnon: =>
-    @fetch config.API_URL + '/demo/users/me',
+    @netox.fetch config.API_URL + '/demo/users/me',
       method: 'POST'
       isIdempotent: true
-    .then (user) =>
-      @accessTokenStreams.onNext Rx.Observable.just user.accessToken
-      return user
