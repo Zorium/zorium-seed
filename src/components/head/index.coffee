@@ -12,8 +12,7 @@ module.exports = class Head
     {modelSerialization} = @state.getValue()
 
     isInliningSource = config.ENV is config.ENVS.PROD
-    webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
-    webpackDevPort = config.WEBPACK_DEV_PORT
+    webpackDevUrl = config.WEBPACK_DEV_URL
     title ?= 'Zorium Seed'
     description = 'Zorium Seed - (╯°□°）╯︵ ┻━┻)'
     keywords = 'Zorium'
@@ -139,4 +138,4 @@ module.exports = class Head
       z 'script.bundle',
         async: true
         src: if isInliningSource then bundlePath \
-             else "//#{webpackDevHostname}:#{webpackDevPort}/bundle.js"
+             else "#{webpackDevUrl}/bundle.js"

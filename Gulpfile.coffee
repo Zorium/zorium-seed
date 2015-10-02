@@ -93,11 +93,8 @@ gulp.task 'dev:server', ['build:static:dev'], ->
   nodemon {script: 'bin/dev_server.coffee', ext: 'js json coffee'}
 
 gulp.task 'dev:webpack-server', ->
-  webpackDevPort = config.WEBPACK_DEV_PORT
-  webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
-
   entries = [
-    "webpack-dev-server/client?http://#{webpackDevHostname}:#{webpackDevPort}"
+    "webpack-dev-server/client?#{config.WEBPACK_DEV_URL}"
     'webpack/hot/dev-server'
     paths.root
   ]
@@ -107,7 +104,7 @@ gulp.task 'dev:webpack-server', ->
     entry: entries
     output:
       path: __dirname
-      publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/"
+      publicPath: "#{config.WEBPACK_DEV_URL}/"
     module:
       loaders: [
         {test: /\.coffee$/, loader: 'coffee'}
@@ -122,13 +119,13 @@ gulp.task 'dev:webpack-server', ->
   }, webpackBase
 
   new WebpackDevServer compiler,
-    publicPath: "//#{webpackDevHostname}:#{webpackDevPort}/"
+    publicPath: "#{config.WEBPACK_DEV_URL}/"
     hot: true
     noInfo: true
-  .listen webpackDevPort, (err) ->
+  .listen config.WEBPACK_DEV_PORT, (err) ->
     if err
       console.trace err
-    console.log 'Webpack listening on port %d', webpackDevPort
+    console.log 'Webpack listening on port %d', config.WEBPACK_DEV_PORT
 
 gulp.task 'build:static:dev', ->
   gulp.src paths.static

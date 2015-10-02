@@ -4,12 +4,9 @@ log = require 'loga'
 app = require '../server'
 config = require '../src/config'
 
-webpackDevPort = config.WEBPACK_DEV_PORT
-webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
-
 app.all '/*', (req, res, next) ->
   res.header(
-    'Access-Control-Allow-Origin', "//#{webpackDevHostname}:#{webpackDevPort}"
+    'Access-Control-Allow-Origin', config.WEBPACK_DEV_URL
   )
   res.header 'Access-Control-Allow-Headers', 'X-Requested-With'
   next()

@@ -22,17 +22,15 @@ app = express()
 
 app.use compress()
 
-webpackDevHost = "#{config.WEBPACK_DEV_HOSTNAME}:" +
-                 "#{config.WEBPACK_DEV_PORT}"
 scriptSrc = [
   '\'self\''
   '\'unsafe-inline\''
   'www.google-analytics.com'
-  if config.ENV is config.ENVS.DEV then webpackDevHost
+  if config.ENV is config.ENVS.DEV then config.WEBPACK_DEV_URL
 ]
 stylesSrc = [
   '\'unsafe-inline\''
-  if config.ENV is config.ENVS.DEV then webpackDevHost
+  if config.ENV is config.ENVS.DEV then config.WEBPACK_DEV_URL
 ]
 app.use helmet.contentSecurityPolicy
   scriptSrc: scriptSrc

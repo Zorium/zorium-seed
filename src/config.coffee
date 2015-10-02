@@ -24,12 +24,15 @@ isomorphic =
 
 # Server only
 # All keys must have values at run-time (value may be null)
+WEBPACK_DEV_PORT = serverEnv.WEBPACK_DEV_PORT or 3001
+
 server =
   PORT: serverEnv.PORT or 3000
 
   # Development
-  WEBPACK_DEV_HOSTNAME: serverEnv.WEBPACK_DEV_HOSTNAME or '127.0.0.1'
-  WEBPACK_DEV_PORT: serverEnv.WEBPACK_DEV_PORT or 3001
+  WEBPACK_DEV_PORT: WEBPACK_DEV_PORT
+  WEBPACK_DEV_URL: serverEnv.WEBPACK_DEV_URL or
+    "http://127.0.0.1:#{WEBPACK_DEV_PORT}"
   SELENIUM_TARGET_URL: serverEnv.SELENIUM_TARGET_URL or null
   REMOTE_SELENIUM: serverEnv.REMOTE_SELENIUM is '1'
   SELENIUM_BROWSER: serverEnv.SELENIUM_BROWSER or 'chrome'
