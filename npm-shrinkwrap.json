@@ -248,6 +248,69 @@
         }
       }
     },
+    "exoid": {
+      "version": "0.1.1",
+      "from": "exoid@0.1.1",
+      "resolved": "https://registry.npmjs.org/exoid/-/exoid-0.1.1.tgz",
+      "dependencies": {
+        "json-stable-stringify": {
+          "version": "1.0.0",
+          "from": "json-stable-stringify@^1.0.0",
+          "resolved": "https://registry.npmjs.org/json-stable-stringify/-/json-stable-stringify-1.0.0.tgz",
+          "dependencies": {
+            "jsonify": {
+              "version": "0.0.0",
+              "from": "jsonify@~0.0.0",
+              "resolved": "https://registry.npmjs.org/jsonify/-/jsonify-0.0.0.tgz"
+            }
+          }
+        },
+        "rx-lite": {
+          "version": "4.0.0",
+          "from": "rx-lite@^4.0.0",
+          "resolved": "https://registry.npmjs.org/rx-lite/-/rx-lite-4.0.0.tgz"
+        }
+      }
+    },
+    "exoid-router": {
+      "version": "0.2.2",
+      "from": "exoid-router@0.2.2",
+      "resolved": "https://registry.npmjs.org/exoid-router/-/exoid-router-0.2.2.tgz",
+      "dependencies": {
+        "bluebird": {
+          "version": "2.10.1",
+          "from": "bluebird@>=2.10.1 <3.0.0",
+          "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.10.1.tgz"
+        },
+        "joi": {
+          "version": "6.7.1",
+          "from": "joi@>=6.7.1 <7.0.0",
+          "resolved": "https://registry.npmjs.org/joi/-/joi-6.7.1.tgz",
+          "dependencies": {
+            "hoek": {
+              "version": "2.16.3",
+              "from": "hoek@>=2.2.0 <3.0.0",
+              "resolved": "https://registry.npmjs.org/hoek/-/hoek-2.16.3.tgz"
+            },
+            "topo": {
+              "version": "1.0.3",
+              "from": "topo@>=1.0.0 <2.0.0",
+              "resolved": "https://registry.npmjs.org/topo/-/topo-1.0.3.tgz"
+            },
+            "isemail": {
+              "version": "1.2.0",
+              "from": "isemail@>=1.0.0 <2.0.0",
+              "resolved": "https://registry.npmjs.org/isemail/-/isemail-1.2.0.tgz"
+            },
+            "moment": {
+              "version": "2.10.6",
+              "from": "moment@>=2.0.0 <3.0.0",
+              "resolved": "https://registry.npmjs.org/moment/-/moment-2.10.6.tgz"
+            }
+          }
+        }
+      }
+    },
     "express": {
       "version": "4.13.3",
       "from": "express@*",

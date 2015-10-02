@@ -4,8 +4,8 @@ module.exports = class Example
   constructor: ({@auth}) -> null
 
   getCount: =>
-    @auth.stream config.API_URL + '/demo/count'
+    @auth.stream 'count.get'
     .map ({count}) -> count
 
   incrementCount: =>
-    @auth.fetch config.API_URL + '/demo/count', {method: 'POST'}
+    @auth.call 'count.inc'

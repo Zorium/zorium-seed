@@ -6,10 +6,10 @@ config = require '../../config'
 module.exports = class Head
   constructor: ({model}) ->
     @state = z.state
-      netoxSerialization: model.netox.getSerializationStream()
+      modelSerialization: model.getSerializationStream()
 
   render: ({styles, bundlePath, title}) =>
-    {netoxSerialization} = @state.getValue()
+    {modelSerialization} = @state.getValue()
 
     isInliningSource = config.ENV is config.ENVS.PROD
     webpackDevHostname = config.WEBPACK_DEV_HOSTNAME
@@ -77,9 +77,9 @@ module.exports = class Head
       z 'meta', {name: 'theme-color', content: "#{themeColor}"}
       z 'link', {rel: 'shortcut icon', href: "#{favicon}"}
 
-      # cache
-      z 'script.netox',
-        innerHTML: netoxSerialization or ''
+      # serialization
+      z 'script.model',
+        innerHTML: modelSerialization or ''
 
       # fonts
       z 'style',

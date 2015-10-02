@@ -14,10 +14,10 @@ before ->
   @timeout 90 * 1000 # 90sec
   count = 0
   check = ->
-    request config.SELENIUM_TARGET_URL
-    .catch ->
+    request config.SELENIUM_TARGET_URL, {timeout: 200}
+    .catch (err) ->
       count += 1
-      if count > 50
+      if count > 10
         throw new Error "Could not connect to #{config.SELENIUM_TARGET_URL}"
       Promise.delay 100
       .then check

@@ -1,14 +1,60 @@
 _ = require 'lodash'
 Netox = require 'netox'
+Exoid = require 'exoid'
+request = require 'clay-request'
 
 Auth = require './auth'
 User = require './user'
 Example = require './example'
 config = require '../config'
 
+SERIALIZATION_KEY = 'ZORIUM_MODEL'
+SERIALIZATION_EXPIRE_TIME_MS = 1000 * 10 # 10 seconds
+
 module.exports = class Model
   constructor: ({cookieSubject, serverHeaders}) ->
-    @netox = new Netox {headers: serverHeaders}
-    @auth = new Auth({@netox, cookieSubject})
+    serverHeaders ?= {}
+
+    serialization = window?[SERIALIZATION_KEY] or {}
+    isExpired = if serialization.expires?
+      # Because of potential clock skew we check around the value
+      delta = Math.abs(Date.now() - serialization.expires)
+      delta > SERIALIZATION_EXPIRE_TIME_MS
+    else
+      true
+    cache = if isExpired then {} else serialization
+
+    accessToken = cookieSubject.map (cookies) ->
+      cookies[config.AUTH_COOKIE]
+
+    proxy = (url, opts) ->
+      accessToken.take(1).toPromise()
+      .then (accessToken) ->
+        proxyHeaders =  _.pick serverHeaders, [
+          'cookie'
+          'user-agent'
+          'accept-language'
+          'x-forwarded-for'
+        ]
+        request url, _.merge {
+          headers: _.merge proxyHeaders,
+            if accessToken? then Authorization: "Token #{accessToken}" else {}
+        }, opts
+
+    @exoid = new Exoid
+      api: config.API_URL + '/exoid'
+      fetch: proxy
+      cache: cache.exoid
+
+    @auth = new Auth({@exoid, cookieSubject})
     @user = new User({@auth})
     @example = new Example({@auth})
+
+  getSerializationStream: =>
+    @exoid.getCacheStream()
+    .map (exoidCache) ->
+      string = JSON.stringify {
+        exoid: exoidCache
+        expires: Date.now() + SERIALIZATION_EXPIRE_TIME_MS
+      }
+      "window['#{SERIALIZATION_KEY}']=#{string};"

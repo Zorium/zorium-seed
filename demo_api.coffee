@@ -3,13 +3,17 @@ express = require 'express'
 log = require 'loga'
 cors = require 'cors'
 bodyParser = require 'body-parser'
+router = require 'exoid-router'
+uuid = require 'uuid'
 
 config = require './src/config'
 
 app = express()
-router = express.Router()
 demoUserDB = {}
-demoCount = 0
+demoCount = {
+  id: uuid.v4()
+  count: 0
+}
 
 app.use cors()
 app.use bodyParser.json()
@@ -20,9 +24,6 @@ app.use '/healthcheck', (req, res, next) ->
 app.use '/ping', (req, res) ->
   res.send 'pong'
 
-app.get '/demo', (req, res) ->
-  res.json {name: 'Zorium'}
-
 app.post '/log', (req, res) ->
   log.info JSON.stringify
     event: 'client_error'
@@ -30,51 +31,44 @@ app.post '/log', (req, res) ->
     message: req.body?.message
   res.status(204).send()
 
-app.get '/demo/users/me', (req, res) ->
-  authHeader = req.header('Authorization') or ''
-  [authScheme, accessToken] = authHeader.split(' ')
+auth = (handler) ->
+  (body, req, rest...) ->
+    authHeader = req.headers.authorization or ''
+    [authScheme, accessToken] = authHeader.split(' ')
 
-  unless demoUserDB[accessToken]
-    return res.status(401).send()
+    unless demoUserDB[accessToken]?
+      router.throw status: 401, detail: 'Unauthorized'
 
-  res.json demoUserDB[accessToken]
+    req.user = demoUserDB[accessToken]
 
-app.post '/demo/users/me', (req, res) ->
-  authHeader = req.header('Authorization') or ''
-  [authScheme, accessToken] = authHeader.split(' ')
+    handler body, req, rest...
 
-  if demoUserDB[accessToken]
-    return res.json demoUserDB[accessToken]
-
-  id = _.keys(demoUserDB).length
+exoidMiddleware = router
+###################
+# Public Routes   #
+###################
+.on 'users.create', (body) ->
+  id = uuid.v4()
   user = {
     id: id
-    username: "test_#{id}"
+    username: "u_#{id.slice(0, 5)}"
     accessToken: "#{id}_#{Math.random().toFixed(10)}"
   }
+  log.info {event: 'user_create', id: user.id}
+  return demoUserDB[user.accessToken] = user
+###################
+# Authed Routes   #
+###################
+.on 'users.getMe', auth (body, {user}) ->
+  return user
+.on 'count.get', auth -> demoCount
+.on 'count.inc', auth ->
+  demoCount.count += 1
+  log.info {event: 'count_inc', count: demoCount.count}
+  return demoCount
+.asMiddleware()
 
-  res.json demoUserDB[user.accessToken] = user
-
-app.get '/demo/count', (req, res) ->
-  authHeader = req.header('Authorization') or ''
-  [authScheme, accessToken] = authHeader.split(' ')
-
-  unless demoUserDB[accessToken]
-    return res.status(401).send()
-
-  res.json {count: demoCount}
-
-app.post '/demo/count', (req, res) ->
-  authHeader = req.header('Authorization') or ''
-  [authScheme, accessToken] = authHeader.split(' ')
-
-  unless demoUserDB[accessToken]
-    return res.status(401).send()
-
-  demoCount += 1
-  res.json {count: demoCount}
-
-app.use router
+app.post '/exoid', exoidMiddleware
 
 app.listen 3005, ->
   log.info 'Demo API, listening on port %d', 3005

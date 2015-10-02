@@ -5,55 +5,33 @@ log = require 'loga'
 config = require '../config'
 
 module.exports = class Auth
-  constructor: ({@netox, cookieSubject}) ->
-    initialAuthPromise = null
+  constructor: ({@exoid, cookieSubject}) ->
+    initPromise = null
+    @waitValidAuthCookie = Rx.Observable.defer =>
+      if initPromise?
+        return initPromise
+      return initPromise = cookieSubject.take(1).toPromise()
+      .then (currentCookies) =>
+        (if currentCookies[config.AUTH_COOKIE]?
+          @exoid.call 'users.getMe'
+          .catch =>
+            cookieSubject.onNext _.defaults {
+              "#{config.AUTH_COOKIE}": null
+            }, currentCookies
+            @exoid.call 'users.create'
+        else
+          @exoid.call 'users.create')
+        .then ({accessToken}) ->
+          cookieSubject.onNext _.defaults {
+            "#{config.AUTH_COOKIE}": accessToken
+          }, currentCookies
 
-    @accessTokenStreams = new Rx.ReplaySubject(1)
-    @accessTokenStreams.onNext Rx.Observable.defer =>
-      if initialAuthPromise?
-        return initialAuthPromise
+  stream: (path, body) =>
+    @waitValidAuthCookie
+    .flatMapLatest =>
+      @exoid.stream path, body
 
-      cookieAccessToken = cookieSubject.getValue()[config.AUTH_COOKIE]
-
-      return initialAuthPromise = (if cookieAccessToken?
-        @netox.stream config.API_URL + '/demo/users/me',
-          headers:
-            Authorization: "Token #{cookieAccessToken}"
-        .take(1).toPromise()
-        .catch =>
-          @loginAnon()
-      else
-        @loginAnon()
-      ).then ({accessToken}) ->
-        accessToken
-
-    @accessTokens = @accessTokenStreams.switch()
-    .doOnNext (accessToken) ->
-      cookies = {}
-      cookies[config.AUTH_COOKIE] = accessToken
-      cookieSubject.onNext \
-        _.defaults cookies, cookieSubject.getValue()
-
-  setAccessToken: (accessToken) =>
-    @accessTokenStreams.onNext Rx.Observable.just accessToken
-
-  stream: (url, opts) =>
-    @accessTokens
-    .flatMapLatest (accessToken) =>
-      @netox.stream url, _.merge {
-        headers:
-          Authorization: "Token #{accessToken}"
-      }, opts
-
-  fetch: (url, opts) =>
-    @accessTokens.take(1).toPromise()
-    .then (accessToken) =>
-      @netox.fetch url, _.merge {
-        headers:
-          Authorization: "Token #{accessToken}"
-      }, opts
-
-  loginAnon: =>
-    @netox.fetch config.API_URL + '/demo/users/me',
-      method: 'POST'
-      isIdempotent: true
+  call: (path, body) =>
+    @waitValidAuthCookie.take(1).toPromise()
+    .then =>
+      @exoid.call path, body

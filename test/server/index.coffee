@@ -43,14 +43,12 @@ describe 'server', ->
   it 'renders /', ->
     zock
     .base config.API_URL
-    .get '/demo'
-    .reply 200, {name: 'Zorium'}
-    .post '/demo/users/me'
-    .reply 200, {}
-    .get '/demo/users/me'
-    .reply 200, {}
-    .get '/demo/count'
-    .reply 200, 0
+    .exoid 'users.create'
+    .reply {}
+    .exoid 'users.getMe'
+    .reply {}
+    .exoid 'count.get'
+    .reply {}
     .withOverrides ->
       flare
         .get '/'

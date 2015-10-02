@@ -19,7 +19,6 @@ MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
 HEALTHCHECK_TIMEOUT = 200
 
 app = express()
-router = express.Router()
 
 app.use compress()
 
@@ -73,7 +72,6 @@ if config.ENV is config.ENVS.PROD
 then app.use express.static(gulpPaths.dist, {maxAge: '4h'})
 else app.use express.static(gulpPaths.build, {maxAge: '4h'})
 
-app.use router
 app.use (req, res, next) ->
   setCookies = (currentCookies) ->
     (cookies) ->
@@ -91,8 +89,10 @@ app.use (req, res, next) ->
   .then (html) ->
     res.send '<!DOCTYPE html>' + html
   .catch (err) ->
+    log.error
+      event: 'error'
+      error: err
     if err.html
-      log.error err
       res.send '<!DOCTYPE html>' + err.html
     else
       next err
