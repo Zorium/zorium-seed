@@ -33,8 +33,7 @@ app.post '/log', (req, res) ->
 
 auth = (handler) ->
   (body, req, rest...) ->
-    authHeader = req.headers.authorization or ''
-    [authScheme, accessToken] = authHeader.split(' ')
+    accessToken = req.query?.accessToken
 
     unless demoUserDB[accessToken]?
       router.throw status: 401, detail: 'Unauthorized'
@@ -68,6 +67,8 @@ exoidMiddleware = router
   return demoCount
 .asMiddleware()
 
+# Avoid CORS preflight
+app.use bodyParser.json({type: 'text/plain'})
 app.post '/exoid', exoidMiddleware
 
 app.listen 3005, ->

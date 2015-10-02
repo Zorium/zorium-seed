@@ -37,8 +37,11 @@ module.exports = class Model
           'x-forwarded-for'
         ]
         request url, _.merge {
-          headers: _.merge proxyHeaders,
-            if accessToken? then Authorization: "Token #{accessToken}" else {}
+          qs: {accessToken}
+          headers: _.merge {
+            # Avoid CORS preflight
+            'Content-Type': 'text/plain'
+          }, proxyHeaders
         }, opts
 
     @exoid = new Exoid
