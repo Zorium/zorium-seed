@@ -37,7 +37,7 @@ module.exports = class Model
           'x-forwarded-for'
         ]
         request url, _.merge {
-          qs: {accessToken}
+          qs: if accessToken? then {accessToken} else {}
           headers: _.merge {
             # Avoid CORS preflight
             'Content-Type': 'text/plain'

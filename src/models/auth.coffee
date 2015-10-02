@@ -13,7 +13,11 @@ module.exports = class Auth
       return initPromise = cookieSubject.take(1).toPromise()
       .then (currentCookies) =>
         (if currentCookies[config.AUTH_COOKIE]?
-          @exoid.call 'users.getMe'
+          @exoid.getCached 'users.getMe'
+          .then (user) =>
+            if user?
+              return user
+            @exoid.call 'users.getMe'
           .catch =>
             cookieSubject.onNext _.defaults {
               "#{config.AUTH_COOKIE}": null
