@@ -24,24 +24,32 @@ if config.ENV is config.ENVS.PROD
 # Report errors to API_URL/log
 log.on 'error', (err) ->
   try
-    trace = StackTrace({e: err, guess: true}).join('\n')
-    window.fetch config.API_URL + '/log',
-      method: 'POST'
-      headers:
-        'Accept': 'application/json'
-        'Content-Type': 'application/json'
-      body: JSON.stringify
-        trace: trace
-        message: err?.message or String(err)
+    StackTrace.fromError err
+    .then (stack) ->
+      stack.join('\n')
+    .catch (parseError) ->
+      console?.log parseError
+      return err
+    .then (trace) ->
+      window.fetch config.API_URL + '/log',
+        method: 'POST'
+        headers:
+          'Accept': 'application/json'
+          'Content-Type': 'application/json'
+        body: JSON.stringify
+          message: JSON.stringify
+            event: 'client_error'
+            trace: trace
+            error: String(err)
     .catch (err) ->
-      console?.error err
+      console?.log err
   catch err
-    console?.error err
+    console?.log err
 
 # Note: window.onerror != window.addEventListener('error')
 oldOnError = window.onerror
 window.onerror = (message, file, line, column, error) ->
-  log.error error or message
+  log.error error or new Error message
   if oldOnError
     return oldOnError arguments...
 
