@@ -23,7 +23,7 @@ Environment variable are dynamically injected at runtime (for running in Docker)
   - `npm start`
 
 ```bash
-npm run build
+npm run dist
 docker build -t zorium-seed .
 
 docker run \
@@ -54,7 +54,13 @@ docker run \
 
 #### functional tests - watch
 ```bash
-# Before starting, make sure dev server is running (npm run dev)
+# Before starting, make sure dev server is running and depending on public network ips
+# npm run demo-api
+# WEBPACK_DEV_PORT=3006 \
+#   WEBPACK_DEV_URL=http://192.168.1.100:3006 \
+#   PRIVATE_API_URL=http://192.168.1.100:3005 \
+#   API_URL=http://192.168.1.100:3005 \
+#   npm run dev
 # SELENIUM_TARGET_URL (note 127.0.0.1 won't work because connections come from a Docker instance)
 export SELENIUM_TARGET_URL=http://192.168.1.100:3000
 npm run watch-functional
@@ -70,7 +76,13 @@ npm run sauce-tunnel
 ```
 
 ```bash
-# Before starting, make sure dev server is running (npm run dev)
+# Before starting, make sure dev server is running and depending on public network ips
+# npm run demo-api
+# WEBPACK_DEV_PORT=3006 \
+#   WEBPACK_DEV_URL=http://192.168.1.100:3006 \
+#   PRIVATE_API_URL=http://192.168.1.100:3005 \
+#   API_URL=http://192.168.1.100:3005 \
+#   npm run dev
 export SAUCE_USERNAME=$SAUCE_USERNAME
 export SAUCE_ACCESS_KEY=$SAUCE_ACCESS_KEY
 # SELENIUM_TARGET_URL (note 127.0.0.1 won't work because connections come from a remote host)

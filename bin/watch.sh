@@ -9,7 +9,7 @@ case $1 in
     GULP_COMMAND="watch:server"
   ;;
   functional)
-    docker run -i --rm -p 4444:4444 selenium/standalone-chrome:2.47.1 >> /dev/null &
+    docker run -i --rm -p 4444:4444 selenium/standalone-chrome:2.48.2 >> /dev/null &
     GULP_COMMAND="watch:functional"
   ;;
   *)
