@@ -94,4 +94,3 @@ else
 
 if module.hot
   module.hot.accept()
-  init()
