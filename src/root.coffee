@@ -34,13 +34,12 @@ log.on 'error', (err) ->
       window.fetch config.API_URL + '/log',
         method: 'POST'
         headers:
-          'Accept': 'application/json'
-          'Content-Type': 'application/json'
+          # Avoid CORS preflight
+          'Content-Type': 'text/plain'
         body: JSON.stringify
-          message: JSON.stringify
-            event: 'client_error'
-            trace: trace
-            error: String(err)
+          event: 'client_error'
+          trace: trace
+          error: String(err)
     .catch (err) ->
       console?.log err
   catch err

@@ -17,6 +17,8 @@ demoCount = {
 
 app.use cors()
 app.use bodyParser.json()
+# Avoid CORS preflight
+app.use bodyParser.json({type: 'text/plain'})
 
 app.use '/healthcheck', (req, res, next) ->
   res.json {healthy: true}
@@ -25,10 +27,10 @@ app.use '/ping', (req, res) ->
   res.send 'pong'
 
 app.post '/log', (req, res) ->
-  log.info JSON.stringify
-    event: 'client_error'
-    trace: req.body?.trace
-    message: req.body?.message
+  unless req.body?.event is 'client_error'
+    router.throw status: 400, detail: 'must be type client_error'
+
+  log.warn req.body
   res.status(204).send()
 
 auth = (handler) ->
@@ -67,8 +69,6 @@ exoidMiddleware = router
   return demoCount
 .asMiddleware()
 
-# Avoid CORS preflight
-app.use bodyParser.json({type: 'text/plain'})
 app.post '/exoid', exoidMiddleware
 
 app.listen 3005, ->
