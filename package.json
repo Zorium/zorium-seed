@@ -19,7 +19,7 @@
     "coffee-loader": "^0.7.2",
     "coffeelint": "^1.11.1",
     "cors": "^2.7.1",
-    "css-loader": "^0.18.0",
+    "css-loader": "^0.22.0",
     "del": "^2.0.2",
     "exoid-router": "^0.2.2",
     "extract-text-webpack-plugin": "^0.8.2",
