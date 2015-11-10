@@ -121,24 +121,29 @@
       }
     },
     "clay-request": {
-      "version": "0.4.3",
-      "from": "https://registry.npmjs.org/clay-request/-/clay-request-0.4.3.tgz",
-      "resolved": "https://registry.npmjs.org/clay-request/-/clay-request-0.4.3.tgz",
+      "version": "0.4.4",
+      "from": "clay-request@0.4.4",
+      "resolved": "https://registry.npmjs.org/clay-request/-/clay-request-0.4.4.tgz",
       "dependencies": {
+        "bluebird": {
+          "version": "2.10.2",
+          "from": "bluebird@>=2.10.2 <3.0.0",
+          "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.10.2.tgz"
+        },
         "node-fetch": {
-          "version": "1.3.2",
-          "from": "https://registry.npmjs.org/node-fetch/-/node-fetch-1.3.2.tgz",
-          "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-1.3.2.tgz",
+          "version": "1.3.3",
+          "from": "node-fetch@>=1.3.3 <2.0.0",
+          "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-1.3.3.tgz",
           "dependencies": {
             "encoding": {
               "version": "0.1.11",
-              "from": "https://registry.npmjs.org/encoding/-/encoding-0.1.11.tgz",
+              "from": "encoding@>=0.1.11 <0.2.0",
               "resolved": "https://registry.npmjs.org/encoding/-/encoding-0.1.11.tgz",
               "dependencies": {
                 "iconv-lite": {
-                  "version": "0.4.11",
-                  "from": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.11.tgz",
-                  "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.11.tgz"
+                  "version": "0.4.13",
+                  "from": "iconv-lite@>=0.4.4 <0.5.0",
+                  "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.13.tgz"
                 }
               }
             }
@@ -146,7 +151,7 @@
         },
         "qs": {
           "version": "2.4.2",
-          "from": "https://registry.npmjs.org/qs/-/qs-2.4.2.tgz",
+          "from": "qs@>=2.4.2 <3.0.0",
           "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.2.tgz"
         }
       }
@@ -667,7 +672,7 @@
     },
     "loga": {
       "version": "0.1.3",
-      "from": "loga@0.1.3",
+      "from": "https://registry.npmjs.org/loga/-/loga-0.1.3.tgz",
       "resolved": "https://registry.npmjs.org/loga/-/loga-0.1.3.tgz"
     },
     "netox": {
