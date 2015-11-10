@@ -40,7 +40,7 @@ app.use helmet.frameguard()
 app.use helmet.hsts
   # https://hstspreload.appspot.com/
   maxAge: MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS
-  includeSubdomains: true # include in Google Chrome
+  includeSubDomains: true # include in Google Chrome
   preload: true # include in Google Chrome
   force: true
 app.use helmet.noSniff()
@@ -48,9 +48,10 @@ app.disable 'x-powered-by'
 app.use cookieParser()
 
 app.use '/healthcheck', (req, res, next) ->
-  Promise.settle [
+  Promise.all [
     Promise.cast(request(config.API_URL + '/ping'))
       .timeout HEALTHCHECK_TIMEOUT
+      .reflect()
   ]
   .spread (api) ->
     result =

@@ -1,7 +1,6 @@
 z = require 'zorium'
 Rx = require 'rx-lite'
 HttpHash = require 'http-hash'
-Qs = require 'qs'
 
 config = require './config'
 gulpPaths = require '../gulp_paths'

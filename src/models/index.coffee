@@ -1,5 +1,4 @@
 _ = require 'lodash'
-Netox = require 'netox'
 Exoid = require 'exoid'
 request = require 'clay-request'
 
