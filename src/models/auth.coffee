@@ -1,6 +1,5 @@
 _ = require 'lodash'
 Rx = require 'rx-lite'
-log = require 'loga'
 
 config = require '../config'
 

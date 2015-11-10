@@ -12,4 +12,6 @@ app.all '/*', (req, res, next) ->
   next()
 
 app.listen config.PORT, ->
-  log.info 'Listening on port %d', config.PORT
+  log.info
+    event: 'dev_server_start'
+    message: "Listening on port #{config.PORT}"

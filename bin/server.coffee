@@ -12,8 +12,12 @@ if cluster.isMaster
     cluster.fork()
 
   cluster.on 'exit', (worker) ->
-    log "Worker #{worker.id} died, respawning"
+    log.warn
+      event: 'cluster_respawn'
+      message: "Worker #{worker.id} died, respawning"
     cluster.fork()
 else
   app.listen config.PORT, ->
-    log.info 'Worker %d, listening on port %d', cluster.worker.id, config.PORT
+    log.info
+      event: 'cluster_fork'
+      message: "Worker #{cluster.worker.id}, listening on port #{config.PORT}"

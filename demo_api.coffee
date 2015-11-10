@@ -72,4 +72,6 @@ exoidMiddleware = router
 app.post '/exoid', exoidMiddleware
 
 app.listen 3005, ->
-  log.info 'Demo API, listening on port %d', 3005
+  log.info
+    event: 'demo_api_start'
+    message: 'Demo API, listening on port 3005'

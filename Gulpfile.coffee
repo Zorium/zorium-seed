@@ -1,6 +1,7 @@
 fs = require 'fs'
 _ = require 'lodash'
 del = require 'del'
+log = require 'loga'
 gulp = require 'gulp'
 KarmaServer = require('karma').Server
 webpack = require 'webpack'
@@ -124,8 +125,11 @@ gulp.task 'dev:webpack-server', ->
     noInfo: true
   .listen config.WEBPACK_DEV_PORT, (err) ->
     if err
-      console.trace err
-    console.log 'Webpack listening on port %d', config.WEBPACK_DEV_PORT
+      log.error err
+    else
+      log.info
+        event: 'webpack_server_start'
+        message: "Webpack listening on port #{config.WEBPACK_DEV_PORT}"
 
 gulp.task 'build:static:dev', ->
   gulp.src paths.static
