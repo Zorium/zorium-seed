@@ -1,15 +1,15 @@
 fs = require 'fs'
-_ = require 'lodash'
 del = require 'del'
+_ = require 'lodash'
 log = require 'loga'
 gulp = require 'gulp'
-KarmaServer = require('karma').Server
 webpack = require 'webpack'
 mocha = require 'gulp-mocha'
-nodemon = require 'gulp-nodemon'
 manifest = require 'gulp-manifest'
-webpackStream = require 'webpack-stream'
+KarmaServer = require('karma').Server
+spawn = require('child_process').spawn
 coffeelint = require 'gulp-coffeelint'
+webpackStream = require 'webpack-stream'
 istanbul = require 'gulp-coffee-istanbul'
 WebpackDevServer = require 'webpack-dev-server'
 ExtractTextPlugin = require 'extract-text-webpack-plugin'
@@ -39,7 +39,7 @@ webpackBase =
     filename: 'bundle.js'
     publicPath: '/'
 
-gulp.task 'dev', ['dev:webpack-server', 'dev:server']
+gulp.task 'dev', ['dev:webpack-server', 'watch:dev:server']
 gulp.task 'test', ['lint', 'test:coverage', 'test:browser']
 gulp.task 'dist', ['dist:scripts', 'dist:static', 'dist:manifest']
 
@@ -51,6 +51,8 @@ gulp.task 'watch:server', ->
   gulp.watch paths.coffee, ['test:server']
 gulp.task 'watch:functional', ->
   gulp.watch paths.coffee, ['test:functional']
+gulp.task 'watch:dev:server', ['dev:server'], ->
+  gulp.watch paths.coffee, ['dev:server']
 
 gulp.task 'lint', ->
   gulp.src paths.coffee
@@ -90,8 +92,15 @@ gulp.task 'test:functional', ->
   gulp.src paths.functionalTests
     .pipe mocha(timeout: FUNCTIONAL_TEST_TIMEOUT_MS)
 
-gulp.task 'dev:server', ['build:static:dev'], ->
-  nodemon {script: 'bin/dev_server.coffee', ext: 'js json coffee'}
+gulp.task 'dev:server', ['build:static:dev'], do ->
+  devServer = null
+  process.on 'exit', -> devServer?.kill()
+  ->
+    devServer?.kill()
+    devServer = spawn 'coffee', ['bin/dev_server.coffee'], {stdio: 'inherit'}
+    devServer.on 'close', (code) ->
+      if code is 8
+        gulp.log 'Error detected, waiting for changes'
 
 gulp.task 'dev:webpack-server', ->
   entries = [
