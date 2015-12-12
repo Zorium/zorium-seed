@@ -84,7 +84,8 @@ app.use (req, res, next) ->
 
   model = new Model({cookieSubject, serverHeaders: req.headers})
 
-  z.renderToString new App({requests: Rx.Observable.just({req, res}), model})
+  requests = new Rx.BehaviorSubject({req, res})
+  z.renderToString new App({requests: requests, model})
   .then (html) ->
     res.send '<!DOCTYPE html>' + html
   .catch (err) ->

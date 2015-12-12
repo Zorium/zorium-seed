@@ -63,6 +63,33 @@ setCookies = (currentCookies) ->
           key, value, CookieService.getCookieOpts()
     currentCookies = cookies
 
+# FIXME: gross, also should be faster, also timeout is busted
+isThunk = (tree) -> tree.component?
+isZThunk = (tree) -> isThunk(tree) and tree.component?
+timeout = 200
+getZThunks = (tree) ->
+  if isZThunk tree
+    [tree]
+  else
+    _.flatten _.map tree.children, getZThunks
+
+untilStable = (zthunk) ->
+  state = zthunk.component.state
+
+  new Promise (resolve, reject) ->
+    setTimeout ->
+      reject new Error "Timeout, request took longer than #{timeout}ms"
+    , timeout
+
+    onStable = if state? then state._subscribeOnStable else (cb) -> cb()
+    onStable ->
+      try
+        children = getZThunks zthunk.render()
+      catch err
+        return reject err
+      resolve Promise.all _.map children, untilStable
+  .then -> zthunk
+
 init = ->
   currentCookies = cookie.parse(document.cookie)
   cookieSubject = new Rx.BehaviorSubject currentCookies
@@ -71,15 +98,25 @@ init = ->
   model = new Model({cookieSubject})
   router = z.router
 
+  root = document.createElement 'div'
+  root.className = 'zorium-root'
   router.init
-    $$root: document.getElementById 'zorium-root'
+    $$root: root
 
   requests = new Rx.ReplaySubject(1)
-  $app = new App({requests, model, router})
+  $app = z new App({requests, model, router})
   router.use (req, res) ->
     requests.onNext {req, res}
     res.send $app
   router.go()
+
+  (if model.wasCached() then untilStable($app) else Promise.resolve null)
+  .catch -> null
+  .then ->
+    # TODO: explain that this prevents white flash, and maybe use reqAnimFrame
+    setTimeout ->
+      $$root = document.getElementById 'zorium-root'
+      $$root.parentNode.replaceChild root, $$root
 
 if document.readyState isnt 'complete' and
     not document.getElementById 'zorium-root'

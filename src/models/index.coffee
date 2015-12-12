@@ -22,6 +22,7 @@ module.exports = class Model
     else
       true
     cache = if isExpired then {} else serialization
+    @isFromCache = not _.isEmpty cache
 
     accessToken = cookieSubject.map (cookies) ->
       cookies[config.AUTH_COOKIE]
@@ -51,6 +52,8 @@ module.exports = class Model
     @auth = new Auth({@exoid, cookieSubject})
     @user = new User({@auth})
     @example = new Example({@auth})
+
+  wasCached: => @isFromCache
 
   getSerializationStream: =>
     @exoid.getCacheStream()

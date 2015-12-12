@@ -33,12 +33,17 @@ module.exports = class App
   constructor: ({requests, model, router}) ->
     routes = new HttpHash()
 
-    defaultHandler = -> $fourOhFourPage
-    requests = requests.map ({req, res}) ->
+    # TODO: ugly
+    @req = requests.getValue?().req
+    @reqToRoute = (req) ->
       route = routes.get req.path
-      $page = if route.handler? then route.handler() else defaultHandler()
+      # TODO: HttpHash should support a catchall
+      route.handler ?= -> $fourOhFourPage
+      return route
 
-      return {req, res, route, $page}
+    requests = requests.map ({req, res}) =>
+      route = @reqToRoute req
+      {req, res, route, $page: route.handler()}
 
     $homePage = new HomePage({
       model
@@ -58,54 +63,22 @@ module.exports = class App
     routes.set '/', -> $homePage
     routes.set '/red', -> $redPage
 
-    handleRequest = requests.doOnNext ({req, res, route, $page}) =>
-      {$currentPage} = @state.getValue()
-
-      if $page instanceof FourOhFourPage
-        res.status? 404
-
-      isEntering = Boolean $currentPage
-
-      if isEntering and window?
-        @state.set {
-          isEntering
-          $nextPage: $page
-        }
-
-        window.requestAnimationFrame =>
-          setTimeout =>
-            @state.set
-              isActive: true
-
-        setTimeout =>
-          @state.set
-            $currentPage: $page
-            $nextPage: null
-            isEntering: false
-            isActive: false
-        , ANIMATION_TIME_MS
-      else
-        @state.set
-          $currentPage: $page
-
     @state = z.state {
-      handleRequest: handleRequest
-      $currentPage: null
-      $nextPage: null
-      isEntering: false
-      isActive: false
+      requests: requests.doOnNext ({$page, res}) ->
+        if $page instanceof FourOhFourPage
+          res.status? 404
     }
 
   render: =>
-    {$nextPage, $currentPage, isEntering, isActive} = @state.getValue()
+    {requests, $modal} = @state.getValue()
+
+    head = requests?.$page.renderHead {styles, bundlePath}
+    # If an error occures during server-side rendering
+    head ?= @reqToRoute(@req).handler().renderHead {styles, bundlePath}
 
     z 'html',
-      $currentPage?.renderHead {styles, bundlePath}
+      head
       z 'body',
         z '#zorium-root',
           z '.z-root',
-            className: z.classKebab {isEntering, isActive}
-            z '.current',
-              $currentPage
-            z '.next',
-              $nextPage
+            requests?.$page
