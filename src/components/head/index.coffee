@@ -75,6 +75,7 @@ module.exports = class Head
       # misc
       z 'meta', {name: 'theme-color', content: "#{themeColor}"}
       z 'link', {rel: 'shortcut icon', href: "#{favicon}"}
+      z 'link', {rel: 'manifest', href: '/manifest.json'} # Android Splash
 
       # serialization
       z 'script.model',
