@@ -48,7 +48,7 @@ exoidMiddleware = router
 ###################
 # Public Routes   #
 ###################
-.on 'users.create', (body) ->
+.on 'auth.login', (body) ->
   id = uuid.v4()
   user = {
     id: id

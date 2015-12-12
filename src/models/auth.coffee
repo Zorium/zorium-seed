@@ -15,15 +15,17 @@ module.exports = class Auth
           @exoid.getCached 'users.getMe'
           .then (user) =>
             if user?
-              return user
+              return {accessToken: currentCookies[config.AUTH_COOKIE]}
             @exoid.call 'users.getMe'
+            .then ->
+              return {accessToken: currentCookies[config.AUTH_COOKIE]}
           .catch =>
             cookieSubject.onNext _.defaults {
               "#{config.AUTH_COOKIE}": null
             }, currentCookies
-            @exoid.call 'users.create'
+            @exoid.call 'auth.login'
         else
-          @exoid.call 'users.create')
+          @exoid.call 'auth.login')
         .then ({accessToken}) ->
           cookieSubject.onNext _.defaults {
             "#{config.AUTH_COOKIE}": accessToken
