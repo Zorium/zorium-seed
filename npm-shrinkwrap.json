@@ -519,6 +519,11 @@
         }
       }
     },
+    "fastclick": {
+      "version": "1.0.6",
+      "from": "fastclick@*",
+      "resolved": "https://registry.npmjs.org/fastclick/-/fastclick-1.0.6.tgz"
+    },
     "helmet": {
       "version": "0.14.0",
       "from": "helmet@>=0.14.0 <0.15.0",

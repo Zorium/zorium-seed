@@ -6,6 +6,7 @@ log = require 'loga'
 Rx = require 'rx-lite'
 cookie = require 'cookie'
 StackTrace = require 'stacktrace-js'
+FastClick = require 'fastclick'
 
 require './root.styl'
 
@@ -91,6 +92,7 @@ untilStable = (zthunk) ->
   .then -> zthunk
 
 init = ->
+  FastClick.attach document.body
   currentCookies = cookie.parse(document.cookie)
   cookieSubject = new Rx.BehaviorSubject currentCookies
   cookieSubject.subscribeOnNext setCookies(currentCookies)
