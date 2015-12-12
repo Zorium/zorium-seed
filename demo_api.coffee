@@ -50,13 +50,14 @@ exoidMiddleware = router
 ###################
 .on 'auth.login', (body) ->
   id = uuid.v4()
+  accessToken = "#{id}_#{Math.random().toFixed(10)}"
   user = {
     id: id
     username: "u_#{id.slice(0, 5)}"
-    accessToken: "#{id}_#{Math.random().toFixed(10)}"
   }
   log.info {event: 'user_create', id: user.id}
-  return demoUserDB[user.accessToken] = user
+  demoUserDB[accessToken] = user
+  return {accessToken}
 ###################
 # Authed Routes   #
 ###################
