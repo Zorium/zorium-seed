@@ -26,7 +26,7 @@ isomorphic =
 # Server only
 # All keys must have values at run-time (value may be null)
 PORT = serverEnv.PORT or 3000
-WEBPACK_DEV_PORT = serverEnv.WEBPACK_DEV_PORT or PORT + 1
+WEBPACK_DEV_PORT = serverEnv.WEBPACK_DEV_PORT or parseInt(PORT) + 1
 
 server =
   PORT: PORT
