@@ -7,7 +7,7 @@ HelloWorld = require '../../components/hello_world'
 module.exports = class HomePage
   constructor: ({model, router, serverData}) ->
     @$head = new Head({
-      modelSerialization: model.getSerializationStream()
+      model
       serverData
       meta:
         canonical: "https://#{config.HOST}"

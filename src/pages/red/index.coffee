@@ -7,7 +7,7 @@ Red = require '../../components/red'
 module.exports = class RedPage
   constructor: ({model, router, serverData}) ->
     @$head = new Head({
-      modelSerialization: model.getSerializationStream()
+      model
       serverData
       meta:
         title: 'Zorium Seed - Red'

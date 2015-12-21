@@ -6,7 +6,7 @@ Head = require '../../components/head'
 module.exports = class FourOhFourPage
   constructor: ({model, serverData}) ->
     @$head = new Head({
-      modelSerialization: model.getSerializationStream()
+      model
       serverData
       meta:
         title: 'Zorium Seed - 404'

@@ -5,11 +5,11 @@ colors = require 'zorium-paper/colors.json'
 config = require '../../config'
 
 module.exports = class Head
-  constructor: ({modelSerialization, meta, serverData}) ->
+  constructor: ({model, meta, serverData}) ->
     @state = z.state
       meta: meta
       serverData: serverData
-      modelSerialization: modelSerialization
+      modelSerialization: model.getSerializationStream()
 
   render: =>
     {meta, serverData, modelSerialization} = @state.getValue()
