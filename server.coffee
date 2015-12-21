@@ -82,7 +82,6 @@ then app.use express.static(gulpPaths.dist, {maxAge: '4h'})
 else app.use express.static(gulpPaths.build, {maxAge: '4h'})
 
 app.use (req, res, next) ->
-  # TODO: npm cookieSubject
   setCookies = (currentCookies) ->
     (cookies) ->
       _.map cookies, (value, key) ->

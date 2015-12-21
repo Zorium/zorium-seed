@@ -760,6 +760,18 @@
       "from": "http-hash@>=2.0.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/http-hash/-/http-hash-2.0.0.tgz"
     },
+    "location-router": {
+      "version": "0.1.1",
+      "from": "location-router@0.1.1",
+      "resolved": "https://registry.npmjs.org/location-router/-/location-router-0.1.1.tgz",
+      "dependencies": {
+        "qs": {
+          "version": "5.2.0",
+          "from": "qs@>=5.2.0 <6.0.0",
+          "resolved": "https://registry.npmjs.org/qs/-/qs-5.2.0.tgz"
+        }
+      }
+    },
     "lodash": {
       "version": "3.10.1",
       "from": "lodash@>=3.10.1 <4.0.0",
@@ -779,11 +791,6 @@
       "version": "1.0.4",
       "from": "promiz@>=1.0.4 <2.0.0",
       "resolved": "https://registry.npmjs.org/promiz/-/promiz-1.0.4.tgz"
-    },
-    "qs": {
-      "version": "5.2.0",
-      "from": "qs@5.2.0",
-      "resolved": "https://registry.npmjs.org/qs/-/qs-5.2.0.tgz"
     },
     "rx-lite": {
       "version": "3.1.2",

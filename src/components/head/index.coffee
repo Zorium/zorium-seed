@@ -86,8 +86,8 @@ module.exports = class Head
 
       # Twitter card
       z 'meta', {name: 'twitter:card', content: 'summary_large_image'}
-      z 'meta', {name: 'twitter:site', content: "#{twitter.site}"}
-      z 'meta', {name: 'twitter:creator', content: "#{twitter.creator}"}
+      z 'meta', {name: 'twitter:site', content: "#{twitter.siteHandle}"}
+      z 'meta', {name: 'twitter:creator', content: "#{twitter.creatorHandle}"}
       z 'meta', {name: 'twitter:title', content: "#{twitter.title}"}
       z 'meta', {name: 'twitter:description', content: "#{twitter.description}"}
       z 'meta', {name: 'twitter:image:src', content: "#{twitter.image}"}

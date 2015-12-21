@@ -12,40 +12,24 @@ module.exports = class App
   constructor: ({requests, serverData, model, router}) ->
     routes = new HttpHash()
 
-    # TODO: ugly
-    reqToRoute = (req) ->
-      route = routes.get req.path
-      # TODO: HttpHash should support a catchall
-      route.handler ?= -> $fourOhFourPage
-      return route
-
     requests = requests.map (req) ->
-      route = reqToRoute req
+      route = routes.get req.path
       {req, route, $page: route.handler()}
 
-    $homePage = new HomePage({
-      model
-      router
-      serverData
-      requests: requests.filter ({$page}) -> $page instanceof HomePage
-    })
-    $redPage = new RedPage({
-      model
-      router
-      serverData
-      requests: requests.filter ({$page}) -> $page instanceof RedPage
-    })
-    $fourOhFourPage = new FourOhFourPage({
-      model
-      serverData
-      requests: requests.filter ({$page}) -> $page instanceof FourOhFourPage
-    })
+    route = (path, Page) ->
+      $page = new Page({
+        model, router, serverData
+        requests: requests.filter ({$page}) -> $page instanceof Page
+      })
 
-    routes.set '/', -> $homePage
-    routes.set '/red', -> $redPage
+      routes.set path, -> $page
+
+    route '/', HomePage
+    route '/red', RedPage
+    route '/*', FourOhFourPage
 
     $backupPage = if serverData?
-      reqToRoute(serverData.req).handler()
+      routes.get(serverData.req.path).handler()
     else
       null
 
