@@ -84,7 +84,9 @@ app.use (req, res, next) ->
 
   model = new Model({cookieSubject, serverHeaders: req.headers})
 
-  requests = new Rx.BehaviorSubject({req, res})
+  # TODO: cleanup/comment..
+  req.res = res
+  requests = new Rx.BehaviorSubject(req)
   z.renderToString new App({requests: requests, model})
   .then (html) ->
     res.send '<!DOCTYPE html>' + html

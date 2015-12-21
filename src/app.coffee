@@ -34,16 +34,16 @@ module.exports = class App
     routes = new HttpHash()
 
     # TODO: ugly
-    @req = requests.getValue?().req
+    @req = requests.getValue()
     @reqToRoute = (req) ->
       route = routes.get req.path
       # TODO: HttpHash should support a catchall
       route.handler ?= -> $fourOhFourPage
       return route
 
-    requests = requests.map ({req, res}) =>
+    requests = requests.map (req) =>
       route = @reqToRoute req
-      {req, res, route, $page: route.handler()}
+      {req, route, $page: route.handler()}
 
     $homePage = new HomePage({
       model
@@ -64,9 +64,9 @@ module.exports = class App
     routes.set '/red', -> $redPage
 
     @state = z.state {
-      requests: requests.doOnNext ({$page, res}) ->
+      requests: requests.doOnNext ({$page, req}) ->
         if $page instanceof FourOhFourPage
-          res.status? 404
+          req.res.status? 404
     }
 
   render: =>

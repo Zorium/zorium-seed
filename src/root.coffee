@@ -7,6 +7,7 @@ Rx = require 'rx-lite'
 cookie = require 'cookie'
 StackTrace = require 'stacktrace-js'
 FastClick = require 'fastclick'
+Qs = require 'qs'
 
 require './root.styl'
 
@@ -74,22 +75,60 @@ getZThunks = (tree) ->
   else
     _.flatten _.map tree.children, getZThunks
 
-untilStable = (zthunk) ->
-  state = zthunk.component.state
+getCurrentUrl = (mode) ->
+  hash = window.location.hash.slice(1)
+  pathname = window.location.pathname
+  search = window.location.search
+  if pathname
+    pathname += search
 
-  new Promise (resolve, reject) ->
-    setTimeout ->
-      reject new Error "Timeout, request took longer than #{timeout}ms"
-    , timeout
+  return if mode is 'pathname' then pathname or hash \
+         else hash or pathname
 
-    onStable = if state? then state._subscribeOnStable else (cb) -> cb()
-    onStable ->
-      try
-        children = getZThunks zthunk.render()
-      catch err
-        return reject err
-      resolve Promise.all _.map children, untilStable
-  .then -> zthunk
+parseUrl = (url) ->
+  a = document.createElement 'a'
+  a.href = url
+
+  {
+    pathname: a.pathname
+    hash: a.hash
+    search: a.search
+    path: a.pathname + a.search
+  }
+
+class Router
+  constructor: ->
+    @mode = if window.history?.pushState then 'pathname' else 'hash'
+    @hasRouted = false
+    @subject = new Rx.BehaviorSubject(@_parse())
+
+    # some browsers erroneously call popstate on intial page load (iOS Safari)
+    # We need to ignore that first event.
+    # https://code.google.com/p/chromium/issues/detail?id=63040
+    window.addEventListener 'popstate', =>
+      if @hasRouted
+        setTimeout =>
+          @subject.onNext @_parse()
+
+  getStream: => @subject
+
+  _parse: (url) =>
+    url ?= getCurrentUrl(@mode)
+    {pathname, search} = parseUrl url
+    query = Qs.parse(search?.slice(1))
+
+    {url, path: pathname, query}
+
+  go: (url) =>
+    req = @_parse url
+
+    if @mode is 'pathname'
+      window.history.pushState null, null, req.url
+    else
+      window.location.hash = req.url
+
+    @hasRouted = true
+    @subject.onNext req
 
 init = ->
   FastClick.attach document.body
@@ -98,22 +137,18 @@ init = ->
   cookieSubject.subscribeOnNext setCookies(currentCookies)
 
   model = new Model({cookieSubject})
-  router = z.router
+  router = new Router()
 
   root = document.createElement 'div'
   root.className = 'zorium-root'
-  router.init
-    $$root: root
-
-  requests = new Rx.ReplaySubject(1)
+  requests = router.getStream()
   $app = z new App({requests, model, router})
-  router.use (req, res) ->
-    requests.onNext {req, res}
-    res.send $app
-  router.go()
+  z.bind root, $app
 
-  (if model.wasCached() then untilStable($app) else Promise.resolve null)
-  .catch -> null
+  (if model.wasCached() \
+    then z.untilStable($app, {timeout: 200})
+    else Promise.resolve null
+  ).catch -> null
   .then ->
     # TODO: explain that this prevents white flash, and maybe use reqAnimFrame
     setTimeout ->
