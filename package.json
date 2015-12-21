@@ -76,7 +76,7 @@
     "rx-lite": "^3.1.2",
     "stacktrace-js": "^1.0.1",
     "whatwg-fetch": "^0.10.1",
-    "zorium": "^1.0.6",
+    "zorium": "^1.0.8",
     "zorium-paper": "^0.5.0"
   },
   "directories": {

@@ -24,10 +24,11 @@ isomorphic =
 
 # Server only
 # All keys must have values at run-time (value may be null)
-WEBPACK_DEV_PORT = serverEnv.WEBPACK_DEV_PORT or 3001
+PORT = serverEnv.PORT or 3000
+WEBPACK_DEV_PORT = serverEnv.WEBPACK_DEV_PORT or PORT + 1
 
 server =
-  PORT: serverEnv.PORT or 3000
+  PORT: PORT
 
   # Development
   WEBPACK_DEV_PORT: WEBPACK_DEV_PORT

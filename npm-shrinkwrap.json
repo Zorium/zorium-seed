@@ -780,6 +780,11 @@
       "from": "promiz@>=1.0.4 <2.0.0",
       "resolved": "https://registry.npmjs.org/promiz/-/promiz-1.0.4.tgz"
     },
+    "qs": {
+      "version": "5.2.0",
+      "from": "qs@5.2.0",
+      "resolved": "https://registry.npmjs.org/qs/-/qs-5.2.0.tgz"
+    },
     "rx-lite": {
       "version": "3.1.2",
       "from": "rx-lite@>=3.1.2 <4.0.0",
@@ -839,9 +844,9 @@
       "resolved": "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-0.10.1.tgz"
     },
     "zorium": {
-      "version": "1.0.6",
-      "from": "zorium@>=1.0.6 <2.0.0",
-      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.6.tgz",
+      "version": "1.0.8",
+      "from": "zorium@1.0.8",
+      "resolved": "https://registry.npmjs.org/zorium/-/zorium-1.0.8.tgz",
       "dependencies": {
         "qs": {
           "version": "2.4.2",
@@ -869,19 +874,19 @@
               "resolved": "https://registry.npmjs.org/escape-html/-/escape-html-1.0.3.tgz"
             },
             "param-case": {
-              "version": "1.1.1",
+              "version": "1.1.2",
               "from": "param-case@>=1.0.1 <2.0.0",
-              "resolved": "https://registry.npmjs.org/param-case/-/param-case-1.1.1.tgz",
+              "resolved": "https://registry.npmjs.org/param-case/-/param-case-1.1.2.tgz",
               "dependencies": {
                 "sentence-case": {
-                  "version": "1.1.2",
+                  "version": "1.1.3",
                   "from": "sentence-case@>=1.1.2 <2.0.0",
-                  "resolved": "https://registry.npmjs.org/sentence-case/-/sentence-case-1.1.2.tgz",
+                  "resolved": "https://registry.npmjs.org/sentence-case/-/sentence-case-1.1.3.tgz",
                   "dependencies": {
                     "lower-case": {
-                      "version": "1.1.2",
+                      "version": "1.1.3",
                       "from": "lower-case@>=1.1.1 <2.0.0",
-                      "resolved": "https://registry.npmjs.org/lower-case/-/lower-case-1.1.2.tgz"
+                      "resolved": "https://registry.npmjs.org/lower-case/-/lower-case-1.1.3.tgz"
                     }
                   }
                 }
