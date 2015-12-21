@@ -14,7 +14,6 @@ module.exports = class Model
   constructor: ({cookieSubject, serverHeaders}) ->
     serverHeaders ?= {}
 
-    # TODO: ugly
     serialization = window?[SERIALIZATION_KEY] or {}
     isExpired = if serialization.expires?
       # Because of potential clock skew we check around the value
@@ -28,7 +27,6 @@ module.exports = class Model
     accessToken = cookieSubject.map (cookies) ->
       cookies[config.AUTH_COOKIE]
 
-    # TODO: ugly
     proxy = (url, opts) ->
       accessToken.take(1).toPromise()
       .then (accessToken) ->
@@ -58,7 +56,6 @@ module.exports = class Model
   wasCached: => @isFromCache
 
   getSerializationStream: =>
-    # TODO: ugly
     @exoid.getCacheStream()
     .map (exoidCache) ->
       string = JSON.stringify {

@@ -6,7 +6,6 @@ config = require '../config'
 module.exports = class Auth
   constructor: ({@exoid, cookieSubject}) ->
     initPromise = null
-    # TODO: ugly
     @waitValidAuthCookie = Rx.Observable.defer =>
       if initPromise?
         return initPromise
