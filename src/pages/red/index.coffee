@@ -1,19 +1,22 @@
-_ = require 'lodash'
 z = require 'zorium'
-Rx = require 'rx-lite'
 
+config = require '../../config'
 Head = require '../../components/head'
 Red = require '../../components/red'
 
 module.exports = class RedPage
-  constructor: ({model, router}) ->
-    @$head = new Head({model})
+  constructor: ({model, router, serverData}) ->
+    @$head = new Head({
+      modelSerialization: model.getSerializationStream()
+      serverData
+      meta:
+        title: 'Zorium Seed - Red'
+        description: 'The Red Page'
+        canonical: "http://#{config.HOST}/red"
+    })
     @$red = new Red({router})
 
-  renderHead: (params) =>
-    z @$head, _.defaults {
-      title: 'Zorium Seed - Red Page'
-    }, params
+  renderHead: => @$head
 
   render: =>
     z '.p-red',

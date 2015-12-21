@@ -9,6 +9,7 @@ serverEnv = process.env
 
 # All keys must have values at run-time (value may be null)
 isomorphic =
+  HOST: process.env.HOST or '127.0.0.1'
   API_URL:
     serverEnv.PRIVATE_API_URL or # server
     process.env.API_URL or # client

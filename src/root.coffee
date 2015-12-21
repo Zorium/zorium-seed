@@ -57,6 +57,7 @@ window.onerror = (message, file, line, column, error) ->
 #################
 # ROUTING SETUP #
 #################
+# TODO: npm cookieSubject
 setCookies = (currentCookies) ->
   (cookies) ->
     _.map cookies, (value, key) ->
@@ -64,16 +65,6 @@ setCookies = (currentCookies) ->
         document.cookie = cookie.serialize \
           key, value, CookieService.getCookieOpts()
     currentCookies = cookies
-
-# FIXME: gross, also should be faster, also timeout is busted
-isThunk = (tree) -> tree.component?
-isZThunk = (tree) -> isThunk(tree) and tree.component?
-timeout = 200
-getZThunks = (tree) ->
-  if isZThunk tree
-    [tree]
-  else
-    _.flatten _.map tree.children, getZThunks
 
 getCurrentUrl = (mode) ->
   hash = window.location.hash.slice(1)
@@ -96,6 +87,7 @@ parseUrl = (url) ->
     path: a.pathname + a.search
   }
 
+# TODO: npm stream-router
 class Router
   constructor: ->
     @mode = if window.history?.pushState then 'pathname' else 'hash'
@@ -140,7 +132,7 @@ init = ->
   router = new Router()
 
   root = document.createElement 'div'
-  root.className = 'zorium-root'
+  root.className = 'zorium-root' # TODO: rm? necessary?
   requests = router.getStream()
   $app = z new App({requests, model, router})
   z.bind root, $app
@@ -160,6 +152,14 @@ if document.readyState isnt 'complete' and
   window.addEventListener 'load', init
 else
   init()
+
+#############################
+# SERVICE WORKERS           #
+#############################
+
+if location.protocol is 'https:'
+  navigator.serviceWorker?.register '/service_worker.js'
+  .catch log.error
 
 #############################
 # ENABLE WEBPACK HOT RELOAD #

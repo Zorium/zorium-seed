@@ -8,8 +8,10 @@ Head = require './index'
 describe 'z-head', ->
   it 'renders title', ->
     $ = query Head::render.call {
-      state: getValue: -> {}
-    }, {title: 'test_title'}
+      state: getValue: ->
+        meta:
+          title: 'test_title'
+    }, {}
 
     b $('title').contents, 'test_title'
 
@@ -25,8 +27,10 @@ describe 'z-head', ->
     config.ENV = config.ENVS.PROD
     try
       $ = query Head::render.call {
-        state: getValue: -> {}
-      }, {styles: 'xxx'}
+        state: getValue: ->
+          serverData:
+            styles: 'xxx'
+      }
     finally
       config.ENV = oldEnv
 
@@ -38,8 +42,10 @@ describe 'z-head', ->
     config.ENV = config.ENVS.PROD
     try
       $ = query Head::render.call {
-        state: getValue: -> {}
-      }, {bundlePath: 'xxx'}
+        state: getValue: ->
+          serverData:
+            bundlePath: 'xxx'
+      }
     finally
       config.ENV = oldEnv
 

@@ -1,16 +1,20 @@
 z = require 'zorium'
-Rx = require 'rx-lite'
 
+config = require '../../config'
 Head = require '../../components/head'
 HelloWorld = require '../../components/hello_world'
 
 module.exports = class HomePage
-  constructor: ({model, router}) ->
-    @$head = new Head({model})
+  constructor: ({model, router, serverData}) ->
+    @$head = new Head({
+      modelSerialization: model.getSerializationStream()
+      serverData
+      meta:
+        canonical: "https://#{config.HOST}"
+    })
     @$hello = new HelloWorld({model, router})
 
-  renderHead: (params) =>
-    z @$head, params
+  renderHead: => @$head
 
   render: =>
     z '.p-home',

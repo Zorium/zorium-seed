@@ -8,6 +8,7 @@ Promise = require 'bluebird'
 request = require 'clay-request'
 Rx = require 'rx-lite'
 cookieParser = require 'cookie-parser'
+fs = require 'fs'
 
 config = require './src/config'
 gulpPaths = require './gulp_paths'
@@ -18,23 +19,32 @@ CookieService = require './src/services/cookie'
 MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
 HEALTHCHECK_TIMEOUT = 200
 
+styles = if config.ENV is config.ENVS.PROD
+  fs.readFileSync gulpPaths.dist + '/bundle.css', 'utf-8'
+else
+  null
+
+bundlePath = if config.ENV is config.ENVS.PROD
+  stats = JSON.parse \
+    fs.readFileSync gulpPaths.dist + '/stats.json', 'utf-8'
+
+  "/#{stats.hash}.bundle.js"
+else
+  null
+
 app = express()
-
 app.use compress()
-
-scriptSrc = [
-  '\'self\''
-  '\'unsafe-inline\''
-  'www.google-analytics.com'
-  if config.ENV is config.ENVS.DEV then config.WEBPACK_DEV_URL
-]
-stylesSrc = [
-  '\'unsafe-inline\''
-  if config.ENV is config.ENVS.DEV then config.WEBPACK_DEV_URL
-]
 app.use helmet.contentSecurityPolicy
-  scriptSrc: scriptSrc
-  stylesSrc: stylesSrc
+  scriptSrc: [
+    '\'self\''
+    '\'unsafe-inline\''
+    'www.google-analytics.com'
+    if config.ENV is config.ENVS.DEV then config.WEBPACK_DEV_URL
+  ]
+  stylesSrc: [
+    '\'unsafe-inline\''
+    if config.ENV is config.ENVS.DEV then config.WEBPACK_DEV_URL
+  ]
 app.use helmet.xssFilter()
 app.use helmet.frameguard()
 app.use helmet.hsts
@@ -72,6 +82,7 @@ then app.use express.static(gulpPaths.dist, {maxAge: '4h'})
 else app.use express.static(gulpPaths.build, {maxAge: '4h'})
 
 app.use (req, res, next) ->
+  # TODO: npm cookieSubject
   setCookies = (currentCookies) ->
     (cookies) ->
       _.map cookies, (value, key) ->
@@ -83,11 +94,9 @@ app.use (req, res, next) ->
   cookieSubject.subscribeOnNext setCookies(req.cookies)
 
   model = new Model({cookieSubject, serverHeaders: req.headers})
-
-  # TODO: cleanup/comment..
-  req.res = res
   requests = new Rx.BehaviorSubject(req)
-  z.renderToString new App({requests: requests, model})
+  serverData = {req, res, styles, bundlePath}
+  z.renderToString new App({requests, model, serverData})
   .then (html) ->
     res.send '<!DOCTYPE html>' + html
   .catch (err) ->

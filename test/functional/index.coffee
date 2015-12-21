@@ -9,9 +9,7 @@ config = require '../../src/config'
 Client = require './client'
 
 # Wait for server to be up
-# coffeelint: disable=missing_fat_arrows
 before ->
-  @timeout 90 * 1000 # 90sec
   count = 0
   check = ->
     request config.SELENIUM_TARGET_URL, {timeout: 200}
@@ -38,7 +36,6 @@ after ->
         public: 'public'
         build: build
       .end()
-# coffeelint: enable=missing_fat_arrows
 
 describe 'functional tests', ->
   client = null

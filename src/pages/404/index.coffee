@@ -1,16 +1,20 @@
 z = require 'zorium'
-_ = require 'lodash'
 
+config = require '../../config'
 Head = require '../../components/head'
 
 module.exports = class FourOhFourPage
-  constructor: ({model}) ->
-    @$head = new Head({model})
+  constructor: ({model, serverData}) ->
+    @$head = new Head({
+      modelSerialization: model.getSerializationStream()
+      serverData
+      meta:
+        title: 'Zorium Seed - 404'
+        description: 'Page not found'
+        canonical: "http://#{config.HOST}/404"
+    })
 
-  renderHead: (params) =>
-    z @$head, _.defaults {
-      title: 'Zorium Seed - 404'
-    }, params
+  renderHead: => @$head
 
   render: ->
     z '.p-404',
