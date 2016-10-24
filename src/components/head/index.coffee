@@ -6,14 +6,6 @@ config = require '../../config'
 
 module.exports = class Head
   constructor: ({model, meta, serverData}) ->
-    @state = z.state
-      meta: meta
-      serverData: serverData
-      modelSerialization: model.getSerializationStream()
-
-  render: =>
-    {meta, serverData, modelSerialization} = @state.getValue()
-
     meta = _.merge {
       title: 'Zorium Seed'
       description: 'Zorium Seed - (╯°□°）╯︵ ┻━┻)'
@@ -57,26 +49,19 @@ module.exports = class Head
         icon: meta.icon256
     }, meta
 
-    {twitter, openGraph, ios, kik} = meta
+    @state = z.state
+      meta: meta
+      serverData: serverData
+      modelSerialization: model.getSerializationStream()
 
-    isInliningSource = config.ENV is config.ENVS.PROD
-    webpackDevUrl = config.WEBPACK_DEV_URL
+  render: =>
+    {meta, serverData, modelSerialization} = @state.getValue()
+    {twitter, openGraph, ios, kik} = meta
+    isInline = config.ENV is config.ENVS.PROD
 
     z 'head',
       z 'title', "#{meta.title}"
       z 'meta', {name: 'description', content: "#{meta.description}"}
-
-      # Appcache
-      # TODO: re-enable
-      # if config.ENV is config.ENVS.PROD
-      #   z 'iframe',
-      #     src: '/manifest.html'
-      #     style:
-      #       width: 0
-      #       height: 0
-      #       visibility: 'hidden'
-      #       position: 'absolute'
-      #       border: 'none'
 
       # mobile
       z 'meta',
@@ -126,14 +111,11 @@ module.exports = class Head
         href: 'https://fonts.googleapis.com/css?family=Roboto:400,300,500'
 
       # styles
-      if isInliningSource
-        z 'style.styles',
-          innerHTML: serverData?.styles
-      else
-        null
+      z 'style.styles',
+        innerHTML: if isInline then serverData?.styles else null
 
       # scripts
       z 'script.bundle',
         async: true
-        src: if isInliningSource then serverData?.bundlePath \
-             else "#{webpackDevUrl}/bundle.js"
+        src: if isInline then serverData?.bundlePath \
+             else "#{config.WEBPACK_DEV_URL}/bundle.js"

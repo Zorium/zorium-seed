@@ -9,7 +9,6 @@ if window?
 module.exports = class Red
   constructor: ({router}) ->
     @$button = new Button({
-      $children: 'click me'
       isRaised: true
       color: 'blue'
       onclick: _.partial @goToHome, router
@@ -28,5 +27,6 @@ module.exports = class Red
         'Hello World'
         z 'br'
         z '.t-click-me',
-          @$button
+          z @$button,
+            $children: 'click me'
         @$input

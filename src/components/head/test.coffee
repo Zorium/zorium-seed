@@ -5,19 +5,22 @@ config = require '../../config'
 
 Head = require './index'
 
+fakeMeta = {twitter: {}, openGraph: {}, ios: {}, kik: {}}
+
 describe 'z-head', ->
   it 'renders title', ->
     $ = query Head::render.call {
       state: getValue: ->
-        meta:
+        meta: _.merge
           title: 'test_title'
+        , fakeMeta
     }, {}
 
     b $('title').contents, 'test_title'
 
   it 'has viewport meta', ->
     $ = query Head::render.call {
-      state: getValue: -> {}
+      state: getValue: -> {meta: fakeMeta}
     }, {}
 
     b $('meta[name=viewport]')?
@@ -28,6 +31,7 @@ describe 'z-head', ->
     try
       $ = query Head::render.call {
         state: getValue: ->
+          meta: fakeMeta
           serverData:
             styles: 'xxx'
       }
@@ -43,6 +47,7 @@ describe 'z-head', ->
     try
       $ = query Head::render.call {
         state: getValue: ->
+          meta: fakeMeta
           serverData:
             bundlePath: 'xxx'
       }

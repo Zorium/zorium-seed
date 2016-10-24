@@ -5,29 +5,22 @@ log = require 'loga'
 gulp = require 'gulp'
 webpack = require 'webpack'
 mocha = require 'gulp-mocha'
-manifest = require 'gulp-manifest'
-KarmaServer = require('karma').Server
 spawn = require('child_process').spawn
+autoprefixer = require 'autoprefixer'
 coffeelint = require 'gulp-coffeelint'
 webpackStream = require 'webpack-stream'
-istanbul = require 'gulp-coffee-istanbul'
 WebpackDevServer = require 'webpack-dev-server'
 ExtractTextPlugin = require 'extract-text-webpack-plugin'
 
 config = require './src/config'
-paths = require './gulp_paths'
 
-FUNCTIONAL_TEST_TIMEOUT_MS = 10 * 1000 # 10sec
-
-karmaConfig =
-  singleRun: true
-  frameworks: ['mocha']
-  files: [paths.build + '/bundle.js']
-  preprocessors:
-    '**/*.js': ['sourcemap']
-  browsers: ['Chrome', 'Firefox']
-
-cssLoader = 'css!autoprefixer!stylus?paths[]=node_modules'
+paths =
+  static: './src/static/**/*'
+  coffee: ['./*.coffee', './src/**/*.coffee']
+  unitTests: ['./src/**/test.coffee', './src/**/*.test.coffee']
+  root: './src/root.coffee'
+  dist: './dist'
+  build: './build'
 
 webpackBase =
   module:
@@ -38,80 +31,41 @@ webpackBase =
   output:
     filename: 'bundle.js'
     publicPath: '/'
+  postcss: -> [autoprefixer({})]
 
-gulp.task 'dev', ['dev:webpack-server', 'watch:dev:server']
-gulp.task 'test', ['lint', 'test:coverage', 'test:browser']
-gulp.task 'dist', ['dist:scripts', 'dist:static', 'dist:manifest']
+gulp.task 'dev', ['dev:webpack-server', 'dev:server']
+gulp.task 'test', ['test:lint', 'test:unit']
+gulp.task 'dist', ['dist:scripts', 'dist:static']
+gulp.task 'watch', -> gulp.watch paths.coffee, ['test']
 
-gulp.task 'watch', ->
-  gulp.watch paths.coffee, ['test:unit']
-gulp.task 'watch:phantom', ->
-  gulp.watch paths.coffee, ['test:browser:phantom']
-gulp.task 'watch:server', ->
-  gulp.watch paths.coffee, ['test:server']
-gulp.task 'watch:functional', ->
-  gulp.watch paths.coffee, ['test:functional']
-gulp.task 'watch:dev:server', ['dev:server'], ->
-  gulp.watch paths.coffee, ['dev:server']
-
-gulp.task 'lint', ->
+gulp.task 'test:lint', ->
   gulp.src paths.coffee
     .pipe coffeelint()
     .pipe coffeelint.reporter()
-
-gulp.task 'test:coverage', ->
-  gulp.src paths.cover
-    .pipe istanbul includeUntested: false
-    .pipe istanbul.hookRequire()
-    .on 'finish', ->
-      gulp.src paths.unitTests.concat [paths.serverTests]
-        .pipe mocha()
-        .pipe istanbul.writeReports({
-          reporters: ['html', 'text', 'text-summary']
-        })
 
 gulp.task 'test:unit', ->
   gulp.src paths.unitTests
     .pipe mocha()
 
-gulp.task 'test:browser:phantom', ['build:scripts:test'], (cb) ->
-  new KarmaServer _.defaults({
-    browsers: ['PhantomJS']
-  }, karmaConfig), cb
-  .start()
+gulp.task 'dev:static', ->
+  gulp.src paths.static
+    .pipe gulp.dest paths.build
 
-gulp.task 'test:server', ->
-  gulp.src paths.serverTests
-    .pipe mocha()
-
-gulp.task 'test:browser', ['build:scripts:test'], (cb) ->
-  new KarmaServer karmaConfig, cb
-  .start()
-
-gulp.task 'test:functional', ->
-  gulp.src paths.functionalTests
-    .pipe mocha(timeout: FUNCTIONAL_TEST_TIMEOUT_MS)
-
-gulp.task 'dev:server', ['build:static:dev'], do ->
+gulp.task 'dev:server', ['dev:static'], do ->
   devServer = null
   process.on 'exit', -> devServer?.kill()
   ->
     devServer?.kill()
-    devServer = spawn 'coffee', ['bin/dev_server.coffee'], {stdio: 'inherit'}
-    devServer.on 'close', (code) ->
-      if code is 8
-        gulp.log 'Error detected, waiting for changes'
+    devServer = spawn 'coffee', ['src/server/start.coffee'], {stdio: 'inherit'}
 
 gulp.task 'dev:webpack-server', ->
-  entries = [
-    "webpack-dev-server/client?#{config.WEBPACK_DEV_URL}"
-    'webpack/hot/dev-server'
-    paths.root
-  ]
-
   compiler = webpack _.defaultsDeep {
     devtool: 'inline-source-map'
-    entry: entries
+    entry: [
+      "webpack-dev-server/client?#{config.WEBPACK_DEV_URL}"
+      'webpack/hot/dev-server'
+      paths.root
+    ]
     output:
       path: __dirname
       publicPath: "#{config.WEBPACK_DEV_URL}/"
@@ -119,7 +73,12 @@ gulp.task 'dev:webpack-server', ->
       loaders: [
         {test: /\.coffee$/, loader: 'coffee'}
         {test: /\.json$/, loader: 'json'}
-        {test: /\.styl$/, loader: 'style!' + cssLoader}
+        {test: /\.styl$/, loaders: [
+          'style-loader'
+          'css-loader',
+          'postcss-loader',
+          'stylus-loader?paths[]=node_modules'
+        ]}
       ]
     plugins: [
       new webpack.HotModuleReplacementPlugin()
@@ -139,27 +98,6 @@ gulp.task 'dev:webpack-server', ->
       log.info
         event: 'webpack_server_start'
         message: "Webpack listening on port #{config.WEBPACK_DEV_PORT}"
-
-gulp.task 'build:static:dev', ->
-  gulp.src paths.static
-    .pipe gulp.dest paths.build
-
-gulp.task 'build:scripts:test', ->
-  gulp.src paths.unitTests
-  .pipe webpackStream _.defaultsDeep {
-    devtool: 'inline-source-map'
-    module:
-      loaders: [
-        {test: /\.coffee$/, loader: 'coffee'}
-        {test: /\.json$/, loader: 'json'}
-        {test: /\.styl$/, loader: 'style!' + cssLoader}
-      ]
-    plugins: [
-      new webpack.DefinePlugin
-        'process.env': _.mapValues process.env, (val) -> JSON.stringify val
-    ]
-  }, webpackBase
-  .pipe gulp.dest paths.build
 
 gulp.task 'dist:clean', (cb) ->
   del paths.dist, cb
@@ -185,7 +123,11 @@ gulp.task 'dist:scripts', ['dist:clean'], ->
         {test: /\.json$/, loader: 'json'}
         {
           test: /\.styl$/
-          loader: ExtractTextPlugin.extract 'style', cssLoader
+          loader: ExtractTextPlugin.extract [
+            'css-loader',
+            'postcss-loader',
+            'stylus-loader?paths[]=node_modules'
+          ]
         }
       ]
   }, webpackBase
@@ -193,18 +135,8 @@ gulp.task 'dist:scripts', ['dist:clean'], ->
   gulp.src paths.root
   .pipe webpackStream scriptsConfig, null, (err, stats) ->
     if err
-      console.trace err
+      console.error err
       return
     statsJson = JSON.stringify {hash: stats.toJson().hash}
     fs.writeFileSync "#{__dirname}/#{paths.dist}/stats.json", statsJson
   .pipe gulp.dest paths.dist
-
-gulp.task 'dist:manifest', ['dist:static', 'dist:scripts'], ->
-  gulp.src paths.manifest
-    .pipe manifest {
-      hash: true
-      timestamp: false
-      preferOnline: true
-      fallback: ['/ /offline.html']
-    }
-    .pipe gulp.dest paths.dist

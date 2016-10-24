@@ -13,14 +13,8 @@ SERIALIZATION_EXPIRE_TIME_MS = 1000 * 10 # 10 seconds
 module.exports = class Model
   constructor: ({cookieSubject, serverHeaders}) ->
     serverHeaders ?= {}
-
     serialization = window?[SERIALIZATION_KEY] or {}
-    isExpired = if serialization.expires?
-      # Because of potential clock skew we check around the value
-      delta = Math.abs(Date.now() - serialization.expires)
-      delta > SERIALIZATION_EXPIRE_TIME_MS
-    else
-      true
+    isExpired = Date.now() > (serialization.expires or 0)
     cache = if isExpired then {} else serialization
     @isFromCache = not _.isEmpty cache
 

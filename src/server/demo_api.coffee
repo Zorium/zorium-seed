@@ -1,12 +1,11 @@
 _ = require 'lodash'
 express = require 'express'
 log = require 'loga'
-cors = require 'cors'
 bodyParser = require 'body-parser'
 router = require 'exoid-router'
 uuid = require 'uuid'
 
-config = require './src/config'
+config = require '../config'
 
 app = express()
 demoUserDB = {}
@@ -15,21 +14,21 @@ demoCount = {
   count: 0
 }
 
-app.use cors()
+# CORS
+app.use (req, res, next) ->
+  res.header 'Access-Control-Allow-Origin', '*'
+  res.header 'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  next()
 app.use bodyParser.json()
 # Avoid CORS preflight
 app.use bodyParser.json({type: 'text/plain'})
 
-app.use '/healthcheck', (req, res, next) ->
-  res.json {healthy: true}
-
-app.use '/ping', (req, res) ->
-  res.send 'pong'
-
+app.get '/healthcheck', (req, res, next) -> res.json {healthy: true}
+app.get '/ping', (req, res) -> res.send 'pong'
 app.post '/log', (req, res) ->
   unless req.body?.event is 'client_error'
-    router.throw status: 400, detail: 'must be type client_error'
-
+    router.throw status: 400, info: 'must be type \'client_error\''
   log.warn req.body
   res.status(204).send()
 
@@ -38,8 +37,7 @@ auth = (handler) ->
     accessToken = req.query?.accessToken
 
     unless demoUserDB[accessToken]?
-      router.throw status: 401, detail: 'Unauthorized'
-
+      router.throw status: 401, info: 'Unauthorized'
     req.user = demoUserDB[accessToken]
 
     handler body, req, rest...

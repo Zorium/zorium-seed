@@ -1,23 +1,18 @@
 #!/bin/bash
-export NODE_ENV=production
-
-paths_dist=`./node_modules/coffee-script/bin/coffee -e "process.stdout.write require('./gulp_paths').dist"`
-
-if [ ! -d $paths_dist ]; then
+if [ ! -d dist ]; then
   echo "./dist directory not found. make sure to run 'npm run dist' beforehand"
   exit 1
 fi
 
-if [ -d "$paths_dist/backup" ]; then
+if [ -d "dist/backup" ]; then
   # Restore js from previous build
   echo "restoring backup dist files"
-  cp $paths_dist/backup/*.js $paths_dist/
-
+  cp dist/backup/*.js dist/
 else
   # Backup js files before replacing
-  mkdir -p $paths_dist/backup
+  mkdir -p dist/backup
   echo "backing up js files before replacing env"
-  cp $paths_dist/*.js $paths_dist/backup/
+  cp dist/*.js dist/backup/
 fi
 
 # Replace process.env.* with environment variable
@@ -36,6 +31,6 @@ while read -d $'\0' -r file; do
       sed -i.bak s/process\.env\.$env_name/$env_value/g $file
     fi
   done < <(grep -o "process\.env\.[A-Z0-9_]\+" $file | uniq)
-done < <(find $paths_dist -maxdepth 1 -iname '*.js' -print0)
+done < <(find dist -maxdepth 1 -iname '*.js' -print0)
 
-./node_modules/coffee-script/bin/coffee ./bin/server.coffee
+./node_modules/coffee-script/bin/coffee ./src/server/start.coffee

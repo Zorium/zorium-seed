@@ -10,13 +10,11 @@ if window?
 module.exports = class HelloWorld
   constructor: ({model, router}) ->
     @$increment = new Button({
-      $children: 'increment counter'
       isRaised: true
       color: 'amber'
       onclick: _.partial @increment, model
     })
     @$button = new Button({
-      $children: 'click me'
       isRaised: true
       color: 'blue'
       onclick: _.partial @goToRed, router
@@ -49,7 +47,9 @@ module.exports = class HelloWorld
           "username: #{username}"
         z '.count',
           "count: #{count}"
-        @$increment
+        z @$increment,
+          $children: 'increment counter'
         z '.t-click-me',
-          @$button
+          z @$button,
+            $children: 'click me'
         @$input

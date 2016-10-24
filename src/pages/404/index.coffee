@@ -11,7 +11,7 @@ module.exports = class FourOhFourPage
       meta:
         title: 'Zorium Seed - 404'
         description: 'Page not found'
-        canonical: "http://#{config.HOST}/404"
+        canonical: "https://#{config.HOST}/404"
     })
 
   renderHead: => @$head

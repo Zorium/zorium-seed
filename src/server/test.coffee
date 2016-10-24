@@ -1,8 +1,8 @@
 flareGun = require 'flare-gun'
 zock = require 'zock'
 
-app = require '../../server'
-config = require '../../src/config'
+app = require './index'
+config = require '../config'
 
 flare = flareGun.express(app)
 
@@ -20,6 +20,7 @@ describe 'server', ->
         .get '/healthcheck'
         .expect 200, {
           healthy: true
+          api: true
         }
 
   it 'fails if not healthy', ->
@@ -43,6 +44,8 @@ describe 'server', ->
   it 'renders /', ->
     zock
     .base config.API_URL
+    .exoid 'auth.login'
+    .reply {}
     .exoid 'users.create'
     .reply {}
     .exoid 'users.getMe'

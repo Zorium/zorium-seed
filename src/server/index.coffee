@@ -1,32 +1,29 @@
-express = require 'express'
-_ = require 'lodash'
-compress = require 'compression'
-log = require 'loga'
-helmet = require 'helmet'
-z = require 'zorium'
-Promise = require 'bluebird'
-request = require 'clay-request'
-Rx = require 'rx-lite'
-cookieParser = require 'cookie-parser'
 fs = require 'fs'
+_ = require 'lodash'
+z = require 'zorium'
+log = require 'loga'
+Rx = require 'rx-lite'
+helmet = require 'helmet'
+express = require 'express'
+compress = require 'compression'
+request = require 'clay-request'
+cookieParser = require 'cookie-parser'
 
-config = require './src/config'
-gulpPaths = require './gulp_paths'
-App = require './src/app'
-Model = require './src/models'
-CookieService = require './src/services/cookie'
+config = require '../config'
+App = require '../app'
+Model = require '../models'
 
 MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
 HEALTHCHECK_TIMEOUT = 200
 
 styles = if config.ENV is config.ENVS.PROD
-  fs.readFileSync gulpPaths.dist + '/bundle.css', 'utf-8'
+  fs.readFileSync 'dist/bundle.css', 'utf-8'
 else
   null
 
 bundlePath = if config.ENV is config.ENVS.PROD
   stats = JSON.parse \
-    fs.readFileSync gulpPaths.dist + '/stats.json', 'utf-8'
+    fs.readFileSync 'dist/stats.json', 'utf-8'
 
   "/#{stats.hash}.bundle.js"
 else
@@ -59,34 +56,34 @@ app.use cookieParser()
 
 app.use '/healthcheck', (req, res, next) ->
   Promise.all [
-    Promise.cast(request(config.API_URL + '/ping'))
-      .timeout HEALTHCHECK_TIMEOUT
-      .reflect()
+    request config.API_URL + '/ping', {timeout: HEALTHCHECK_TIMEOUT}
+    .catch -> false
   ]
-  .spread (api) ->
+  .then ([api]) ->
     result =
-      api: api.isFulfilled()
+      api: api isnt false
 
     isHealthy = _.every _.values result
-    if isHealthy
-      res.json {healthy: isHealthy}
-    else
-      res.status(500).json _.defaults {healthy: isHealthy}, result
+    status = if isHealthy then 200 else 500
+    res.status(status).json _.defaults {healthy: isHealthy}, result
   .catch next
 
 app.use '/ping', (req, res) ->
   res.send 'pong'
 
 if config.ENV is config.ENVS.PROD
-then app.use express.static(gulpPaths.dist, {maxAge: '4h'})
-else app.use express.static(gulpPaths.build, {maxAge: '4h'})
+then app.use express.static('dist', {maxAge: '4h'})
+else app.use express.static('build', {maxAge: '4h'})
 
 app.use (req, res, next) ->
   setCookies = (currentCookies) ->
     (cookies) ->
       _.map cookies, (value, key) ->
         unless currentCookies[key] is value
-          res.cookie(key, value, CookieService.getCookieOpts())
+          res.cookie(key, value, {
+            path: '/'
+            expires: new Date(Date.now() + config.COOKIE_DURATION_MS)
+          })
       currentCookies = cookies
 
   cookieSubject = new Rx.BehaviorSubject req.cookies

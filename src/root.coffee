@@ -12,7 +12,6 @@ LocationRouter = require 'location-router'
 require './root.styl'
 
 config = require './config'
-CookieService = require './services/cookie'
 App = require './app'
 Model = require './models'
 
@@ -62,7 +61,10 @@ setCookies = (currentCookies) ->
     _.map cookies, (value, key) ->
       unless currentCookies[key] is value
         document.cookie = cookie.serialize \
-          key, value, CookieService.getCookieOpts()
+          key, value, {
+            path: '/'
+            expires: new Date(Date.now() + config.COOKIE_DURATION_MS)
+          }
     currentCookies = cookies
 
 init = ->

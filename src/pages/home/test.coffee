@@ -5,5 +5,5 @@ HomePage = require './index'
 
 describe 'home page', ->
   it 'renders', ->
-    $ = query HomePage.prototype.render()
+    $ = query HomePage::render()
     b $('.').className, 'p-home'

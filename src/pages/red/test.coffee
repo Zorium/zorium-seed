@@ -6,5 +6,5 @@ Model = require '../../models'
 
 describe 'red page', ->
   it 'renders', ->
-    $ = query RedPage.prototype.render()
+    $ = query RedPage::render()
     b $('.').className, 'p-red'

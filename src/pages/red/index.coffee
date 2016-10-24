@@ -12,7 +12,7 @@ module.exports = class RedPage
       meta:
         title: 'Zorium Seed - Red'
         description: 'The Red Page'
-        canonical: "http://#{config.HOST}/red"
+        canonical: "https://#{config.HOST}/red"
     })
     @$red = new Red({router})
 

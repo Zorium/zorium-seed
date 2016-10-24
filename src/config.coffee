@@ -2,7 +2,6 @@
 # Note that simply env.* is not replaced, and thus suitible for private config
 
 _ = require 'lodash'
-assertNoneMissing = require 'assert-none-missing'
 
 # Don't let server environment variables leak into client code
 serverEnv = process.env
@@ -15,6 +14,7 @@ isomorphic =
     process.env.API_URL or # client
     'http://127.0.0.1:3005' # default
   AUTH_COOKIE: 'accessToken'
+  COOKIE_DURATION_MS: 365 * 24 * 3600 * 1000 # 1 year
   ENV:
     serverEnv.NODE_ENV or
     process.env.NODE_ENV
@@ -41,9 +41,7 @@ server =
   SAUCE_USERNAME: serverEnv.SAUCE_USERNAME or null
   SAUCE_ACCESS_KEY: serverEnv.SAUCE_ACCESS_KEY or null
 
-assertNoneMissing isomorphic
 if window?
   module.exports = isomorphic
 else
-  assertNoneMissing server
   module.exports = _.merge isomorphic, server

@@ -1,4 +1,4 @@
-FROM node:4.2.3
+FROM node:6.9.1
 
 # npm-shrinkwrap.json, package.json
 COPY *.json /tmp/

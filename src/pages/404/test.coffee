@@ -5,5 +5,5 @@ FourOhFourPage = require './index'
 
 describe '404 page', ->
   it 'renders', ->
-    $ = query FourOhFourPage.prototype.render()
+    $ = query FourOhFourPage::render()
     b $('.').className, 'p-404'

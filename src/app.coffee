@@ -3,7 +3,6 @@ Rx = require 'rx-lite'
 HttpHash = require 'http-hash'
 
 config = require './config'
-gulpPaths = require '../gulp_paths'
 HomePage = require './pages/home'
 RedPage = require './pages/red'
 FourOhFourPage = require './pages/404'
@@ -35,9 +34,9 @@ module.exports = class App
 
     @state = z.state {
       $backupPage
-      request: requests.doOnNext ({$page, req}) ->
+      request: requests.doOnNext ({$page}) ->
         if $page instanceof FourOhFourPage
-          res?.status? 404
+          serverData?.res.status 404
     }
 
   render: =>
