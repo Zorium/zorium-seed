@@ -26,11 +26,6 @@ app.use bodyParser.json({type: 'text/plain'})
 
 app.get '/healthcheck', (req, res, next) -> res.json {healthy: true}
 app.get '/ping', (req, res) -> res.send 'pong'
-app.post '/log', (req, res) ->
-  unless req.body?.event is 'client_error'
-    router.throw status: 400, info: 'must be type \'client_error\''
-  log.warn req.body
-  res.status(204).send()
 
 auth = (handler) ->
   (body, req, rest...) ->

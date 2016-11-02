@@ -32,11 +32,10 @@ log.on 'error', (err) ->
       console?.log parseError
       return err
     .then (trace) ->
-      window.fetch config.API_URL + '/log',
+      window.fetch '/log',
         method: 'POST'
         headers:
-          # Avoid CORS preflight
-          'Content-Type': 'text/plain'
+          'Content-Type': 'application/json'
         body: JSON.stringify
           event: 'client_error'
           trace: trace

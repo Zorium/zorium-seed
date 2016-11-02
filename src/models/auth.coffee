@@ -30,6 +30,7 @@ module.exports = class Auth
           cookieSubject.onNext _.defaults {
             "#{config.AUTH_COOKIE}": accessToken
           }, currentCookies
+      .catch (err) -> Rx.Observable.throw err
 
   stream: (path, body) =>
     @waitValidAuthCookie
