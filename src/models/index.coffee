@@ -52,8 +52,8 @@ module.exports = class Model
   getSerializationStream: =>
     @exoid.getCacheStream()
     .map (exoidCache) ->
-      string = JSON.stringify {
+      string = JSON.stringify({
         exoid: exoidCache
         expires: Date.now() + SERIALIZATION_EXPIRE_TIME_MS
-      }
+      }).replace /<\/script/gi, '<\\/script'
       "window['#{SERIALIZATION_KEY}']=#{string};"
