@@ -1,10 +1,10 @@
 # Zorium Seed
-[![zorium](./src/static/images/zorium_icon_256.png)](https://zorium.org)
+[![zorium](./src/static/images/zorium_icon_256.png)](https://zorium.zolmeister.com)
 
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/Zolmeister.svg)](https://saucelabs.com/u/Zolmeister)
 
-This project provides the base [Zorium](https://zorium.org) setup, following all current best practices.  
+This project provides the base [Zorium](https://zorium.zolmeister.com) setup, following all current best practices.  
 
 ## Dev
 
